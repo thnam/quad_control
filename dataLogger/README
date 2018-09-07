@@ -1,0 +1,18 @@
+.
+├── config
+│   └── default.json: runtime parameters
+├── drivers: interface to hardware
+│   ├── fakeCVData.py
+│   └── fakePulserStatus.py
+├── loggers
+│   ├── baseLogger.js
+│   ├── cvLogger.js: record current, voltage values
+│   ├── mainLogger.js: main logger, everything except periodical values
+│   ├── statusLogger.js: pulser status (enable, fault, interlock)
+│   └── triggerLogger.js: pulsing state (Stop/External/Internal)
+├── package.json
+├── package-lock.json
+├── README
+├── servers
+│   └── periodicReadout.js: current, voltage, pulser status
+└── test

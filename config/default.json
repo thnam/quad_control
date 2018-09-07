@@ -1,0 +1,50 @@
+{
+  "server": {
+    "port": 8080
+  },
+
+  "mongo": {
+    "host": "localhost",
+    "port": 27017,
+    "db": "quad",
+    "user": "daq",
+    "password": "g2muon"
+  },
+
+  "logger": {
+    "clockPeriod": 1000,
+    "voltagePollingPeriod": 3000,
+    "pulserStatePollingPerios": 10000,
+    "periodUnit": "ms; just a comment, changing this would have no effect",
+    "onlineDataPoints": 10,
+    "onlineStatusDataPoints": 10,
+    "maxLogSize": 524,
+    "maxNumFile": 10
+  },
+
+  "setVoltageLJ":{
+    "ip": "192.168.30.85",
+    "fs": "TDAC0",
+    "ss": "TDAC1",
+    "os": "TDAC7"
+  },
+
+  "vScaleFactor": {
+    "fs": 3.0,
+    "ss": 4.0,
+    "os": 4.0
+  },
+
+  "cScaleFactor": {
+    "fs": 6.6,
+    "ss": 5.0,
+    "os": 7.5
+  },
+
+  "psStatusReadoutPort":{
+    "nos": ["AIN09", "AIN08", "FIO6"],
+    "pos": ["AIN07", "AIN06", "FIO4"],
+    "pts": ["AIN05", "AIN04", "FIO2"],
+    "nts": ["AIN03", "AIN02", "FIO0"]
+  }
+}
