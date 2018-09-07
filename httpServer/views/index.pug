@@ -1,0 +1,79 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
+    meta(name='description', content='')
+    meta(name='author', content='Nam Tran')
+    link(rel='icon', href='/favicon.ico')
+
+    title Starter Template for Bootstrap
+
+    link(
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.0/css/bootstrap.min.css"
+      integrity="sha256-NJWeQ+bs82iAeoT5Ktmqbi3NXwxcHlfaVejzJI2dklU="
+      crossorigin="anonymous"
+    )
+    link(href='/starter-template.css', rel='stylesheet')
+
+  body
+    .container
+      br
+      header
+        h3.float-left ESQ Slow Control
+      #clock.float-right(style='color: red;')
+    // </nav>
+    ul.nav.nav-tabs.container
+      li.nav-item
+        a.nav-link.active(data-toggle='tab', href='#mainTab', role='tab') Main Control
+      li.nav-item
+        a.nav-link(data-toggle='tab', href='#pulserTab', role='tab') Pulser Status
+      li.nav-item
+        a.nav-link(data-toggle='tab', href='#logTab', role='tab') Log Messages
+      li.nav-item
+        a.nav-link(data-toggle='tab', href='#timingTab', role='tab') Pulse Timing
+      // <li class="nav-item">
+      // </li>
+    .tab-content
+      // First tab
+      #mainTab.tab-pane.fade.in.show.active.container.mainTabBG(role='tabpanel')
+        // First row: spark and pulsing
+        .row
+          // Spark group
+          .col-sm.border.border-secondary
+            .row.mb-2
+              .col
+                h5 Spark
+              .col
+                input#radCamacMaster(name='camacMode', value='master', checked='', type='radio')
+                label(for='radCamacMaster') Master
+              .col
+                input#radCamacSlave(name='camacMode', value='slave', type='radio')
+                label(for='radCamacSlave') Slave
+            .row.mb-2
+              .col-4
+                button#btnReadThreshold.btn.btn-block.btn-info  Read Threshold
+              .col-4
+                | Slot 3: 
+                strong#slot3Th 800 mV
+                br
+                |                 Slot 6: 
+                strong#slot6Th 800 mV
+              .col-4  Last Spark: 
+            .row.mb-2
+              .col-4
+                button#btnSetThreshold.btn.btn-block.btn-info Set Threshold
+              .col-4
+                input#iThresholdSet.form-control(name='sparkThreshold', placeholder='800 mV', min='20', max='1023', step='10.', type='number')
+              .col-4
+                | #Sparks: 
+                big#nSparks(style='color: green;') 0
+            .row.mb-1
+              .col-4
+                button#btnSparkCountReset.btn.btn-block.btn-warning Reset Count
+              .col-4
+                button#btnSparkAlarmReset.btn.btn-block.btn-success Reset Alarm
+              .col-4
+                button#btnClearSparkDiplay.btn.btn-block.btn-warning Clear Display
+          // Pulsing group
