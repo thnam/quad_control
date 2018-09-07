@@ -3,8 +3,8 @@ const config = require('config');
 const exec = require('child_process').exec;
 
 global.appRoot = require('app-root-path').toString();
-const cvLogger = require(appRoot + '/loggers/cvLogger.js');
-const statusLogger = require(appRoot + '/loggers/statusLogger.js');
+const cvLogger = require(global.appRoot + '/loggers/cvLogger.js');
+const statusLogger = require(global.appRoot + '/loggers/statusLogger.js');
 
 const fakeCvDataCmd = appRoot + '/drivers/fakeCVData.py';
 const fakeStatusDataCmd = appRoot + '/drivers/fakePulserStatus.py';

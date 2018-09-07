@@ -4,6 +4,11 @@ module.exports = {
     script: 'dataLogger/app.js',
     watch: ["./dataLogger/loggers", "./dataLogger/drivers/",
       "./dataLogger/app.js"],
+  }, {
+    name: 'http',
+    script: 'httpServer/bin/www',
+    watch: ["./httpServer/bin", "./httpServer/app.js",
+      "./httpServer/routes" ],
   }
   ]
 };
