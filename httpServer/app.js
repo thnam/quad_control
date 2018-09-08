@@ -4,11 +4,10 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 
-global.appRoot = require('app-root-path').toString();
 const mainLog = require(global.appRoot + '/loggers/mainLogger.js');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var indexRouter = require(global.appRoot + '/routes/index');
+var usersRouter = require(global.appRoot + '/routes/users');
 
 var app = express();
 
