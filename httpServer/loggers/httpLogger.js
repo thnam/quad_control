@@ -1,23 +1,23 @@
 var mainOptions = {
   file:{
     daily: true,
-    name: "mainLog",
-    outputName: "quad"
+    name: "httpLog",
+    outputName: "http"
   },
   console: {
     enable: true
   },
   db: {
-    name: "mainLog",
+    name: "http",
   },
   dbOnline:{ enable: false }
 };
 
-var mainLog = require(global.appRoot + "/loggers/baseLogger.js")(mainOptions);
+var httpLog = require(global.appRoot + "/loggers/baseLogger.js")(mainOptions);
 // stream.write is needed for streaming morgan log to winston outputs
-mainLog.stream = {
+httpLog.stream = {
   write: function (message, encoding) {
-    mainLog.info(message);
+    httpLog.info(message);
   }
 };
-module.exports = mainLog;
+module.exports = httpLog;
