@@ -6,8 +6,8 @@ global.appRoot = require('app-root-path').toString();
 const cvLogger = require(global.appRoot + '/loggers/cvLogger.js');
 const statusLogger = require(global.appRoot + '/loggers/statusLogger.js');
 
-const fakeCvDataCmd = appRoot + '/drivers/fakeCVData.py';
-const fakeStatusDataCmd = appRoot + '/drivers/fakePulserStatus.py';
+const fakeCvDataCmd = appRoot + '/../hwInterface/fakeCVData.py';
+const fakeStatusDataCmd = appRoot + '/../hwInterface/fakePulserStatus.py';
 
 setInterval(
   function broadcastCV() {

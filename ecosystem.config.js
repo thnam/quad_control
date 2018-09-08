@@ -2,7 +2,7 @@ module.exports = {
   apps : [{
     name: 'logger',
     script: 'dataLogger/app.js',
-    watch: ["./dataLogger/loggers", "./dataLogger/drivers/",
+    watch: ["./dataLogger/loggers", "hwInterface",
       "./dataLogger/app.js"],
   }, {
     name: 'http',

@@ -36,44 +36,4 @@ html(lang='en')
       // <li class="nav-item">
       // </li>
     .tab-content
-      // First tab
-      #mainTab.tab-pane.fade.in.show.active.container.mainTabBG(role='tabpanel')
-        // First row: spark and pulsing
-        .row
-          // Spark group
-          .col-sm.border.border-secondary
-            .row.mb-2
-              .col
-                h5 Spark
-              .col
-                input#radCamacMaster(name='camacMode', value='master', checked='', type='radio')
-                label(for='radCamacMaster') Master
-              .col
-                input#radCamacSlave(name='camacMode', value='slave', type='radio')
-                label(for='radCamacSlave') Slave
-            .row.mb-2
-              .col-4
-                button#btnReadThreshold.btn.btn-block.btn-info  Read Threshold
-              .col-4
-                | Slot 3: 
-                strong#slot3Th 800 mV
-                br
-                |                 Slot 6: 
-                strong#slot6Th 800 mV
-              .col-4  Last Spark: 
-            .row.mb-2
-              .col-4
-                button#btnSetThreshold.btn.btn-block.btn-info Set Threshold
-              .col-4
-                input#iThresholdSet.form-control(name='sparkThreshold', placeholder='800 mV', min='20', max='1023', step='10.', type='number')
-              .col-4
-                | #Sparks: 
-                big#nSparks(style='color: green;') 0
-            .row.mb-1
-              .col-4
-                button#btnSparkCountReset.btn.btn-block.btn-warning Reset Count
-              .col-4
-                button#btnSparkAlarmReset.btn.btn-block.btn-success Reset Alarm
-              .col-4
-                button#btnClearSparkDiplay.btn.btn-block.btn-warning Clear Display
-          // Pulsing group
+      include tab1.pug
