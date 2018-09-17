@@ -10,9 +10,12 @@ html(lang='en')
     title ESQ Slow Control Interface
 
     link(rel="stylesheet", href="stylesheets/bootstrap.min.css")
+    link(rel="stylesheet", href="stylesheets/style.css")
     script(src='javascripts/bootstrap.min.js')
     script(src='javascripts/jquery.slim.js')
     script(src='javascripts/popper.min.js')
+    script(src='javascripts/highcharts.js')
+    script(src='javascripts/quadControl.js')
 
   body
     .container
@@ -20,7 +23,6 @@ html(lang='en')
       header
         h3.float-left ESQ Slow Control
       #clock.float-right(style='color: red;')
-    // </nav>
     ul.nav.nav-tabs.container
       li.nav-item
         a.nav-link.active(data-toggle='tab', href='#mainTab', role='tab') Main Control
@@ -30,8 +32,7 @@ html(lang='en')
         a.nav-link(data-toggle='tab', href='#logTab', role='tab') Log Messages
       li.nav-item
         a.nav-link(data-toggle='tab', href='#timingTab', role='tab') Pulse Timing
-      // <li class="nav-item">
-      // </li>
+
     .tab-content
       include tab1.pug
       include tab2.pug

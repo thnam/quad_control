@@ -1,2 +1,33 @@
 // First tab
 #mainTab.tab-pane.fade.in.show.active.container.mainTabBG(role='tabpanel')
+
+  .row
+    .col-6
+      p Pulsing control
+      .row.mb-2.mt-2
+        .col-3
+          button#btnStop.btn.btn-fill.btn-danger Stop
+        .col-6
+          .row.mb-3
+            .col-4
+              button#btn1Hz.btn.btn-block.btn-info 1 Hz
+            .col-4
+              button#btn2Hz.btn.btn-block.btn-info 2 Hz
+            .col-4
+              button#btnBurst.btn.btn-block.btn-primary Burst
+          .row
+            .col-4
+              button#btn5Hz.btn.btn-block.btn-info(type='button') 5 Hz
+            .col-4
+              button#btn12Hz.btn.btn-block.btn-info 12 Hz
+            .col-4
+              button#btnExternal.btn.btn-block.btn-success External
+        .col-3
+          .text-center.alert-fill
+            | State:
+            br
+            label#lblPulsingState External
+    .col-6
+      p Voltages and currents
+      #lastCVPlot(style='width:100%; height:93%;')
+
