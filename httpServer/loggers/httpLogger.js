@@ -17,7 +17,7 @@ var httpLog = require(global.appRoot + "/loggers/baseLogger.js")(mainOptions);
 // stream.write is needed for streaming morgan log to winston outputs
 httpLog.stream = {
   write: function (message, encoding) {
-    httpLog.info(message);
+    httpLog.info(message.trim());
   }
 };
 module.exports = httpLog;
