@@ -5,6 +5,8 @@ const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 
 const httpLog = require(global.appRoot + '/loggers/httpLogger.js');
+// const log = require(global.appRoot + '/loggers/pulseModeLogger.js');
+// log.info("Stop");
 
 var app = express();
 

@@ -1,10 +1,9 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET users listing. */
 router.get('/', async(req, res, next) => {
   try {
-    const currentMode = await getPulseModeFromDB();
+    const currentMode = await require(global.appRoot + "/utils/dbTools").getPulseMode();
     res.json(currentMode);
   } catch (e) {
     next (e);
