@@ -6,7 +6,7 @@ var url = "mongodb://" + config.get("mongo.user") + ":"
   "/" + config.get("mongo.db");
 
 function getPulseMode() {
-  return mongoClient.connect(url, options:{useNewUrlParser: true}).then(function(db) {
+  return mongoClient.connect(url, {useNewUrlParser: true}).then(function(db) {
     var collection = db.db("quad").collection('pulseMode');
     return collection.findOne();
   }).then(function(items) {
