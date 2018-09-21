@@ -7,23 +7,24 @@
       .row.mb-2.mt-2
         .col-3
           button#btnStop.btn.btn-fill.btn-danger Stop
-        .col-6
+        .col-5
           .row.mb-3
-            .col-4
-              button#btn1Hz.btn.btn-block.btn-info 1 Hz
-            .col-4
-              button#btn2Hz.btn.btn-block.btn-info 2 Hz
-            .col-4
-              button#btnBurst.btn.btn-block.btn-primary Burst
+            .col-6
+              button#btnInternal.btn.btn-block.btn-info Internal
+            .col-6
+              select#internalMode.combobox(name='internalMode')
+                option(value="Single") Single
+                option(value="1 Hz") 1 Hz
+                option(value="5 Hz") 5 Hz
+                option(value="10 Hz") 10 Hz
+                option(value="Burst", selected="") Burst
+
           .row
-            .col-4
-              button#btn5Hz.btn.btn-block.btn-info(type='button') 5 Hz
-            .col-4
-              button#btn12Hz.btn.btn-block.btn-info 12 Hz
-            .col-4
+            .col-6
               button#btnExternal.btn.btn-block.btn-success External
-        .col-3
-          .text-center.alert-fill
+
+        .col-4
+          .text-center.pulseModeBox
             | State:
             br
             label#lblPulsingState External
