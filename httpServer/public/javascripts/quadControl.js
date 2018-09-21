@@ -11,7 +11,7 @@ $(() =>{
 var baseUrl = "http://" + document.location.hostname + ":" + document.location.port
 
 function setPulseMode(newMode) {
-  $.get(baseUrl + "/compute").done((currentMode)=> {
+  $.get(baseUrl + "/pulsemode").ready((currentMode)=> {
     alert(currentMode);
   });
 }
