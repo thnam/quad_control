@@ -17,7 +17,13 @@ function setPulseMode(newMode) {
         alert("Already in " + newMode + "!");
       }
       else
-        alert("Changing from " + currentMode + " to " + newMode);
+      {
+        $.ajax({
+          type: 'POST',
+          url: baseUrl + '/pulsemode',
+          data: {currentMode: currentMode, newMode: newMode}
+        });
+      }
     },
     error: function() {
       alert("Error");

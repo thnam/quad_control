@@ -14,12 +14,12 @@ router
     }
   })
   .post("/", (req, res) => {
-    httpLog.info("Pulse mode change request: from", req.body.current, "to",
-      req.body.new); 
+    httpLog.info("Pulse mode change request: from", req.body.currentMode, "to",
+      req.body.newMode); 
     // do some hardware stuff here first, should be try/catch and 
     // .....
     // then change mode info accordingly
-    modeLog.info(req.body.new);
+    modeLog.info(req.body.newMode);
     res.sendStatus(200);
   })
 ;
