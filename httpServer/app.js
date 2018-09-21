@@ -22,7 +22,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', require(global.appRoot + "/routes/index"));
 app.use('/pulsemode', require(global.appRoot + '/routes/pulseMode'));
-app.use('/compute', require(global.appRoot + '/routes/compute'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
