@@ -7,7 +7,7 @@ $(() =>{
 
 })
 
-var baseUrl = "http://" + document.location.hostname + ":" + document.location.port
+const baseUrl = "http://" + document.location.hostname + ":" + document.location.port
 
 function setPulseMode(newMode) {
   // get the current pulse mode first
@@ -37,3 +37,14 @@ function setPulseMode(newMode) {
     }
   });
 }
+
+let cvEvent = new EventSource('/cv');
+cvEvent.onmessage = (ev) => {
+  data = JSON.parse(ev.data);
+
+  if (data.error)  // stop processing on error data
+    return;
+
+  console.log(data);
+
+};

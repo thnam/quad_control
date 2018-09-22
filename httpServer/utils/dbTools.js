@@ -14,16 +14,32 @@ function getPulseMode() {
   });
 }
 
-function readOnlineCV() {
-  return mongoClient.connect(url).then(function(db) {
-    var collection = db.db("quad").collection('cvOnline');
-
-    return collection.find().toArray();
-  }).then(function(items) {
-    return items;
-  });
+function getLastCV() {
+  return mongoClient.connect(url, {useNewUrlParser: true})
+    .then(function(db) {
+      const collection = db.db("quad").collection('cvOnline');
+      const result = collection.find().sort({$natural: -1}).limit(1).toArray();
+      return result;
+    })
+    .then(function(item) {
+      return item;
+    });
 }
+
+function getOnlineCV() {
+  return mongoClient.connect(url, {useNewUrlParser: true})
+    .then(function(db) {
+      const collection = db.db("quad").collection('cvOnline');
+      const result = collection.find().sort({$natural: -1}).toArray();
+      return result;
+    })
+    .then(function(items) {
+      return items;
+    });
+}
+
 module.exports = {
   getPulseMode: getPulseMode,
-  readOnlineCV: readOnlineCV,
+  getLastCV: getLastCV,
+  getOnlineCV: getOnlineCV
 }
