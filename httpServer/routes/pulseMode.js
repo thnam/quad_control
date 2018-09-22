@@ -22,7 +22,7 @@ router
     try {
       // if (newMode == "Stop") {
         var child = spawn(global.appRoot + "/../hwInterface/success");
-        // var child = spawn(global.appRoot + "/../hwInterface/failed");
+        // const child = spawn(global.appRoot + "/../hwInterface/failed");
         child.on('exit', (code, signal) => {
           if (code) {
             httpLog.error("Error while changing pulse mode to " + newMode);
