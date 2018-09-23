@@ -74,4 +74,4 @@ function onListening() {
 module.exports = server;
 
 // sockets
-const io = require(global.appRoot + "/utils/sockets");
+var io = require(global.appRoot + "/utils/sockets");
