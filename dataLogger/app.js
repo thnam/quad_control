@@ -9,8 +9,7 @@ const statusLogger = require(global.appRoot + '/loggers/statusLogger.js');
 const fakeCvDataCmd = appRoot + '/../hwInterface/fakeCVData.py';
 const fakeStatusDataCmd = appRoot + '/../hwInterface/fakePulserStatus.py';
 
-setInterval(
-  function broadcastCV() {
+setInterval( () => {
     const command = exec(fakeCvDataCmd);
     var cv = {};
     command.stdout.on('data', function(data){
@@ -31,8 +30,7 @@ setInterval(
   }, config.get("logger.voltagePollingPeriod")
 );
 
-setInterval(
-  function broadcastPulserStatus() {
+setInterval( () => {
     const command = exec(fakeStatusDataCmd);
     var pulserState = {};
     command.stdout.on('data', function(data){

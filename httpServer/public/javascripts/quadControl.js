@@ -38,13 +38,12 @@ function setPulseMode(newMode) {
   });
 }
 
-let cvEvent = new EventSource('/cv');
-cvEvent.onmessage = (ev) => {
+let lastCVEvent = new EventSource('/cv');
+lastCVEvent.onmessage = (ev) => {
   data = JSON.parse(ev.data);
 
   if (data.error)  // stop processing on error data
     return;
 
   console.log(data);
-
 };

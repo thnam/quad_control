@@ -26,7 +26,7 @@ function getLastCV() {
     });
 }
 
-function getOnlineCV() {
+function getCV() {
   return mongoClient.connect(url, {useNewUrlParser: true})
     .then(function(db) {
       const collection = db.db("quad").collection('cvOnline');
@@ -40,6 +40,5 @@ function getOnlineCV() {
 
 module.exports = {
   getPulseMode: getPulseMode,
-  getLastCV: getLastCV,
-  getOnlineCV: getOnlineCV
+  getCV: getCV,
 }
