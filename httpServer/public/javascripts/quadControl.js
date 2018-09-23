@@ -47,3 +47,13 @@ lastCVEvent.onmessage = (ev) => {
 
   console.log(data);
 };
+
+var socket = io.connect(baseUrl);
+socket.on('news', function(data) {
+  console.log(data);
+  socket.emit('join', 'Hello World from client');
+});
+
+socket.on("timeStamp", (data) =>{
+  $("#clock").html('<h4> Server time: ' + data.timeStamp + '</h4>');
+});

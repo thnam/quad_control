@@ -8,7 +8,7 @@ const httpLog = require(global.appRoot + '/loggers/httpLogger.js');
 // const log = require(global.appRoot + '/loggers/pulseModeLogger.js');
 // log.info("Stop");
 
-var app = express();
+const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

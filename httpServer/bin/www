@@ -6,6 +6,7 @@
 
 global.appRoot = require('app-root-path').toString();
 const app = require(global.appRoot + '/app');
+const httpLog = require(global.appRoot + '/loggers/httpLogger.js');
 const debug = require('debug')('httpserver:server');
 const http = require('http');
 
@@ -20,7 +21,8 @@ app.set('port', port);
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
+const server = http.createServer(app);
+
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -69,3 +71,21 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+
+// socket io for pushing periodic events
+const io = require('socket.io')(server);
+io.on('connection', function (socket) {
+  httpLog.info("Client connected from: "  + socket.handshake.address);
+
+  socket.emit('greeting', { hello: 'world' });
+
+  setInterval(()=>{
+    var date = new Date();
+    dateStr = date.toDateString() + " - " + date.toLocaleTimeString();
+    socket.emit('timeStamp', {timeStamp: dateStr});
+  }, 1000);
+
+  socket.on('my other event', function (data) {
+    console.log(data);
+  });
+});
