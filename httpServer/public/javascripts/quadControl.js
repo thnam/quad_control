@@ -49,9 +49,9 @@ lastCVEvent.onmessage = (ev) => {
 };
 
 var socket = io.connect(baseUrl);
-socket.on('news', function(data) {
-  console.log(data);
-  socket.emit('join', 'Hello World from client');
+socket.on('greeting', function(data) {
+  console.log(data.message);
+  // socket.emit('join', 'Hello World from client');
 });
 
 socket.on("timeStamp", (data) =>{

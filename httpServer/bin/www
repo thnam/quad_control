@@ -77,7 +77,7 @@ const io = require('socket.io')(server);
 io.on('connection', function (socket) {
   httpLog.info("Client connected from: "  + socket.handshake.address);
 
-  socket.emit('greeting', { hello: 'world' });
+  socket.emit('greeting', { message: "Greeting from quad controller." });
 
   setInterval(()=>{
     var date = new Date();
@@ -85,7 +85,7 @@ io.on('connection', function (socket) {
     socket.emit('timeStamp', {timeStamp: dateStr});
   }, 1000);
 
-  socket.on('my other event', function (data) {
-    console.log(data);
-  });
+  // socket.on('join', function (data) {
+    // httpLog.info("Join");
+  // });
 });
