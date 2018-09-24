@@ -57,3 +57,22 @@ socket.on('greeting', function(data) {
 socket.on("timeStamp", (data) =>{
   $("#clock").html('<h4> Server time: ' + data.timeStamp + '</h4>');
 });
+
+socket.on("cv", (data) => {
+  const values = data.cv;
+
+  // update the voltages and currents first
+  const lastCV = values[0].message;
+  // console.log(lastCV);
+
+  // console.log(lastCV.os);
+
+  // $("#pvos").html(lastCV.os.pv);
+  // $("#nvos").html(lastCV.os.nv);
+  // $("#pvfs").html(lastCV.fs.pv);
+  // $("#nvfs").html(lastCV.fs.nv);
+  // $("#pvss").html(lastCV.ss.pv);
+  // $("#nvss").html(lastCV.ss.nv);
+
+  // then cv table
+})

@@ -8,7 +8,7 @@ module.exports = {
     name: 'http',
     script: 'httpServer/bin/www',
     watch: ["./httpServer/bin", "./httpServer/app.js",
-      "./httpServer/routes" ],
+      "./httpServer/routes", "./httpServer/utils" ],
   }
   ]
 };
