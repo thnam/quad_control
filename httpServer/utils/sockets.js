@@ -19,9 +19,13 @@ io.on('connection', function (socket) {
   // });
   
   setInterval(async ()=>{
-    const cv = await dbTool.getCV();
-    // console.log(cv);
-    socket.emit("cv", {cv: cv});
+    try {
+      const cv = await dbTool.getCV();
+      // console.log(cv);
+      socket.emit("cv", {cv: cv});
+    } catch (e) {
+      next(e);
+    }
 
   }, 3333);
 });
