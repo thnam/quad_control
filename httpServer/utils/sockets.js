@@ -23,7 +23,7 @@ io.on('connection', function (socket) {
     // console.log(cv);
     socket.emit("cv", {cv: cv});
 
-  }, 3000);
+  }, 3333);
 });
 
 module.exports = io;

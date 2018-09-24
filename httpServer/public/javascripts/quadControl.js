@@ -62,17 +62,13 @@ socket.on("cv", (data) => {
   const values = data.cv;
 
   // update the voltages and currents first
-  const lastCV = values[0].message;
-  // console.log(lastCV);
+  const lastCV = JSON.parse(values[0].message);
 
-  // console.log(lastCV.os);
-
-  // $("#pvos").html(lastCV.os.pv);
-  // $("#nvos").html(lastCV.os.nv);
-  // $("#pvfs").html(lastCV.fs.pv);
-  // $("#nvfs").html(lastCV.fs.nv);
-  // $("#pvss").html(lastCV.ss.pv);
-  // $("#nvss").html(lastCV.ss.nv);
-
+  document.getElementById("pbPVOS").value = parseFloat(lastCV.os.pv);
+  document.getElementById("pbNVOS").value = Math.abs(parseFloat(lastCV.os.nv));
+  document.getElementById("pbPVSS").value = parseFloat(lastCV.fs.pv);
+  document.getElementById("pbNVSS").value = Math.abs(parseFloat(lastCV.fs.nv));
+  document.getElementById("pbPVFS").value = parseFloat(lastCV.ss.pv);
+  document.getElementById("pbNVFS").value = Math.abs(parseFloat(lastCV.ss.nv));
   // then cv table
 })

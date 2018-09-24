@@ -13,7 +13,7 @@ pulsers = ["os", "fs", "ss"]
 ostr = '{'
 for ps in pulsers:
   ostr += '"%s" : {"pv": %.3f, "nv": %.3f, "pc": %.3f, "nc": %.3f},' % (
-    ps, uniform(10, 11), uniform(-11, -10), uniform(.1, .2), uniform(-.2, -.1))
+    ps, uniform(10, 15), uniform(-14, -11), uniform(.1, .2), uniform(-.2, -.1))
 
 ostr += ' "spark": %s}' % float('%.3g' % uniform(-.4, -.2))
 
