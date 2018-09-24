@@ -26,10 +26,13 @@ const server = http.createServer(app);
 /**
  * Listen on provided port, on all network interfaces.
  */
+const db = require(global.appRoot + "/utils/db");
+db.connect(()=>{
+  server.listen(port);
+  server.on('error', onError);
+  server.on('listening', onListening);
+});
 
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
 
 /**
  * Event listener for HTTP server "error" event.

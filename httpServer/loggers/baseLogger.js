@@ -37,11 +37,12 @@ module.exports = function (options){
   var loggerOptions = {
     file:{
       name: options.file.name,
+      handleExceptions: true,
       filename: logDir + "/" + options.file.outputName + ".log"
     },
     fileDaily: {
       name: options.file.name + "_dailyFile",
-      handleExceptions: false,
+      handleExceptions: true,
       format: combine(timestamp(), colorize(), logTimestampFormat),
       // datePattern: "YYYY-MM-DD-HH-mm", // every minute
       // datePattern: "YYYY-MM-DD-HH", // every hour
