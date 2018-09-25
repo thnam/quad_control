@@ -21,6 +21,12 @@
   border-radius: 3px;
 }
 
+canvas {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
 .progress-bar {
   background-color: #f3f3f3;
   border-radius: 5px;
