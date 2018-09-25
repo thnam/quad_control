@@ -22,7 +22,7 @@ window.onload = () => {
   window.lastCVChartData =  {
     labels: ["PVOS", "NVOS", "PVSS", "NVSS", "PVFS", "NVFS"],
     datasets: [{
-      label: 'kV, absolute value in case of negative voltage',
+      label: 'kV',
       data: [20, 20, 20, 19, 14, 13.5],
       backgroundColor: [
         'rgba(255, 99, 132, 0.2)',
@@ -51,6 +51,7 @@ window.onload = () => {
       responsive: true,
       legend: {
         position: 'bottom',
+        display: false,
       },
       title: {
         display: true,
@@ -58,12 +59,31 @@ window.onload = () => {
       },
       scales: {
         yAxes: [{
+          scaleLabel: {
+            display: true,
+            labelString: 'Voltage [kV]'
+          },
           ticks: {
             beginAtZero:true,
             suggestedMax: 30
           }
         }]
-      }
+      },
+
+      plugins: {
+        datalabels: {
+          color: 'black',
+          display: true,
+          font: {
+            weight: 'bold'
+          },
+          formatter: function(value, context) {
+            return Math.round(value * 100) / 100;
+            // return context.dataIndex + ': ' + Math.round(value*100) + '%';
+          }
+        }
+      },
+
     }
   });
 }
