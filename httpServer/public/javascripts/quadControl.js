@@ -17,3 +17,6 @@ socket.on("timeStamp", (data) =>{
   $("#clock").html('<h4> Server time: ' + data.timeStamp + '</h4>');
 });
 
+window.onload = () => {
+  initCharts();
+};
