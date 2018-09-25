@@ -34,9 +34,12 @@ html(lang='en')
       include logTab.pug
       include timingTab.pug
 
+    //- script sequence is important
     script(src='javascripts/jquery-3.3.1.min.js')
     script(src='javascripts/popper.min.js')
     script(src='javascripts/bootstrap.min.js')
     script(src='javascripts/highcharts.js')
     script(src='/socket.io/socket.io.js')
+    script(src='javascripts/pulseMode.js')
     script(src='javascripts/quadControl.js')
+    script(src='javascripts/cv.js')
