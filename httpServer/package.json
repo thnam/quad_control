@@ -8,8 +8,6 @@
   },
   "dependencies": {
     "app-root-path": "^2.1.0",
-    "chart.js": "^2.7.2",
-    "chartjs-plugin-datalabels": "^0.4.0",
     "config": "^2.0.1",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
