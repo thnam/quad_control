@@ -47,6 +47,11 @@ socket.on("cv", (data) => {
   window.chartCV.update();
 })
 
+TESTER = document.getElementById('bcLastCV');
+Plotly.plot( TESTER, [{
+  x: [1, 2, 3, 4, 5],
+  y: [1, 2, 4, 8, 16] }], {
+    margin: { t: 0 } } );
 // no fill plz
 Chart.defaults.global.elements.line.fill = false;
 window.cvChartInited = false;

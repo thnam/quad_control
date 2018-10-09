@@ -6,8 +6,8 @@ global.appRoot = require('app-root-path').toString();
 const cvLogger = require(global.appRoot + '/loggers/cvLogger.js');
 const statusLogger = require(global.appRoot + '/loggers/statusLogger.js');
 
-const cvDataCmd = appRoot + '/../hwInterface/ljCVData.py';
-// const cvDataCmd = appRoot + '/../hwInterface/fakeCVData.py';
+// const cvDataCmd = appRoot + '/../hwInterface/ljCVData.py';
+const cvDataCmd = appRoot + '/../hwInterface/fakeCVData.py';
 const statusDataCmd = appRoot + '/../hwInterface/fakePulserStatus.py';
 
 setInterval( () => {
