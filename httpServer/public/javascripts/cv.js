@@ -62,7 +62,7 @@ function initLastCVChart() {
     labels: ["PVOS", "NVOS", "PVSS", "NVSS", "PVFS", "NVFS"],
     datasets: [{
       label: 'kV',
-      data: [20, 20, 20, 19, 14, 13.5],
+      data: [0., 0., 0., 0., 0., 0.],
       backgroundColor: [
         'rgba(255, 99, 132, 0.2)',
         'rgba(54, 162, 235, 0.2)',
@@ -118,7 +118,7 @@ function initLastCVChart() {
             weight: 'bold'
           },
           formatter: function(value, context) {
-            return Math.round(value * 100) / 100;
+            return Math.round(value * 1000) / 1000;
             // return context.dataIndex + ': ' + Math.round(value*100) + '%';
           }
         }
@@ -157,7 +157,7 @@ function initCVChart() {
     type: 'line',
     data: cvChartData,
     options: {
-      elements: { point: { radius: 0 } },
+      // elements: { point: { radius: 0 } },
       responsive: true,
       tooltips: {
         mode: 'index',

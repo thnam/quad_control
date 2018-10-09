@@ -6,11 +6,12 @@ global.appRoot = require('app-root-path').toString();
 const cvLogger = require(global.appRoot + '/loggers/cvLogger.js');
 const statusLogger = require(global.appRoot + '/loggers/statusLogger.js');
 
-const fakeCvDataCmd = appRoot + '/../hwInterface/fakeCVData.py';
-const fakeStatusDataCmd = appRoot + '/../hwInterface/fakePulserStatus.py';
+const cvDataCmd = appRoot + '/../hwInterface/ljCVData.py';
+// const cvDataCmd = appRoot + '/../hwInterface/fakeCVData.py';
+const statusDataCmd = appRoot + '/../hwInterface/fakePulserStatus.py';
 
 setInterval( () => {
-    const command = exec(fakeCvDataCmd);
+    const command = exec(cvDataCmd);
     var cv = {};
     command.stdout.on('data', function(data){
       cv = JSON.parse(data);
@@ -31,7 +32,7 @@ setInterval( () => {
 );
 
 setInterval( () => {
-    const command = exec(fakeStatusDataCmd);
+    const command = exec(statusDataCmd);
     var pulserState = {};
     command.stdout.on('data', function(data){
       pulserState = JSON.parse(data);
