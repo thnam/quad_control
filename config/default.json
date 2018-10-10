@@ -17,7 +17,7 @@
     "pulserStatePollingPerios": 10000,
     "periodUnit": "ms; just a comment, changing this would have no effect",
     "onlineDataPoints": 300,
-    "onlineStatusDataPoints": 10,
+    "onlineStatusDataPoints": 300,
     "maxLogSize": 524,
     "maxNumFile": 10
   },

@@ -26,8 +26,17 @@ io.on('connection', function (socket) {
     } catch (e) {
       next(e);
     }
-
   }, 3333);
+
+  setInterval(async ()=>{
+    try {
+      const pulserStatus = await dbTool.getPulserStatus();
+      // console.log(cv);
+      socket.emit("pulserStatus", {pulserStatus: pulserStatus});
+    } catch (e) {
+      next(e);
+    }
+  }, 5000);
 });
 
 module.exports = io;
