@@ -1,0 +1,24 @@
+p Pulsing control
+.row.mb-2.mt-2
+  .col-3
+    button#btnStop.btn.btn-fill.btn-danger Stop
+  .col-5
+    .row.mb-3
+      .col-6
+        button#btnInternal.btn.btn-block.btn-info Internal
+      .col-6
+        select#internalMode.combobox(name='internalMode')
+          option(value="Single") Single
+          option(value="1 Hz") 1 Hz
+          option(value="5 Hz") 5 Hz
+          option(value="10 Hz") 10 Hz
+          option(value="Burst", selected="") Burst
+
+    .row
+      .col-6
+        button#btnExternal.btn.btn-block.btn-success External
+
+  .col-4
+    .text-center.pulseModeBox
+      | State:
+      p#labelPulseMode Unknown
