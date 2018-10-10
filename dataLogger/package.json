@@ -14,6 +14,7 @@
     "events": "^3.0.0",
     "fs": "0.0.1-security",
     "log-timestamp": "^0.1.2",
+    "moment": "^2.22.2",
     "path": "^0.12.7",
     "winston": "^3.0.0",
     "winston-daily-rotate-file": "^3.3.1",

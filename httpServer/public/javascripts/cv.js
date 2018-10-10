@@ -5,7 +5,8 @@ socket.on("cv", (data) => {
   // update the voltages and currents first
   const lastCV = JSON.parse(values[0].message);
 
-  window.lastCVChartData.datasets[0].data = [
+  // window.lastCVChartData.datasets[0].data = [
+  var lastCvValue = [
     parseFloat(lastCV.os.pv),
     Math.abs(parseFloat(lastCV.os.nv)), 
     parseFloat(lastCV.ss.pv),
@@ -13,220 +14,130 @@ socket.on("cv", (data) => {
     parseFloat(lastCV.fs.pv),
     Math.abs(parseFloat(lastCV.fs.nv))];
 
-  window.chartLastCV.update();
+  window.lastCvBarChartData[0].y = lastCvValue;
+  window.lastCvBarChartData[0].text = lastCvValue;
+
+  Plotly.redraw(document.getElementById('bcLastCV'));
+
   // then cv table
   //
+  let len = values.length;
+  var timestamp = [];
+  var cTrace = [[], [], [], [], [], []];
 
-  if (!window.cvChartInited) {
-    window.cvChartInited = true;
-    let len = values.length;
-    for (var i = len -1; i == 0; i--) {
-      let cv = JSON.parse(values[i].message);
-      let tstamp = values[i].timestamp;
+  for (var i = len - 1; i >= 0; i--) {
+    var cv = JSON.parse(values[i].message);
 
-      window.cvChartData.labels.push(tstamp);
-      window.cvChartData.datasets[0].data.push(parseFloat(cv.os.pv));
-      window.cvChartData.datasets[1].data.push(Math.abs(parseFloat(cv.os.nv)));
-      window.cvChartData.datasets[2].data.push(parseFloat(cv.ss.pv));
-      window.cvChartData.datasets[3].data.push(Math.abs(parseFloat(cv.ss.nv)));
-      window.cvChartData.datasets[4].data.push(parseFloat(cv.fs.pv));
-      window.cvChartData.datasets[5].data.push(Math.abs(parseFloat(cv.fs.nv)));
-    }
-  }
-  else
-  {
-      window.cvChartData.labels.push(values[0].timestamp);
-      window.cvChartData.datasets[0].data.push(parseFloat(lastCV.os.pv));
-      window.cvChartData.datasets[1].data.push(Math.abs(parseFloat(lastCV.os.nv)));
-      window.cvChartData.datasets[2].data.push(parseFloat(lastCV.ss.pv));
-      window.cvChartData.datasets[3].data.push(Math.abs(parseFloat(lastCV.ss.nv)));
-      window.cvChartData.datasets[4].data.push(parseFloat(lastCV.fs.pv));
-      window.cvChartData.datasets[5].data.push(Math.abs(parseFloat(lastCV.fs.nv)));
-  }
+    timestamp.push(values[i].timestamp);
+    cTrace[0].push(parseFloat(cv.os.pv));
+    cTrace[1].push(Math.abs(parseFloat(cv.os.nv)));
+    cTrace[2].push(parseFloat(cv.ss.pv));
+    cTrace[3].push(Math.abs(parseFloat(cv.ss.nv)));
+    cTrace[4].push(parseFloat(cv.fs.pv));
+    cTrace[5].push(Math.abs(parseFloat(cv.fs.nv)));
+  };
 
-  window.chartCV.update();
+  timestamp.forEach((element)=>{
+    let newElement = moment().set(element).format("YYYY-MM-DD HH:mm:ss");
+    element = newElement;
+  });
+  // console.log(formatter.format(timestamp[0]));
+
+  for (var i = 0; i < 6; i++) {
+    window.cvTrendData[i].x = timestamp;
+    window.cvTrendData[i].y = cTrace[i];
+  };
+
+  Plotly.redraw(document.getElementById("lcCVTrend"));
 })
 
-TESTER = document.getElementById('bcLastCV');
-Plotly.plot( TESTER, [{
-  x: [1, 2, 3, 4, 5],
-  y: [1, 2, 4, 8, 16] }], {
-    margin: { t: 0 } } );
-// no fill plz
-Chart.defaults.global.elements.line.fill = false;
-window.cvChartInited = false;
-
 function initCharts() {
-  initCVChart();
-  initLastCVChart();
+  initLastCVBarChart();
+  initCVTrendLineChart();
 };
 
-function initLastCVChart() {
-  var ctxLastCV = document.getElementById("ctxLastCV");
-  window.lastCVChartData =  {
-    labels: ["PVOS", "NVOS", "PVSS", "NVSS", "PVFS", "NVFS"],
-    datasets: [{
-      label: 'kV',
-      data: [0., 0., 0., 0., 0., 0.],
-      backgroundColor: [
-        'rgba(255, 99, 132, 0.2)',
-        'rgba(54, 162, 235, 0.2)',
-        'rgba(255, 206, 86, 0.2)',
-        'rgba(75, 192, 192, 0.2)',
-        'rgba(153, 102, 255, 0.2)',
-        'rgba(255, 159, 64, 0.2)'
-      ],
-      borderColor: [
-        'rgba(255,99,132,1)',
-        'rgba(54, 162, 235, 1)',
-        'rgba(255, 206, 86, 1)',
-        'rgba(75, 192, 192, 1)',
-        'rgba(153, 102, 255, 1)',
-        'rgba(255, 159, 64, 1)'
-      ],
-      borderWidth: 1
-    }]
+plotColor = [
+  '#ff7f0e',  // safety orange
+  '#1f77b4',  // muted blue
+  '#d62728',  // brick red
+  '#2ca02c',  // cooked asparagus green
+  '#e377c2',  // raspberry yogurt pink
+  '#17becf',   // blue-teal
+  '#8c564b',  // chestnut brown
+  '#9467bd',  // muted purple
+  '#7f7f7f',  // middle gray
+  '#bcbd22',  // curry yellow-green
+];
+
+function initLastCVBarChart() {
+  var layout = {
+    title: 'Last voltage readout',
+    // font:{ family: 'Raleway, sans-serif' },
+    showlegend: false,
+    // xaxis: { tickangle: -45 },
+    // yaxis: { zeroline: true, gridwidth: 2 },
+    // bargap :0.1,
+    paper_bgcolor: 'rgba(0, 0, 0, 0)',
+    plot_bgcolor: 'rgba(0, 0, 0, 0)'
   };
 
-  window.chartLastCV = new Chart(ctxLastCV, {
+  var lastCvValue = [0, 0, 0, 0, 0, 0];
+  window.lastCvBarChartData = [{
+    x: ["PVOS", "NVOS", "PVSS", "NVSS", "PVFS", "NVFS"],
+    y: lastCvValue,
+    marker: { color: plotColor },
     type: 'bar',
-    data: lastCVChartData,
-    options: {
-      responsive: true,
-      legend: {
-        position: 'bottom',
-        display: false,
-      },
-      title: {
-        display: true,
-        text: 'Last voltages and currents readout'
-      },
-      scales: {
-        yAxes: [{
-          scaleLabel: {
-            display: true,
-            fontSize: 14,
-            labelString: 'Voltage [kV]'
-          },
-          ticks: {
-            beginAtZero:true,
-            suggestedMax: 30
-          }
-        }]
-      },
+    textposition: 'auto',
+    hoverinfo: 'none',
+    text: lastCvValue,
+    // text: [
+    // "One Step Positive Voltage", "One Step Negative Voltage",
+    // "Second Step Positive Voltage", "Second Step Negative Voltage",
+    // "First Step Positive Voltage", "First Step Negative Voltage",]
+  }];
 
-      plugins: {
-        datalabels: {
-          color: 'black',
-          display: true,
-          font: {
-            weight: 'bold'
-          },
-          formatter: function(value, context) {
-            return Math.round(value * 1000) / 1000;
-            // return context.dataIndex + ': ' + Math.round(value*100) + '%';
-          }
-        }
-      },
-
-    }
-  });
+  Plotly.newPlot(document.getElementById('bcLastCV'),
+    window.lastCvBarChartData, layout, {responsive: true});
 }
 
-
-
-function initCVChart() {
-  var ctxCV = document.getElementById("ctxCV");
-
-  window.chartColors = {
-    orange: 'rgb(245, 176, 65)',
-    green: 'rgb(46, 204, 113)',
-    ligtblue: 'rgb(26, 188, 156)',
-    blue: 'rgb(41, 128, 185)',
-    purple: 'rgb(155, 89, 182)',
-    red: 'rgb(231, 76, 60)',
-  };
-  window.cvChartData =  {
-    labels: [],
-    datasets: [
-      {label: "PVOS", data: [], id: "v-axis", borderColor: window.chartColors.red},
-      {label: "NVOS", data: [], id: "v-axis", borderColor: window.chartColors.green},
-      {label: "PVSS", data: [], id: "v-axis", borderColor: window.chartColors.purple},
-      {label: "NVSS", data: [], id: "v-axis", borderColor: window.chartColors.blue},
-      {label: "PVFS", data: [], id: "v-axis", borderColor: window.chartColors.orange},
-      {label: "NVFS", data: [], id: "v-axis", borderColor: window.chartColors.lightblue},
-    ],
+function initCVTrendLineChart() {
+  var layout = {
+    title: 'Voltage and current trend plot',
+    // font:{ family: 'Raleway, sans-serif' },
+    showlegend: false,
+    // xaxis: { tickangle: -45 },
+    // yaxis: { zeroline: true, gridwidth: 2 },
+    yaxis: {title: 'Voltage [kV]'},
+    yaxis2: {
+      title: 'Current [mA]',
+      titlefont: {color: 'rgb(148, 103, 189)'},
+      tickfont: {color: 'rgb(148, 103, 189)'},
+      overlaying: 'y',
+      side: 'right'
+    },
+    // bargap :0.1,
+    paper_bgcolor: 'rgba(0, 0, 0, 0)',
+    plot_bgcolor: 'rgba(0, 0, 0, 0)'
   };
 
-  window.chartCV = new Chart(ctxCV, {
-    type: 'line',
-    data: cvChartData,
-    options: {
-      // elements: { point: { radius: 0 } },
-      responsive: true,
-      tooltips: {
-        mode: 'index',
-        intersect: false,
-      },
-      hover: {
-        mode: 'nearest',
-        intersect: true
-      },
-      legend: {
-        position: 'bottom',
-        display: true,
-      },
-      title: {
-        display: true,
-        text: 'Voltages and currents trend'
-      },
-      scales: {
-        xAxes: [{
-          type: 'time',
-          time: {
-            displayFormats: {
-              second: 'h:mm:ss'
-            }
-          }
-        }],
-        yAxes: [
-          {
-            id: "v-axis",
-            position: "left",
-            scaleLabel: {
-              display: true,
-              fontSize: 14,
-              labelString: 'Voltage [kV]'
-            },
-            ticks: {
-              beginAtZero:true,
-              suggestedMax: 30
-            }
-          },
-          {
-            id: "c-axis",
-            gridLines: { display:false },
-            position: "right",
-            scaleLabel: {
-              display: true,
-              fontSize: 14,
-              labelString: 'Current [mA]'
-            },
-            ticks: {
-              beginAtZero:true,
-              suggestedMax: 2,
-            }
-          },
+  var vTrace0 = {x: [], y: [], mode: 'lines+markers', marker: {color: plotColor[0]}, name: "PVOS", line: {dash: "solid"}};
+  var vTrace1 = {x: [], y: [], mode: 'lines+markers', marker: {color: plotColor[1]}, name: "NVOS", line: {dash: "solid"}};
+  var vTrace2 = {x: [], y: [], mode: 'lines+markers', marker: {color: plotColor[2]}, name: "PVSS", line: {dash: "solid"}};
+  var vTrace3 = {x: [], y: [], mode: 'lines+markers', marker: {color: plotColor[3]}, name: "NVSS", line: {dash: "solid"}};
+  var vTrace4 = {x: [], y: [], mode: 'lines+markers', marker: {color: plotColor[4]}, name: "PVFS", line: {dash: "solid"}};
+  var vTrace5 = {x: [], y: [], mode: 'lines+markers', marker: {color: plotColor[5]}, name: "NVFS", line: {dash: "solid"}};
+  var cTrace0 = {x: [], y: [], mode: 'lines+markers', marker: {color: plotColor[0]}, name: "PVOS", line: {dash: "dot"}, yaxis: 'y2'};
+  var cTrace1 = {x: [], y: [], mode: 'lines+markers', marker: {color: plotColor[1]}, name: "NVOS", line: {dash: "dot"}, yaxis: 'y2'};
+  var cTrace2 = {x: [], y: [], mode: 'lines+markers', marker: {color: plotColor[2]}, name: "PVSS", line: {dash: "dot"}, yaxis: 'y2'};
+  var cTrace3 = {x: [], y: [], mode: 'lines+markers', marker: {color: plotColor[3]}, name: "NVSS", line: {dash: "dot"}, yaxis: 'y2'};
+  var cTrace4 = {x: [], y: [], mode: 'lines+markers', marker: {color: plotColor[4]}, name: "PVFS", line: {dash: "dot"}, yaxis: 'y2'};
+  var cTrace5 = {x: [], y: [], mode: 'lines+markers', marker: {color: plotColor[5]}, name: "NVFS", line: {dash: "dot"}, yaxis: 'y2'};
+  window.cvTrendData = [
+    vTrace0, vTrace1, vTrace2, vTrace3, vTrace4, vTrace5,
+    cTrace0, cTrace1, cTrace2, cTrace3, cTrace4, cTrace5
+  ];
 
-        ]
-      },
-
-      plugins: {
-        datalabels: {
-          display: false,
-        }
-      },
-    }
-  });
-
+  Plotly.newPlot(document.getElementById('lcCVTrend'),
+    window.cvTrendData, layout, {responsive: true});
 }
+

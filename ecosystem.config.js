@@ -11,8 +11,8 @@ module.exports = {
     watch: ["./httpServer/bin", "./httpServer/app.js",
       "./httpServer/routes", "./httpServer/utils", "./httpServer/views"
     ],
-    env: { NODE_ENV: "production" }
-    // env: { NODE_ENV: "development" }
+    // env: { NODE_ENV: "production" }
+    env: { NODE_ENV: "development" }
   }
   ]
 };
