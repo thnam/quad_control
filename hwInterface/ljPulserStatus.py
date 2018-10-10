@@ -39,9 +39,9 @@ if __name__ == "__main__":
         for idx in range(len(ps)):
             out += '"%s" : {"fault": %.1f, "interlock": %.1f, "enabled": %.1f},' % (
                 ps[idx],
-                vals[idx*3],
-                int(vals[3*idx + 1] / 3.5),
-                vals[3*idx + 2])
+                int(vals[idx*3] / 3.5), # fault
+                int(vals[3*idx + 1] / 3.5), # interlock, convert to logic level
+                vals[3*idx + 2]) # enabled, already in logic level
         out = out[:-1]
         out += '}'
 
