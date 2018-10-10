@@ -51,7 +51,7 @@ socket.on("cv", (data) => {
   Plotly.redraw(document.getElementById("lcCVTrend"));
 })
 
-function initCharts() {
+function initCVCharts() {
   initLastCVBarChart();
   initCVTrendLineChart();
 };
@@ -126,6 +126,7 @@ function initCVTrendLineChart() {
   var vTrace3 = {x: [], y: [], mode: 'lines+markers', marker: {color: plotColor[3]}, name: "NVSS", line: {dash: "solid"}};
   var vTrace4 = {x: [], y: [], mode: 'lines+markers', marker: {color: plotColor[4]}, name: "PVFS", line: {dash: "solid"}};
   var vTrace5 = {x: [], y: [], mode: 'lines+markers', marker: {color: plotColor[5]}, name: "NVFS", line: {dash: "solid"}};
+
   var cTrace0 = {x: [], y: [], mode: 'lines+markers', marker: {color: plotColor[0]}, name: "PVOS", line: {dash: "dot"}, yaxis: 'y2'};
   var cTrace1 = {x: [], y: [], mode: 'lines+markers', marker: {color: plotColor[1]}, name: "NVOS", line: {dash: "dot"}, yaxis: 'y2'};
   var cTrace2 = {x: [], y: [], mode: 'lines+markers', marker: {color: plotColor[2]}, name: "PVSS", line: {dash: "dot"}, yaxis: 'y2'};
