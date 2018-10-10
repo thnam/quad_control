@@ -49,10 +49,10 @@ function initPSTrendLineChart() {
     plot_bgcolor: 'rgba(0, 0, 0, 0)'
   };
 
-  var vTrace0 = {x: [], y: [], mode: 'lines+markers', marker: {color: plotColor[0]}, name: "POS", line: {dash: "solid"}};
-  var vTrace1 = {x: [], y: [], mode: 'lines+markers', marker: {color: plotColor[1]}, name: "NOS", line: {dash: "solid"}};
-  var vTrace2 = {x: [], y: [], mode: 'lines+markers', marker: {color: plotColor[2]}, name: "PTS", line: {dash: "solid"}};
-  var vTrace3 = {x: [], y: [], mode: 'lines+markers', marker: {color: plotColor[3]}, name: "NTS", line: {dash: "solid"}};
+  var vTrace0 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[0]}, name: "POS", line: {dash: "solid"}};
+  var vTrace1 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[1]}, name: "NOS", line: {dash: "solid"}};
+  var vTrace2 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[2]}, name: "PTS", line: {dash: "solid"}};
+  var vTrace3 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[3]}, name: "NTS", line: {dash: "solid"}};
   window.psTrendData = [
     vTrace0, vTrace1, vTrace2, vTrace3
   ];
