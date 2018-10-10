@@ -70,5 +70,7 @@ if __name__ == "__main__":
                 ps[idx], vals[idx*4], vals[4*idx + 1], vals[4*idx + 2], vals[4*idx + 3])
         out += ' "spark": %.3f}' % vals[12]
         print(out)
+        exit(0)
     else:
         print("ERROR")
+        exit(-1)
