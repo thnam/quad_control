@@ -42,6 +42,9 @@ if __name__ == "__main__":
                 vals[idx*3],
                 int(vals[3*idx + 1] / 3.5),
                 vals[3*idx + 2])
+        out = out[:-1]
+        out += '}'
+
         print(out)
         exit(0)
 
