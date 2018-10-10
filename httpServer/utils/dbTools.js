@@ -17,7 +17,14 @@ function getCV() {
   return result;
 }
 
+function getPulserStatus() {
+  const collection = db.get().db("quad").collection('pulserStatusOnline');
+  const result = collection.find().sort({$natural: -1}).toArray();
+  return result;
+}
+
 module.exports = {
   getPulseMode: getPulseMode,
   getCV: getCV,
+  getPulserStatus: getPulserStatus,
 }
