@@ -1,8 +1,17 @@
 // First tab
 #mainTab.tab-pane.fade.in.show.active.container.mainTabBG(role='tabpanel')
+  .row.border.border-secondary
+    .col-6
+      include components/pulsingControl
+      hr
+      include components/sparkControl
+    .col-6
+      include components/sparkTable
+  .row.border.border-warning
+    .col-6
+      #container(style='width:100%;')
+        #bcLastCV(style='width:100%;')
+    .col-6
+      #container(style='width: 100%;')
+        #lcCVTrend(style='width:100%;')
 
-  .row
-    .col-6
-      include components/pulsingControl.pug
-    .col-6
-      include components/cvBox.pug

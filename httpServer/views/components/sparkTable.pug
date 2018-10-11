@@ -1,0 +1,21 @@
+p Spark Pattern
+table.table.table-striped.table-bordered#sparkTable
+  tbody
+    each val in [1, 2, 3, 4]
+      //- tr(style='height:20px;')
+      tr
+        td= 'Q' + val + 'S'
+        each val in ['T', 'B', 'O', 'I']
+          td= val + ': 0'
+
+        td= 'Q' + val + 'L'
+        each val in ['T', 'B', 'O', 'I']
+          td= val + ': 0'
+
+.row.mb-1
+  .col-4
+    button#btnSparkCountReset.btn.btn-block.btn-warning Reset Count
+  .col-4
+    button#btnSparkAlarmReset.btn.btn-block.btn-success Reset Alarm
+  .col-4
+    button#btnClearSparkDiplay.btn.btn-block.btn-warning Clear Display

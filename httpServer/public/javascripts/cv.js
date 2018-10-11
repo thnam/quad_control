@@ -14,7 +14,7 @@ socket.on("cv", (data) => {
     parseFloat(lastCV.fs.pv),
     Math.abs(parseFloat(lastCV.fs.nv))];
 
-  window.lastCvBarChartData[0].y = lastCvValue;
+  window.lastCvBarChartData[0].x = lastCvValue;
   window.lastCvBarChartData[0].text = lastCvValue;
 
   Plotly.redraw(document.getElementById('bcLastCV'));
@@ -82,13 +82,14 @@ function initLastCVBarChart() {
 
   var lastCvValue = [0, 0, 0, 0, 0, 0];
   window.lastCvBarChartData = [{
-    x: ["PVOS", "NVOS", "PVSS", "NVSS", "PVFS", "NVFS"],
-    y: lastCvValue,
+    x: lastCvValue,
+    y: ["PVOS", "NVOS", "PVSS", "NVSS", "PVFS", "NVFS"],
     marker: { color: plotColor },
     type: 'bar',
     textposition: 'auto',
     hoverinfo: 'none',
     text: lastCvValue,
+    orientation: 'h',
     // text: [
     // "One Step Positive Voltage", "One Step Negative Voltage",
     // "Second Step Positive Voltage", "Second Step Negative Voltage",
