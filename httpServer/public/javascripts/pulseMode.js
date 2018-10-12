@@ -29,6 +29,18 @@ async function setPulseMode(newMode) {
   });
 };
 
+async function getPulseMode() {
+  const ret = await $.ajax({
+    type: 'GET',
+    url: baseUrl + '/pulsemode',
+    success: function(data) { },
+    error: (xhr)=>{
+      alert("Error", xhr);
+    },
+  })
+  return ret.message;
+};
+
 function displayPulseMode(newMode) {
   $("#labelPulseMode").text(newMode);
   if (newMode == "External") 
@@ -40,16 +52,4 @@ function displayPulseMode(newMode) {
   else if (["1 Hz", "5 Hz", "10 Hz", "Burst", "Single"].includes(newMode))
     $("#labelPulseMode").css({ 'color': $(".btn-info").css("background-color"),
       'font-size': '120%' });
-};
-
-async function getPulseMode() {
-  const ret = await $.ajax({
-    type: 'GET',
-    url: baseUrl + '/pulsemode',
-    success: function(data) { },
-    error: (xhr)=>{
-      alert("Error", xhr);
-    },
-  })
-  return ret.message;
 };
