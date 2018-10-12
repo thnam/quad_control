@@ -1,20 +1,48 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-from random import uniform
+from random import gauss
+import json
+from pprint import pprint
+import sys
 
-pulsers = ["os", "fs", "ss"]
 #  cv = {
   #  "os": {"pv": 1., "nv": 1., "pc": 0.1, "nc": 0.1},
   #  "fs": {"pv": 1., "nv": 1., "pc": 0.1, "nc": 0.1},
   #  "ss": {"pv": 1., "nv": 1., "pc": 0.1, "nc": 0.1},
 #  };
 
+spFile = "./hwInterface/setpoint.json"
+with open(spFile) as f:
+    setpoint = json.load(f)
+
+# get setpoint from arguments if exist
+if len(sys.argv) > 1:
+    if len(sys.argv) == 4:
+        setpoint["v"]["fs"] = float(sys.argv[1])
+        setpoint["v"]["ss"] = float(sys.argv[2])
+        setpoint["v"]["os"] = float(sys.argv[3])
+    elif len(sys.argv) == 3:
+        setpoint["v"]["fs"] = float(sys.argv[1])
+        setpoint["v"]["ss"] = float(sys.argv[2])
+        setpoint["v"]["os"] = float(sys.argv[2])
+    else:
+        exit(-1)
+
+    with open(spFile, 'w') as outfile:
+        json.dump(setpoint, outfile)
+
+
+pulsers = ["os", "fs", "ss"]
 ostr = '{'
 for ps in pulsers:
   ostr += '"%s" : {"pv": %.3f, "nv": %.3f, "pc": %.3f, "nc": %.3f},' % (
-    ps, uniform(10, 15), uniform(-14, -11), uniform(.1, .2), uniform(-.2, -.1))
+      ps,
+      gauss(setpoint["v"][ps], setpoint["v"]["sigma"]),
+      gauss(-1 * setpoint["v"][ps], setpoint["v"]["sigma"]),
+      gauss(setpoint["c"][ps], setpoint["v"]["sigma"]),
+      gauss(-1 * setpoint["c"][ps], setpoint["v"]["sigma"]))
 
-ostr += ' "spark": %s}' % float('%.3g' % uniform(-.4, -.2))
+ostr += ' "spark": %s}' % float('%.3g' % gauss(-.4, .2))
 
 print(ostr)
