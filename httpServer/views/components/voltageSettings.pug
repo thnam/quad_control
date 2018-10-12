@@ -1,58 +1,62 @@
-.col-4.bg-light.border.border-warning
-  .row
-    .col-4
-      input#vModeManual(value='vManual', name='vMode', type='radio')
-      label(for='vModeManual') Manual
-    .col-8
-      input#cbForceAsym(onclick='checkFlattopLock()', value='', name='', type='checkbox')
-      label(for='cbForceAsym') Force Asym. Voltages
-  .row
-    .form-row
-      label.col-7(for='manualVFS')  First Step
-      input#manualVFS.col-4(onchange='reflectVManual()', value='', name='', step='0.1', min='0.0', max='24.0', type='number')
-      label.col-7(for='manualVSS')  Second Step
-      input#manualVSS.col-4(value='', name='', step='0.1', onchange='lockFlattop()', min='0.0', max='27.0', type='number')
-      label.col-7(for='manualVOS')  One Step
-      input#manualVOS.col-4(value='', name='', step='0.1', onchange='lockFlattop()', min='0.0', max='27.0', type='number')
+.row
+  .col-6
+    .row
+        input#vModeManual(value='vManual', name='vMode', type='radio')
+        label(for='vModeManual') Manual
+    .row
+        input#cbForceAsym(onclick='checkFlattopLock()', value='', name='', type='checkbox')
+        label(for='cbForceAsym') Force Asym. Voltages
+    .row
+      .form-row
+        label.col-7(for='manualVFS')  First Step
+        input#manualVFS.col-4(onchange='reflectVManual()', value='', name='', step='0.1', min='0.0', max='24.0', type='number')
+        label.col-7(for='manualVSS')  Second Step
+        input#manualVSS.col-4(value='', name='', step='0.1', onchange='lockFlattop()', min='0.0', max='27.0', type='number')
+        label.col-7(for='manualVOS')  One Step
+        input#manualVOS.col-4(value='', name='', step='0.1', onchange='lockFlattop()', min='0.0', max='27.0', type='number')
+  
+  .col-6
+    .row
+      input#vModePreset(value='vPreset', name='vMode', checked='', type='radio')
+      label(for='vModePreset') Preset
+    .row
+      .form-row
+        label.col-6(for='vPreset') Set point
+        select#vSetpoint.form-control.col-5.combobox(name='vSetpoint', onchange='reflectVPreset()')
+          option(value='0.0, 0.0') 0.0, 0.0
+          option(value='0.8, 1.6') 0.8, 1.6 
+          option(value='4.0, 5.0') 4.0, 5.0 
+          option(value='4.0, 7.0') 4.0, 7.0 
+          option(value='7.0, 10.0') 7.0, 10.0 
+          option(value='10.0, 13.0') 10.0, 13.0
+          option(value='10.7, 15.0') 10.7, 15.0
+          option(value='12.0, 15.0') 12.0, 15.0
+          option(value='12.6, 17.6') 12.6, 17.6
+          option(value='14.4, 20.2') 14.4, 20.2
+          option(value='16.0, 23.0') 16.0, 23.0
+        label.col-6(for='vStep') Step
+        input#vStep.col-5(name='vStep', value='1.0', step='0.1', min='0.01', max='1.1', type='number')
+        label.col-6(for='vInterval') Interval [s]
+        input#vInterval.col-5(min='10', step='5', name='vInterval', value='30', type='number')
 
-.col-3.bg-light.border.border-warning
-  .row
-    input#vModePreset(value='vPreset', name='vMode', checked='', type='radio')
-    label(for='vModePreset') Preset
-  .row
-    .form-row
-      label.col-6(for='vPreset') Set point
-      select#vSetpoint.form-control.col-5.combobox(name='vSetpoint', onchange='reflectVPreset()')
-        option(value='0.0, 0.0') 0.0, 0.0
-        option(value='0.8, 1.6') 0.8, 1.6 
-        option(value='4.0, 5.0') 4.0, 5.0 
-        option(value='4.0, 7.0') 4.0, 7.0 
-        option(value='7.0, 10.0') 7.0, 10.0 
-        option(value='10.0, 13.0') 10.0, 13.0
-        option(value='10.7, 15.0') 10.7, 15.0
-        option(value='12.0, 15.0') 12.0, 15.0
-        option(value='12.6, 17.6') 12.6, 17.6
-        option(value='14.4, 20.2') 14.4, 20.2
-        option(value='16.0, 23.0') 16.0, 23.0
-      label.col-6(for='vStep') Step
-      input#vStep.col-5(name='vStep', value='1.0', step='0.1', min='0.01', max='1.1', type='number')
-      label.col-6(for='vInterval') Interval [s]
-      input#vInterval.col-5(min='10', step='5', name='vInterval', value='30', type='number')
-.col-5
-  .row.mb-2.mt-1
-    .col-4
-      button#setVoltages.btn.btn-block.bg-success(type='submit') Set Voltages
-    .col-4
+.row.mt-2.mb-2
+  .col-4
+    button#setVoltages.btn.btn-block.bg-success(type='submit') Set Voltages
+  .col-4
       button#abortRamping.btn.btn-block.bg-danger(type='submit') Abort Ramping
-    .col-4
+  .col-4
       button#zeroVoltages.btn.btn-block.bg-warning(type='submit') Zero Voltages
-  .row
-    .col-4
-      button#p1kV.btn.btn-block.bg-info(type='submit') + 1 kV
-      button#m1kV.btn.btn-block.bg-info(type='submit') - 1 kV
-    .col-4
-      button#m2kV.btn.btn-block.bg-info(type='submit') - 2 kV
-      button#m3kV.btn.btn-block.bg-info(type='submit') - 3 kV
-    .col-4
-      button#m4kV.btn.btn-block.bg-info(type='submit') - 4 kV
-      button#m10kV.btn.btn-block.bg-info(type='submit') - 10 kV
+
+.row.mt-2.mb-2
+  .col-2
+    button#p1kV.btn.btn-block.bg-info(type='submit') + 1 kV
+  .col-2
+    button#m1kV.btn.btn-block.bg-info(type='submit') - 1 kV
+  .col-2
+    button#m2kV.btn.btn-block.bg-info(type='submit') - 2 kV
+  .col-2
+    button#m3kV.btn.btn-block.bg-info(type='submit') - 3 kV
+  .col-2
+    button#m4kV.btn.btn-block.bg-info(type='submit') - 4 kV
+  .col-2
+    button#m10kV.btn.btn-block.bg-info(type='submit') - 10 kV

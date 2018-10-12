@@ -3,17 +3,18 @@
   .row.border.border-secondary
     .col-6
       include components/pulsingControl
-      hr
+    .col-6
+      include components/voltageSettings
+  .row.border.border-warning
+    .col-6
+      #container(style='width:100%;height:350px;')
+        #bcLastCV(style='width:100%;height:100%;')
+    .col-6
+      #container(style='width: 100%;height:350px;')
+        #lcCVTrend(style='width:100%;height:100%;')
+  .row.border.border-normal
+    .col-6
       include components/sparkControl
     .col-6
       include components/sparkTable
-  .row.border.border-normal
-    include components/voltageSettings
-  .row.border.border-warning
-    .col-6
-      #container(style='width:100%;')
-        #bcLastCV(style='width:100%;')
-    .col-6
-      #container(style='width: 100%;')
-        #lcCVTrend(style='width:100%;')
 
