@@ -1,9 +1,9 @@
 $(() =>{
   // pulse mode buttons
-  $("#btnExternal").click(()=>{ setPulseMode("External");});
-  $("#btnStop").click(()=>{ setPulseMode("Stop");});
+  $("#btnExternal").click(()=>{ changePulseMode("External");});
+  $("#btnStop").click(()=>{ changePulseMode("Stop");});
   $("#btnInternal").click(()=>{
-    setPulseMode($("#internalMode").val()) });
+    changePulseMode($("#internalMode").val()) });
 
   getPulseMode().then((currentMode)=>{
     displayPulseMode(currentMode);
