@@ -33,6 +33,7 @@ plotColor = [
   '#bcbd22',  // curry yellow-green
 ];
 
+const baseUrl = "http://" + document.location.hostname + ":" + document.location.port
 var socket = io.connect(baseUrl);
 socket.on('greeting', function(data) {
   console.log(data.message);

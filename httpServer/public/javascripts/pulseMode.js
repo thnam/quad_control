@@ -1,5 +1,3 @@
-const baseUrl = "http://" + document.location.hostname + ":" + document.location.port
-
 function setPulseMode(newMode) {
   // get the current pulse mode first
   $.ajax({

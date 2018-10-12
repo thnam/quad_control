@@ -1,10 +1,29 @@
+function setVoltages() {
+  // if (getVoltageSettings()) {
+  getVoltageSettings();
+    $.ajax({
+      type: "POST",
+      url: baseUrl + "/cv",
+      data: window.vSet,
+      success: (res) => {
+        console.log(res + ", voltage set to " + vSet);
+      },
+      error: (err, stat) =>{
+        alert("Could not set voltage, error message: " + err.responseText);
+      }
+    });
+  // }
+  // else {
+    // alert("Could not read voltage settings");
+  // }
+};
 
 function zeroVoltages() {
   vSet = {"fs": 0., "ss": 0., "os": 0.};
   $("#vSetpoint").val('0.0, 0.0').trigger("change");
   vSet["ramp"] = false;
   setVoltages();
-}
+};
 
 async function changeVoltages(deltaV){
   if (Number.isNaN(vCurrent["fs"]) ||
