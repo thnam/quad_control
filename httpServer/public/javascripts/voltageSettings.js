@@ -19,9 +19,8 @@ function setVoltages() {
 };
 
 function zeroVoltages() {
-  vSet = {"fs": 0., "ss": 0., "os": 0.};
+  window.vSet = {"fs": 0., "ss": 0., "os": 0.};
   $("#vSetpoint").val('0.0, 0.0').trigger("change");
-  vSet["ramp"] = false;
   setVoltages();
 };
 

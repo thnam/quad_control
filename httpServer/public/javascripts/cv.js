@@ -1,18 +1,19 @@
 var socket = io.connect(baseUrl);
+
+function formatVC(val) {
+  return(Math.abs(parseFloat(val)));
+}
+
 socket.on("cv", (data) => {
   const values = data.cv;
 
   // update the voltages and currents first
-  const lastCV = JSON.parse(values[0].message);
+  window.vRead = JSON.parse(values[0].message);
 
-  // window.lastCVChartData.datasets[0].data = [
   var lastCvValue = [
-    parseFloat(lastCV.os.pv),
-    Math.abs(parseFloat(lastCV.os.nv)), 
-    parseFloat(lastCV.ss.pv),
-    Math.abs(parseFloat(lastCV.ss.nv)), 
-    parseFloat(lastCV.fs.pv),
-    Math.abs(parseFloat(lastCV.fs.nv))];
+    formatVC(window.vRead.os.pv), formatVC(window.vRead.os.nv), 
+    formatVC(window.vRead.ss.pv), formatVC(window.vRead.ss.nv), 
+    formatVC(window.vRead.fs.pv), formatVC(window.vRead.fs.nv)];
 
   window.lastCvBarChartData[0].x = lastCvValue;
   window.lastCvBarChartData[0].text = lastCvValue;
@@ -30,25 +31,26 @@ socket.on("cv", (data) => {
     var cv = JSON.parse(values[i].message);
 
     timestamp.push(values[i].timestamp);
-    vTrace[0].push(parseFloat(cv.os.pv));
-    vTrace[1].push(Math.abs(parseFloat(cv.os.nv)));
-    vTrace[2].push(parseFloat(cv.ss.pv));
-    vTrace[3].push(Math.abs(parseFloat(cv.ss.nv)));
-    vTrace[4].push(parseFloat(cv.fs.pv));
-    vTrace[5].push(Math.abs(parseFloat(cv.fs.nv)));
+    vTrace[0].push(formatVC(cv.os.pv));
+    vTrace[1].push(formatVC(cv.os.nv));
+    vTrace[2].push(formatVC(cv.ss.pv));
+    vTrace[3].push(formatVC(cv.ss.nv));
+    vTrace[4].push(formatVC(cv.fs.pv));
+    vTrace[5].push(formatVC(cv.fs.nv));
 
-    cTrace[0].push(parseFloat(cv.os.pc));
-    cTrace[1].push(Math.abs(parseFloat(cv.os.nc)));
-    cTrace[2].push(parseFloat(cv.ss.pc));
-    cTrace[3].push(Math.abs(parseFloat(cv.ss.nc)));
-    cTrace[4].push(parseFloat(cv.fs.pc));
-    cTrace[5].push(Math.abs(parseFloat(cv.fs.nc)));
+    cTrace[0].push(formatVC(cv.os.pc));
+    cTrace[1].push(formatVC(cv.os.nc));
+    cTrace[2].push(formatVC(cv.ss.pc));
+    cTrace[3].push(formatVC(cv.ss.nc));
+    cTrace[4].push(formatVC(cv.fs.pc));
+    cTrace[5].push(formatVC(cv.fs.nc));
   };
 
-  timestamp.forEach((element)=>{
-    let newElement = moment().set(element).format("YYYY-MM-DD HH:mm:ss");
-    element = newElement;
-  });
+  // This seems to have no effect ...
+  // timestamp.forEach((element)=>{
+    // let newElement = moment().set(element).format("YYYY-MM-DD HH:mm:ss");
+    // element = newElement;
+  // });
   // console.log(formatter.format(timestamp[0]));
 
   for (var i = 0; i < 6; i++) {
