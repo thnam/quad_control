@@ -71,6 +71,7 @@ function initCVCharts() {
 function initLastCVBarChart() {
   var layout = {
     title: 'Last voltage readout',
+    margin: { l: 40, r: 10, b: 30, t: 40, pad: 4 },
     // font:{ family: 'Raleway, sans-serif' },
     showlegend: false,
     // xaxis: { tickangle: -45 },
@@ -103,6 +104,7 @@ function initLastCVBarChart() {
 function initCVTrendLineChart() {
   var layout = {
     title: 'Voltage and current trend plot',
+    margin: { l: 40, r: 40, b: 30, t: 40, pad: 4 },
     // font:{ family: 'Raleway, sans-serif' },
     showlegend: false,
     // xaxis: { tickangle: -45 },
