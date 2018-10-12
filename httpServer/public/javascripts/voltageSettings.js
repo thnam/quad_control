@@ -1,46 +1,64 @@
-function setVoltages() {
-  // if (getVoltageSettings()) {
+async function setVoltages() {
   getVoltageSettings();
-    $.ajax({
-      type: "POST",
-      url: baseUrl + "/cv",
-      data: window.vSet,
-      success: (res) => {
-        console.log(res + ", voltage set to " + vSet);
-      },
-      error: (err, stat) =>{
-        alert("Could not set voltage, error message: " + err.responseText);
-      }
-    });
-  // }
-  // else {
-    // alert("Could not read voltage settings");
-  // }
+
+  // need to resolve the current pulse mode first, then act accordingly
+  getPulseMode().then(async (currentMode) =>{
+    if (currentMode !== "Stop") 
+    {
+      setPulseMode("Stop").then(async ()=>{
+        await $.ajax({
+          type: "POST",
+          url: baseUrl + "/cv",
+          data: window.vSet,
+          success: (res) => {
+            console.log(res + ", voltage set to " + JSON.stringify(vSet));
+          },
+          error: (err, stat) =>{
+            alert("Could not set voltage, error message: " + err.responseText);
+          }});
+        setPulseMode(currentMode);
+      })
+    }
+    else
+      $.ajax({
+        type: "POST",
+        url: baseUrl + "/cv",
+        data: window.vSet,
+        success: (res) => {
+          console.log(res + ", voltage set to " + JSON.stringify(vSet));
+        },
+        error: (err, stat) =>{
+          alert("Could not set voltage, error message: " + err.responseText);
+        }
+      });
+
+  });
 };
 
-function zeroVoltages() {
+async function zeroVoltages() {
   window.vSet = {"fs": 0., "ss": 0., "os": 0.};
   $("#vSetpoint").val('0.0, 0.0').trigger("change");
   setVoltages();
 };
 
 async function changeVoltages(deltaV){
-  if (Number.isNaN(vCurrent["fs"]) ||
-    Number.isNaN(vCurrent["ss"]) ||
-    Number.isNaN(vCurrent["os"])){
-    alert("Aborted: cannot read current voltage values,\n");
-    return;
-  }
-  else{
+  let vFS = (window.vRead.fs.pv + Math.abs(window.vRead.fs.nv)) / 2;
+  let vSS = (window.vRead.ss.pv + Math.abs(window.vRead.ss.nv)) / 2;
+  let vOS = (window.vRead.os.pv + Math.abs(window.vRead.os.nv)) / 2;
 
-  vSet["fs"] = vCurrent["fs"] + deltaV;
-  vSet["ss"] = vCurrent["ss"] + deltaV;
-  vSet["os"] = vCurrent["os"] + deltaV;
-  vSet["ramp"] = false;
-  ["fs", "ss", "os"].forEach((ps)=>{if (vSet[ps] < 0.0) vSet[ps] = 0.0;})
+  window.vSet.fs = vFS + deltaV;
+  window.vSet.ss = vSS + deltaV;
+  window.vSet.os = vSS + deltaV;
 
-  str = Number.parseFloat(vSet["fs"]).toFixed(1) + ", " +
-    Number.parseFloat(vSet["ss"]).toFixed(1);
+  if (window.vSet.fs < 0.0) window.vSet.fs = 0.0;
+  if (window.vSet.ss < 0.0) window.vSet.ss = 0.0;
+  if (window.vSet.os < 0.0) window.vSet.os = 0.0;
+
+  console.log(window.vRead.fs, window.vRead.os, window.vRead.ss);
+  console.log(vSet);
+
+  str = window.vSet.fs.toFixed(1) + ", " + window.vSet.ss.toFixed(1);
+  console.log(str);
 
   if (!findPreset(str)) {
     let newOpt = document.createElement("option");
@@ -54,16 +72,8 @@ async function changeVoltages(deltaV){
 
   $("#vSetpoint").val(str).trigger("change");
 
-  var currentMode = document.getElementById("lblPulsingState").innerText;
-  console.log(currentMode);
-  if (currentMode !="Stop") 
-    await setPulseMode("Stop");
-  setVoltages();
-  console.log(currentMode);
-  if (currentMode != "Stop") 
-    await setPulseMode(currentMode);
-  }
-}
+  await setVoltages();
+};
 
 function getVoltageSettings() {
   window.vMode = $('input[name=vMode]:checked').val();

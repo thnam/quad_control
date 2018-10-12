@@ -5,6 +5,9 @@ $(() =>{
   $("#btnInternal").click(()=>{
     setPulseMode($("#internalMode").val()) });
 
+  getPulseMode().then((currentMode)=>{
+    displayPulseMode(currentMode);
+  });
   // 
   $("#setVoltages").click(()=>{ setVoltages() })
   $("#zeroVoltages").click(()=>{ zeroVoltages() })

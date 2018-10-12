@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 from random import gauss
+from time import sleep
 import json
 from pprint import pprint
 import sys
@@ -29,6 +30,7 @@ if len(sys.argv) > 1:
     else:
         exit(-1)
 
+    sleep(2)
     with open(spFile, 'w') as outfile:
         json.dump(setpoint, outfile)
 

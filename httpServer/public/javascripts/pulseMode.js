@@ -1,10 +1,9 @@
-function setPulseMode(newMode) {
+async function setPulseMode(newMode) {
   // get the current pulse mode first
   $.ajax({
     type: 'GET',
     url: baseUrl + '/pulsemode',
     success: function(resp) {
-      console.log(resp);
       currentMode = resp.message;
       if (newMode == currentMode) { // do nothing if nothing changes
         alert("Already in " + newMode + "!");
@@ -16,18 +15,7 @@ function setPulseMode(newMode) {
           data: {currentMode: currentMode, newMode: newMode},
           success: (res) =>{
             console.log(res + ", pulse mode changed to " + newMode);
-
-            // change state indicator
-            $("#labelPulseMode").text(newMode);
-            if (newMode == "External") 
-              $("#labelPulseMode").css({ 'color': $(".btn-success").css("background-color"),
-                'font-size': '120%' });
-            else if (newMode == "Stop") 
-              $("#labelPulseMode").css({ 'color': $(".btn-danger").css("background-color"),
-                'font-size': '120%' });
-            else if (["1 Hz", "5 Hz", "10 Hz", "Burst", "Single"].includes(newMode))
-              $("#labelPulseMode").css({ 'color': $(".btn-info").css("background-color"),
-                'font-size': '120%' });
+            displayPulseMode(newMode);
           },
           error: (err, stat) =>{
             alert("Couldn't change pulse mode, error message: " + err.responseText);
@@ -39,5 +27,29 @@ function setPulseMode(newMode) {
       alert("Error");
     }
   });
-}
+};
 
+function displayPulseMode(newMode) {
+  $("#labelPulseMode").text(newMode);
+  if (newMode == "External") 
+    $("#labelPulseMode").css({ 'color': $(".btn-success").css("background-color"),
+      'font-size': '120%' });
+  else if (newMode == "Stop") 
+    $("#labelPulseMode").css({ 'color': $(".btn-danger").css("background-color"),
+      'font-size': '120%' });
+  else if (["1 Hz", "5 Hz", "10 Hz", "Burst", "Single"].includes(newMode))
+    $("#labelPulseMode").css({ 'color': $(".btn-info").css("background-color"),
+      'font-size': '120%' });
+};
+
+async function getPulseMode() {
+  const ret = await $.ajax({
+    type: 'GET',
+    url: baseUrl + '/pulsemode',
+    success: function(data) { },
+    error: (xhr)=>{
+      alert("Error", xhr);
+    },
+  })
+  return ret.message;
+};
