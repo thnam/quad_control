@@ -6,17 +6,9 @@ async function setVoltages() {
     if (currentMode !== "Stop") 
     {
       setPulseMode("Stop").then(async ()=>{
-        await $.ajax({
-          type: "POST",
-          url: baseUrl + "/cv",
-          data: window.vSet,
-          success: (res) => {
-            console.log(res + ", voltage set to " + JSON.stringify(vSet));
-          },
-          error: (err, stat) =>{
-            alert("Could not set voltage, error message: " + err.responseText);
-          }});
-        setPulseMode(currentMode);
+        requestVoltageChange().then( ()=>{
+          setPulseMode(currentMode);
+        })
       })
     }
     else
@@ -34,6 +26,20 @@ async function setVoltages() {
 
   });
 };
+
+async function requestVoltageChange() {
+  const ret = await $.ajax({
+    type: "POST",
+    url: baseUrl + "/cv",
+    data: window.vSet,
+    success: (res) => {
+      console.log(res + ", voltage set to " + JSON.stringify(vSet));
+    },
+    error: (err, stat) =>{
+      alert("Could not set voltage, error message: " + err.responseText);
+    }});
+  return ret;
+}
 
 async function zeroVoltages() {
   window.vSet = {"fs": 0., "ss": 0., "os": 0.};
