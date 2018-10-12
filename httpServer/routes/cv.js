@@ -18,7 +18,8 @@ router
     try {
       let cmd = "";
       if (env == "production") {
-        cmd += " ";
+        cmd = appRoot + '/../hwInterface/ljSetVoltage.py';
+        cmd += " " + vSet.fs + " " + vSet.ss + " " + vSet.os;
       } else {
         cmd = appRoot + '/../hwInterface/fakeCVData.py';
         cmd += " " + vSet.fs + " " + vSet.ss + " " + vSet.os;
