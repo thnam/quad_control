@@ -23,14 +23,14 @@ socket.on("cv", (data) => {
   // then cv table
   //
   let len = values.length;
-  var timestamp = [];
+  var time = [];
   var cTrace = [[], [], [], [], [], []];
   var vTrace = [[], [], [], [], [], []];
 
   for (var i = len - 1; i >= 0; i--) {
     var cv = JSON.parse(values[i].message);
 
-    timestamp.push(values[i].timestamp);
+    time.push(new Date(values[i].timestamp));
     vTrace[0].push(formatVC(cv.os.pv));
     vTrace[1].push(formatVC(cv.os.nv));
     vTrace[2].push(formatVC(cv.ss.pv));
@@ -46,19 +46,12 @@ socket.on("cv", (data) => {
     cTrace[5].push(formatVC(cv.fs.nc));
   };
 
-  // This seems to have no effect ...
-  // timestamp.forEach((element)=>{
-    // let newElement = moment().set(element).format("YYYY-MM-DD HH:mm:ss");
-    // element = newElement;
-  // });
-  // console.log(formatter.format(timestamp[0]));
-
   for (var i = 0; i < 6; i++) {
-    window.cvTrendData[i].x = timestamp;
+    window.cvTrendData[i].x = time;
     window.cvTrendData[i].y = vTrace[i];
   };
   for (var i = 0; i < 6; i++) {
-    window.cvTrendData[i + 6].x = timestamp;
+    window.cvTrendData[i + 6].x = time;
     window.cvTrendData[i + 6].y = cTrace[i];
   };
 
