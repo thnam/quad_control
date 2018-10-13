@@ -57,6 +57,7 @@ function setVoltage(vSet) {
 }
 
 async function zeroVoltages() {
+  changePulseMode("Stop");
   window.vSet = {"fs": 0., "ss": 0., "os": 0.};
   $("#vSetpoint").val('0.0, 0.0').trigger("change");
   setVoltages();
@@ -98,6 +99,9 @@ async function changeVoltages(deltaV){
 
 function getVoltageSettings() {
   window.vMode = $('input[name=vMode]:checked').val();
+
+  if (window.vSet === undefined) 
+    window.vSet = {};
 
   if (window.vMode == "vPreset") {
     let str = $("#vSetpoint").val().split(",");

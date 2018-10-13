@@ -20,9 +20,6 @@ $(() =>{
 
 })
 
-window.vRead = {};
-window.vSet = {};
-
 plotColor = [
   '#ff7f0e',  // safety orange
   '#1f77b4',  // muted blue
