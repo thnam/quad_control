@@ -10,7 +10,7 @@ async function getVoltage() {
   return ret.message;
 };
 
-async function setVoltages() {
+async function changeVoltage() {
   getVoltageSettings();
 
   // need to resolve the current pulse mode first, then act accordingly
@@ -39,18 +39,21 @@ async function setVoltages() {
   });
 };
 
-async function requestVoltageChange() {
-  const ret = await $.ajax({
-    type: "POST",
-    url: baseUrl + "/cv",
-    data: window.vSet,
-    success: (res) => {
-      console.log(res + ", voltage set to " + JSON.stringify(vSet));
-    },
-    error: (err, stat) =>{
-      alert("Could not set voltage, error message: " + err.responseText);
-    }});
-  return ret;
+function setVoltage(vSet) {
+  return new Promise(function (resolve, reject) {
+    $.ajax({
+      type: "POST",
+      url: baseUrl + "/cv",
+      data: vSet,
+      success: (res) => {
+        console.log(res + ", voltage set to " + JSON.stringify(vSet));
+        resolve(true);
+      },
+      error: (err, stat) =>{
+        resolve(false);
+        alert("Could not set voltage, error message: " + err.responseText);
+      }});
+  });
 }
 
 async function zeroVoltages() {
