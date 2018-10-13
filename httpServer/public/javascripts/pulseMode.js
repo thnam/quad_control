@@ -1,37 +1,38 @@
 function changePulseMode(newMode) {
-  console.log("Start change pulsemode");
   // always get current pulsemode first
   getPulseMode().then((currentMode) => {
-    console.log("Current mode: " + currentMode);
-    if (currentMode !== "Stop")  // stop pulsing if necessary
-    {
-      setPulseMode("Stop").then(()=>{ 
-        console.log("changing to ", newMode);
-        setPulseMode(newMode) });
+    if (currentMode === newMode) 
+      alert("Already in " + newMode + "!");
+    else {
+      console.log("Start changing pulsemode from " + currentMode + " to " + newMode);
+
+      if (currentMode !== "Stop")  // stop pulsing if necessary
+        setPulseMode("Stop").then(()=>{
+          setPulseMode(newMode);
+        });
+      else 
+        setPulseMode(newMode);
     }
-    else
-      setPulseMode(newMode);
   })
 }
 
+// just set pulse mode, dont care about current mode
 function setPulseMode(newMode) {
-  getPulseMode().then(async (currentMode) => {
-    if (newMode === currentMode) 
-      alert("Already in " + newMode + "!");
-    else {
-      const ret = await $.ajax({
-        type: 'POST',
-        url: baseUrl + '/pulsemode',
-        data: {currentMode: currentMode, newMode: newMode},
-        success: (res) =>{
-          console.log(res + ", pulse mode changed to " + newMode);
-          displayPulseMode(newMode);
-        },
-        error: (err, stat) =>{
-          alert("Couldn't change pulse mode, error message: " + err.responseText);
-        } });
-    }
-  })
+  return new Promise(function (resolve, reject) {
+    $.ajax({
+      type: 'POST',
+      url: baseUrl + '/pulsemode',
+      data: {mode: newMode},
+      success: (res) =>{
+        console.log(res + ", pulse mode changed to " + newMode);
+        displayPulseMode(newMode);
+        resolve(true);
+      },
+      error: (err, stat) =>{
+        resolve(false);
+        alert("Couldn't change pulse mode, error message: " + err.responseText);
+      } });
+  });
 };
 
 async function getPulseMode() {

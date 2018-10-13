@@ -15,15 +15,10 @@ router
     }
   })
   .post("/", (req, res, next) => {
-    const currentMode = req.body.currentMode;
-    const newMode = req.body.newMode;
-    
+    const newMode = req.body.mode;
     const env = req.app.get("env");
-
-    httpLog.info("Pulse mode change request: from " + currentMode + " to " + newMode); 
-    // do some hardware stuff here, should be try/catch and 
+    httpLog.info("Pulse mode set request: " + newMode); 
     try {
-      // if (newMode == "Stop") {
       let cmd = "";
       if (env === "production") {
         // BU electronics interface
@@ -33,28 +28,47 @@ router
         cmd += '/home/daq/gm2daq/frontends/ESQ_slow/quadcontrol/ljUtils/pulseControl.py --mode ';
         cmd += ' "' + newMode + '" --ntry 3';
       } else 
-        cmd += global.appRoot + "/../hwInterface/success";
+        cmd += global.appRoot + "/../hwInterface/success 2";
 
       httpLog.info(cmd);
+      var child = exec(cmd);
 
-      exec(cmd, (err, stdout, stderr) => {
-        if (err) {
+      promiseFromChild(child).then(
+        function (result) {
+          httpLog.info("Changed pulse mode to " + newMode);
+          modeLog.info(newMode);
+          res.sendStatus(200);
+        }, 
+        function (err) {
           httpLog.error(err);
           httpLog.error("Error while changing pulse mode to " + newMode);
           res.sendStatus(500);
           throw(err);
         }
-
-        httpLog.info("Changed pulse mode to " + newMode);
-        modeLog.info(newMode);
-        res.sendStatus(200);
-
-      });
-      // }
+      );
     } catch (e) {
       next(e);
     }
+
+    child.stdout.on("data", function (data) {
+      httpLog.info("setPulseMode stdout: " + data);
+    });
+
+    child.stderr.on("data", function (data){
+      httpLog.error("setPulseMode stderr: " + data);
+    });
+
+    child.on("close", function(code){
+      httpLog.info("setPulseMode exit code: " + code);
+    })
   })
 ;
+
+function promiseFromChild(child) {
+  return new Promise(function (resolve, reject) {
+    child.addListener("error", reject);
+    child.addListener("exit", resolve);
+  });
+};
 
 module.exports = router;
