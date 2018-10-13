@@ -1,19 +1,22 @@
 function changePulseMode(newMode) {
-  // always get current pulsemode first
-  getPulseMode().then((currentMode) => {
-    if (currentMode === newMode) 
-      alert("Already in " + newMode + "!");
-    else {
-      console.log("Start changing pulsemode from " + currentMode + " to " + newMode);
+  if (newMode === "Stop")  // stop always works
+    setPulseMode("Stop");
+  else{
+    // obtain the current pulsemode first
+    getPulseMode().then((currentMode) => {
+      if (currentMode === newMode) 
+        alert("Already in " + newMode + "!");
+      else {
+        console.log("Start changing pulsemode from " + currentMode + " to " + newMode);
 
-      if (currentMode !== "Stop")  // stop pulsing if necessary
-        setPulseMode("Stop").then(()=>{
+        if (currentMode !== "Stop")  // stop pulsing if necessary before changing
+          setPulseMode("Stop").then(()=>{
+            setPulseMode(newMode);
+          });
+        else 
           setPulseMode(newMode);
-        });
-      else 
-        setPulseMode(newMode);
-    }
-  })
+      }})
+  }
 }
 
 // just set pulse mode, dont care about current mode
