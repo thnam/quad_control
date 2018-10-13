@@ -1,3 +1,15 @@
+async function getVoltage() {
+  const ret = await $.ajax({
+    type: 'GET',
+    url: baseUrl + '/lastcv',
+    success: function(data) { },
+    error: (xhr)=>{
+      alert("Error", xhr);
+    },
+  })
+  return ret.message;
+};
+
 async function setVoltages() {
   getVoltageSettings();
 

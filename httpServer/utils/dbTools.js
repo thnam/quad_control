@@ -26,5 +26,6 @@ function getPulserStatus() {
 module.exports = {
   getPulseMode: getPulseMode,
   getCV: getCV,
+  getLastCV: getLastCV,
   getPulserStatus: getPulserStatus,
 }

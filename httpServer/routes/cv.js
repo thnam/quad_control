@@ -6,8 +6,8 @@ const { exec } = require('child_process');
 
 router
   .get('/', async (req, res, next) => {
-  const cv = await dbTool.getCV();
-  res.json(cv);
+    const cv = await dbTool.getCV();
+    res.json(cv);
   })
   .post("/", (req, res, next) => {
     const vSet = req.body;
