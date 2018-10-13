@@ -1,4 +1,5 @@
 function changePulseMode(newMode) {
+  console.log("Start change pulsemode");
   // always get current pulsemode first
   getPulseMode().then((currentMode) => {
     console.log("Current mode: " + currentMode);
@@ -13,12 +14,12 @@ function changePulseMode(newMode) {
   })
 }
 
-async function setPulseMode(newMode) {
-  getPulseMode().then((currentMode) => {
+function setPulseMode(newMode) {
+  getPulseMode().then(async (currentMode) => {
     if (newMode === currentMode) 
       alert("Already in " + newMode + "!");
-    else
-      $.ajax({
+    else {
+      const ret = await $.ajax({
         type: 'POST',
         url: baseUrl + '/pulsemode',
         data: {currentMode: currentMode, newMode: newMode},
@@ -29,6 +30,7 @@ async function setPulseMode(newMode) {
         error: (err, stat) =>{
           alert("Couldn't change pulse mode, error message: " + err.responseText);
         } });
+    }
   })
 };
 
