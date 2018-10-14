@@ -9,14 +9,14 @@ $(() =>{
     displayPulseMode(currentMode);
   });
   // 
-  $("#setVoltages").click(()=>{ setVoltage() })
+  $("#setVoltages").click(()=>{ changeVoltage() })
   $("#zeroVoltages").click(()=>{ zeroVoltage() })
-  $("#p1kV").click(()=>{ changeVoltages(1);})
-  $("#m1kV").click(()=>{ changeVoltages(-1);})
-  $("#m2kV").click(()=>{ changeVoltages(-2);})
-  $("#m3kV").click(()=>{ changeVoltages(-3);})
-  $("#m4kV").click(()=>{ changeVoltages(-4);})
-  $("#m10kV").click(()=>{ changeVoltages(-10);})
+  $("#p1kV").click(()=>{ increaseVoltages(1);})
+  $("#m1kV").click(()=>{ increaseVoltages(-1);})
+  $("#m2kV").click(()=>{ increaseVoltages(-2);})
+  $("#m3kV").click(()=>{ increaseVoltages(-3);})
+  $("#m4kV").click(()=>{ increaseVoltages(-4);})
+  $("#m10kV").click(()=>{ increaseVoltages(-10);})
 
 })
 

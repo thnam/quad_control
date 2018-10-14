@@ -87,41 +87,21 @@ function increaseVoltages(deltaV){
     })
 };
 
-async function changeVoltage() {
+function changeVoltage() {
   getVoltageSettings();
-  // force reading voltage if it has not been initialized yet
-  if (window.vRead === undefined) {
-    getVoltage().then((val) =>{
-      window.vRead = JSON.parse(val);
-    })
-  }
 
-  // need to resolve the current pulse mode first, then act accordingly
-  getPulseMode().then((currentMode) =>{
-    if (currentMode !== "Stop") 
-    {
-      setPulseMode("Stop").then(async ()=>{
-        requestVoltageChange().then( ()=>{
-          setPulseMode(currentMode);
+  getPulseMode()
+    .then((currentMode) =>{
+      if (currentMode === "Stop") 
+        setVoltage(window.vSet);
+      else 
+        setPulseMode("Stop").then(()=>{
+          setVoltage(window.vSet).then(()=>{
+            setPulseMode(currentMode);
+          })
         })
-      })
-    }
-    else
-      $.ajax({
-        type: "POST",
-        url: baseUrl + "/cv",
-        data: window.vSet,
-        success: (res) => {
-          console.log(res + ", voltage set to " + JSON.stringify(vSet));
-        },
-        error: (err, stat) =>{
-          alert("Could not set voltage, error message: " + err.responseText);
-        }
-      });
-
-  });
+    })
 };
-
 
 function getVoltageSettings() {
   window.vMode = $('input[name=vMode]:checked').val();

@@ -48,6 +48,7 @@ function setupVoltageGroup() {
 }
 
 function reflectVPreset() {
+  let vSet = {};
   let str = $("#vSetpoint").val().split(",");
   vSet["fs"] =  Number.parseFloat(str[0]);
   vSet["ss"] =  Number.parseFloat(str[1]);
@@ -62,6 +63,7 @@ function reflectVPreset() {
 }
 
 function reflectVManual() {
+  let vSet = {};
   vSet["fs"] = Number.parseFloat($("#manualVFS").val());
   vSet["ss"] = Number.parseFloat($("#manualVSS").val());
   vSet["os"] = Number.parseFloat($("#manualVOS").val());
