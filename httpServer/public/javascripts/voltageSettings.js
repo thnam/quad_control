@@ -10,11 +10,94 @@ async function getVoltage() {
   return ret.message;
 };
 
+function setVoltage(vSet) {
+  return new Promise(function (resolve, reject) {
+    $.ajax({
+      type: "POST",
+      url: baseUrl + "/cv",
+      data: vSet,
+      success: (res) => {
+        console.log(res + ", voltage set to " + JSON.stringify(vSet));
+        resolve(true);
+      },
+      error: (err, stat) =>{
+        resolve(false);
+        alert("Could not set voltage, error message: " + err.responseText);
+      }});
+  });
+}
+
+function zeroVoltage() {
+  changePulseMode("Stop");
+  window.vSet = {"fs": 0., "ss": 0., "os": 0.};
+  $("#vSetpoint").val('0.0, 0.0').trigger("change");
+  setVoltage(window.vSet);
+};
+
+function increaseVoltages(deltaV){
+  if (window.vRead === undefined) {
+    getVoltage().then((val) =>{
+      window.vRead = JSON.parse(val);
+    })
+  }
+
+  let vFS = (window.vRead.fs.pv + Math.abs(window.vRead.fs.nv)) / 2;
+  let vSS = (window.vRead.ss.pv + Math.abs(window.vRead.ss.nv)) / 2;
+  let vOS = (window.vRead.os.pv + Math.abs(window.vRead.os.nv)) / 2;
+
+  if (window.vSet === undefined) window.vSet = {};
+
+  window.vSet.fs = vFS + deltaV;
+  window.vSet.ss = vSS + deltaV;
+  window.vSet.os = vSS + deltaV;
+
+  if (window.vSet.fs < 0.0) window.vSet.fs = 0.0;
+  if (window.vSet.ss < 0.0) window.vSet.ss = 0.0;
+  if (window.vSet.os < 0.0) window.vSet.os = 0.0;
+
+  console.log(window.vRead.fs, window.vRead.os, window.vRead.ss);
+  console.log(window.vSet);
+
+  str = window.vSet.fs.toFixed(1) + ", " + window.vSet.ss.toFixed(1);
+  console.log(str);
+
+  if (!findPreset(str)) {
+    let newOpt = document.createElement("option");
+    newOpt.value = str;
+    newOpt.innerHTML = str;
+    sel = document.getElementById('vSetpoint')
+    opts = sel.options;
+    opts.forEach
+    sel.appendChild(newOpt);
+  }
+
+  $("#vSetpoint").val(str).trigger("change");
+
+  // do the work
+  getPulseMode()
+    .then((currentMode) =>{
+      if (currentMode === "Stop") 
+        setVoltage(window.vSet);
+      else 
+        setPulseMode("Stop").then(()=>{
+          setVoltage(window.vSet).then(()=>{
+            setPulseMode(currentMode);
+          })
+        })
+    })
+};
+
 async function changeVoltage() {
   getVoltageSettings();
+  // force reading voltage if it has not been initialized yet
+  if (window.vRead === undefined) {
+    getVoltage().then((val) =>{
+      window.vRead = JSON.parse(val);
+    })
+  }
 
   // need to resolve the current pulse mode first, then act accordingly
-  getPulseMode().then(async (currentMode) =>{
+  getPulseMode().then((currentMode) =>{
     if (currentMode !== "Stop") 
     {
       setPulseMode("Stop").then(async ()=>{
@@ -39,63 +122,6 @@ async function changeVoltage() {
   });
 };
 
-function setVoltage(vSet) {
-  return new Promise(function (resolve, reject) {
-    $.ajax({
-      type: "POST",
-      url: baseUrl + "/cv",
-      data: vSet,
-      success: (res) => {
-        console.log(res + ", voltage set to " + JSON.stringify(vSet));
-        resolve(true);
-      },
-      error: (err, stat) =>{
-        resolve(false);
-        alert("Could not set voltage, error message: " + err.responseText);
-      }});
-  });
-}
-
-async function zeroVoltages() {
-  changePulseMode("Stop");
-  window.vSet = {"fs": 0., "ss": 0., "os": 0.};
-  $("#vSetpoint").val('0.0, 0.0').trigger("change");
-  setVoltages();
-};
-
-async function changeVoltages(deltaV){
-  let vFS = (window.vRead.fs.pv + Math.abs(window.vRead.fs.nv)) / 2;
-  let vSS = (window.vRead.ss.pv + Math.abs(window.vRead.ss.nv)) / 2;
-  let vOS = (window.vRead.os.pv + Math.abs(window.vRead.os.nv)) / 2;
-
-  window.vSet.fs = vFS + deltaV;
-  window.vSet.ss = vSS + deltaV;
-  window.vSet.os = vSS + deltaV;
-
-  if (window.vSet.fs < 0.0) window.vSet.fs = 0.0;
-  if (window.vSet.ss < 0.0) window.vSet.ss = 0.0;
-  if (window.vSet.os < 0.0) window.vSet.os = 0.0;
-
-  console.log(window.vRead.fs, window.vRead.os, window.vRead.ss);
-  console.log(vSet);
-
-  str = window.vSet.fs.toFixed(1) + ", " + window.vSet.ss.toFixed(1);
-  console.log(str);
-
-  if (!findPreset(str)) {
-    let newOpt = document.createElement("option");
-    newOpt.value = str;
-    newOpt.innerHTML = str;
-    sel = document.getElementById('vSetpoint')
-    opts = sel.options;
-    opts.forEach
-    sel.appendChild(newOpt);
-  }
-
-  $("#vSetpoint").val(str).trigger("change");
-
-  await setVoltages();
-};
 
 function getVoltageSettings() {
   window.vMode = $('input[name=vMode]:checked').val();
@@ -121,10 +147,10 @@ function getVoltageSettings() {
       window.vSet["os"] = vSet["ss"];
   }
 
-  window.vSet["step"] = Number.parseFloat($("#vStep").val());
-  window.vSet["interval"] = Number.parseFloat($("#vInterval").val());
-
-  console.log(window.vSet);
+  window.vStep = Number.parseFloat($("#vStep").val());
+  window.vInterval = Number.parseFloat($("#vInterval").val());
+  console.log("Voltage setpoint: " + JSON.stringify(window.vSet) + ", step: " 
+    + window.vStep + ", interval: " + window.vInterval);
 }
 
 function validateVoltageSettings() {
@@ -171,105 +197,3 @@ function validateVoltageSettings() {
     return true;
 }
 
-function findPreset(newPreset) {
-  sel = document.getElementById('vSetpoint');
-  opts = sel.options;
-  for (var i = 0, len = opts.length; i < len; i++) 
-    if (opts[i].value == newPreset) 
-      return true;
-  return false;
-}
-
-function setupVoltageGroup() {
-  // Toggling manual/preset mode
-  if($('input[name=vMode]:checked').val() == "vPreset"){
-    document.getElementById("manualVFS").disabled = true;
-    document.getElementById("manualVSS").disabled = true;
-    document.getElementById("manualVOS").disabled = true;
-    document.getElementById("cbForceAsym").disabled = true;
-    document.getElementById("vSetpoint").disabled = false;
-  }
-  else if($('input[name=vMode]:checked').val() == "vManual"){
-    document.getElementById("manualVFS").disabled = false;
-    document.getElementById("manualVSS").disabled = false;
-    document.getElementById("cbForceAsym").disabled = false;
-    document.getElementById("vSetpoint").disabled = true;
-    if (document.getElementById('cbForceAsym').checked)
-      document.getElementById("manualVOS").disabled = false;
-    else
-      document.getElementById("manualVOS").disabled = true;
-  };
-  $('input[type=radio][name=vMode]').change(function() {
-    if (this.value == 'vPreset') {
-      document.getElementById("manualVFS").disabled = true;
-      document.getElementById("manualVSS").disabled = true;
-      document.getElementById("manualVOS").disabled = true;
-      document.getElementById("cbForceAsym").disabled = true;
-      document.getElementById("vSetpoint").disabled = false;
-    }
-    else if (this.value == 'vManual') {
-      document.getElementById("manualVFS").disabled = false;
-      document.getElementById("manualVSS").disabled = false;
-      document.getElementById("cbForceAsym").disabled = false;
-      document.getElementById("vSetpoint").disabled = true;
-      if (document.getElementById('cbForceAsym').checked)
-        document.getElementById("manualVOS").disabled = false;
-      else
-        document.getElementById("manualVOS").disabled = true;
-    }
-  });
-}
-
-function reflectVPreset() {
-  let str = $("#vSetpoint").val().split(",");
-  vSet["fs"] =  Number.parseFloat(str[0]);
-  vSet["ss"] =  Number.parseFloat(str[1]);
-  vSet["os"] =  Number.parseFloat(str[1]);
-  vSet["step"] = Number.parseFloat($("#vStep").val());
-  vSet["interval"] = Number.parseFloat($("#vInterval").val());
-  // console.log(vSet);
-
-  $("#manualVFS").val(vSet["fs"]);
-  $("#manualVSS").val(vSet["ss"]);
-  $("#manualVOS").val(vSet["os"]);
-}
-
-function reflectVManual() {
-  vSet["fs"] = Number.parseFloat($("#manualVFS").val());
-  vSet["ss"] = Number.parseFloat($("#manualVSS").val());
-  vSet["os"] = Number.parseFloat($("#manualVOS").val());
-  vSet["step"] = Number.parseFloat($("#vStep").val());
-  vSet["interval"] = Number.parseFloat($("#vInterval").val());
-  let str = Number.parseFloat($("#manualVFS").val()).toFixed(1) + ", ";
-  str += Number.parseFloat($("#manualVSS").val()).toFixed(1);
-
-  let newOpt = document.createElement("option");
-  newOpt.value = str;
-  newOpt.innerHTML = str;
-  sel = document.getElementById('vSetpoint')
-  sel.appendChild(newOpt);
-
-  opts = sel.options;
-  for (var opt, j = 0; opt = opts[j]; j++) {
-    if (opt.value == str) {
-      sel.selectedIndex = j;
-      break;
-    }
-  }
-}
-
-function checkFlattopLock() {
-  let checkbox = document.getElementById('cbForceAsym');
-  if (checkbox.checked)
-    document.getElementById("manualVOS").disabled = false;
-  else
-    document.getElementById("manualVOS").disabled = true;
-}
-
-function lockFlattop() {
-  if (!document.getElementById("cbForceAsym").checked) 
-  {
-    $("#manualVOS").val($("#manualVSS").val());
-  }
-  reflectVManual();
-}

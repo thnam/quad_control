@@ -9,8 +9,8 @@ $(() =>{
     displayPulseMode(currentMode);
   });
   // 
-  $("#setVoltages").click(()=>{ setVoltages() })
-  $("#zeroVoltages").click(()=>{ zeroVoltages() })
+  $("#setVoltages").click(()=>{ setVoltage() })
+  $("#zeroVoltages").click(()=>{ zeroVoltage() })
   $("#p1kV").click(()=>{ changeVoltages(1);})
   $("#m1kV").click(()=>{ changeVoltages(-1);})
   $("#m2kV").click(()=>{ changeVoltages(-2);})
