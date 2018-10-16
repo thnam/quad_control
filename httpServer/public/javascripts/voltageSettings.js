@@ -16,7 +16,10 @@ function setVoltage(vSet) {
       type: "POST",
       url: baseUrl + "/cv",
       data: vSet,
-      success: (res) => {
+      success: (res) => { // confirm the voltage first, then done
+        var done = setInterval(()=>{
+          if (confirmVoltage(0.1)) clearInterval(done); }, 1000);
+
         console.log(res + ", voltage set to " + JSON.stringify(vSet));
         resolve(true);
       },
@@ -131,6 +134,23 @@ function getVoltageSettings() {
   window.vInterval = Number.parseFloat($("#vInterval").val());
   console.log("Voltage setpoint: " + JSON.stringify(window.vSet) + ", step: " 
     + window.vStep + ", interval: " + window.vInterval);
+}
+
+function confirmVoltage(tolerance) {
+  try {
+    let goodPOS = Math.abs(window.vSet["os"] - window.vRead.os.pv) <= tolerance;
+    let goodNOS = Math.abs(window.vSet["os"] + window.vRead.os.nv) <= tolerance;
+    let goodPSS = Math.abs(window.vSet["ss"] - window.vRead.ss.pv) <= tolerance;
+    let goodNSS = Math.abs(window.vSet["ss"] + window.vRead.ss.nv) <= tolerance;
+    let goodPFS = Math.abs(window.vSet["fs"] - window.vRead.fs.pv) <= tolerance;
+    let goodNFS = Math.abs(window.vSet["fs"] + window.vRead.fs.nv) <= tolerance;
+
+    // console.log(JSON.stringify(window.vSet));
+    // console.log(JSON.stringify(window.vRead));
+    return goodPOS && goodNOS && goodPSS && goodNSS && goodPFS && goodNFS;
+  } catch (e) {
+    return false;
+  }
 }
 
 function validateVoltageSettings() {

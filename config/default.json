@@ -21,7 +21,11 @@
     "maxLogSize": 524,
     "maxNumFile": 10
   },
-
+  "limits": {
+    "vFS": 20,
+    "vOS": 27,
+    "vSS": 27
+  },
   "setVoltageLJ":{
     "ip": "192.168.30.85",
     "fs": "TDAC0",
