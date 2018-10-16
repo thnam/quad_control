@@ -91,7 +91,10 @@ function increaseVoltages(deltaV){
 };
 
 function changeVoltage() {
-  getVoltageSettings();
+  validateSetpoint();
+
+  if (!window.ramping) 
+    setVoltage(window.vSet);
 
   getPulseMode()
     .then((currentMode) =>{
@@ -106,7 +109,7 @@ function changeVoltage() {
     })
 };
 
-function getVoltageSettings() {
+function getSetpoint() {
   window.vMode = $('input[name=vMode]:checked').val();
 
   if (window.vSet === undefined) 
@@ -153,38 +156,47 @@ function confirmVoltage(tolerance) {
   }
 }
 
-function validateVoltageSettings() {
-  let zero = vSet["os"] == 0.0 && vSet["fs"] == 0.0 && vSet["ss"] == 0.0;
-  let goodOS = vSet["os"] >= 0.0 && vSet["os"] <= 25.0;
-  let goodSS = vSet["ss"] >= 0.0 && vSet["ss"] <= 25.0;
-  let goodFS = vSet["fs"] >= 0.0 && vSet["fs"] <= 20.0;
-  let gap = vSet["ss"] - vSet["fs"];
+function validateSetpoint() {
+  getSetpoint();
+  let zero = window.vSet["os"] == 0.0 && window.vSet["fs"] == 0.0 && window.vSet["ss"] == 0.0;
+  let goodOS = window.vSet["os"] >= 0.0 && window.vSet["os"] <= 27.0;
+  let goodSS = window.vSet["ss"] >= 0.0 && window.vSet["ss"] <= 27.0;
+  let goodFS = window.vSet["fs"] >= 0.0 && window.vSet["fs"] <= 21.0;
+
+  let gap = window.vSet["ss"] - window.vSet["fs"];
   let goodGap = gap >= 0.3 && gap <= 7.0;
-  if (vSet["fs"] >= 10.0) 
+
+  if (window.vSet["fs"] >= 10.0) 
     goodGap = goodGap && gap >= 3.0
 
   let allGood = zero || (goodOS && goodSS && goodFS && goodGap);
 
-  if (vSet["os"] >= vCurrent["os"] && vSet["fs"] >= vSet["fs"]
-    && vSet["ss"] >= vSet["ss"])
-    vSet["ramp"] = true;
+  if (window.vRead === undefined) 
+    getVoltage().then((val) =>{ window.vRead = JSON.parse(val); })
+  let vStep = {};
+  vStep.fs = window.vSet["fs"] - (window.vRead.fs.pv - window.vRead.fs.nv)/2;
+  vStep.os = window.vSet["os"] - (window.vRead.os.pv - window.vRead.os.nv)/2;
+  vStep.ss = window.vSet["ss"] - (window.vRead.ss.pv - window.vRead.ss.nv)/2;
+  console.log(vStep);
 
-  if (zero) 
-    return true;
+  if (vStep.fs >= 0.2 && vStep.ss >= 0.2 && vStep.os >= 0.2)
+    window.ramping = true;
+  else
+    window.ramping = false;
 
   if (!goodOS) {
     let msg = "Bad setting: one step voltage should be \n"
-    msg += "in range from 0 to 25 kV"
+    msg += "in range from 0 to 27 kV"
     alert(msg);
     return false;
   } else if (!goodSS) {
     let msg = "Bad setting: second step voltage should be \n"
-    msg += "in range from 0 to 25 kV"
+    msg += "in range from 0 to 27 kV"
     alert(msg);
     return false;
   } else if (!goodFS) {
     let msg = "Bad setting: first step voltage should be \n"
-    msg += "in range from 0 to 20 kV"
+    msg += "in range from 0 to 21 kV"
     alert(msg);
     return false;
   } else if (!goodGap){
@@ -195,5 +207,7 @@ function validateVoltageSettings() {
     return false;
   } else
     return true;
+
+  return allGood;
 }
 
