@@ -1,15 +1,15 @@
 p Spark Pattern
 .table-responsive
-  table.table.table-hover.table-striped.table-bordered#sparkTable
+  table.table.table-hover.table-bordered#sparkTable
     tbody
       each val in [1, 2, 3, 4]
         //- tr(style='height:20px;')
         tr
-          td= 'Q' + val + 'S'
+          th(scope='row')='Q' + val + 'S'
           each val in ['T', 'B', 'O', 'I']
             td= val + ': 0'
   
-          td= 'Q' + val + 'L'
+          th(scope='row')='Q' + val + 'L'
           each val in ['T', 'B', 'O', 'I']
             td= val + ': 0'
   
