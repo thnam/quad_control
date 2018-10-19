@@ -8,14 +8,14 @@ const statusLogger = require(global.appRoot + '/loggers/statusLogger.js');
 const sparkLogger = require(global.appRoot + '/loggers/sparkLogger.js');
 
 // Fake data
-// const cvDataCmd = appRoot + '/../hwInterface/fakeCVData.py';
-// const statusDataCmd = appRoot + '/../hwInterface/fakePulserStatus.py';
-// const sparkDataCmd = appRoot + "/../hwInterface/fakeSparkData.py";
+const cvDataCmd = appRoot + '/../hwInterface/fakeCVData.py';
+const statusDataCmd = appRoot + '/../hwInterface/fakePulserStatus.py';
+const sparkDataCmd = appRoot + "/../hwInterface/fakeSparkData.py";
 
 // Labjack data
-const cvDataCmd = appRoot + '/../hwInterface/ljCVData.py';
-const statusDataCmd = appRoot + '/../hwInterface/ljPulserStatus.py';
-const sparkDataCmd = appRoot + "/../hwInterface/ljSparkData.py";
+// const cvDataCmd = appRoot + '/../hwInterface/ljCVData.py';
+// const statusDataCmd = appRoot + '/../hwInterface/ljPulserStatus.py';
+// const sparkDataCmd = appRoot + "/../hwInterface/ljSparkData.py";
 //
 // BU electronics data
 // const statusDataCmd = appRoot + '/../hwInterface/fakePulserStatus.py';
@@ -66,7 +66,7 @@ setInterval( () => {
     command.stdout.on('data', function(data){
       spark = JSON.parse(data);
       spark["error"] = false;
-      statusLogger.info(JSON.stringify(spark));
+      sparkLogger.info(JSON.stringify(spark));
     });
 
     command.stderr.on('error', function(err){
