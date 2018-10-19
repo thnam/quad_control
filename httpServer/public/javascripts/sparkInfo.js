@@ -28,20 +28,28 @@ function displaySparkInfo() {
     for (var iP = 0, len = plate.length; iP < len; iP++) {
       let sparkNum = parseInt(window.spark[qName].s[plate[iP]]);
       row.cells[cellId + iP].innerHTML = plate[iP].toUpperCase() + ": " + sparkNum.toString();
-      if (sparkNum > 0) 
+      if (sparkNum > 0) {
+        row.cells[cellId + iP].classList.remove("table-success");
         row.cells[cellId + iP].classList.add("table-warning");
-      else if (sparkNum == 0)
+      }
+      else{
+        row.cells[cellId + iP].classList.remove("table-warning");
         row.cells[cellId + iP].classList.add("table-success");
+      }
     }
 
     cellId = 6;
     for (var iP = 0, len = plate.length; iP < len; iP++) {
       let sparkNum = parseInt(window.spark[qName].l[plate[iP]]);
       row.cells[cellId + iP].innerHTML = plate[iP].toUpperCase() + ": " + sparkNum.toString();
-      if (sparkNum > 0) 
+      if (sparkNum > 0) {
+        row.cells[cellId + iP].classList.remove("table-success");
         row.cells[cellId + iP].classList.add("table-warning");
-      else if (sparkNum == 0)
+      }
+      else{
+        row.cells[cellId + iP].classList.remove("table-warning");
         row.cells[cellId + iP].classList.add("table-success");
+      }
     }
   }
 }

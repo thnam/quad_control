@@ -20,6 +20,11 @@ socket.on("cv", (data) => {
 
   Plotly.redraw(document.getElementById('bcLastCV'));
 
+  // spark alert
+  if (window.vRead.spark >= 2) {
+    alert("Spark!");
+  }
+
   // then cv table
   //
   let len = values.length;
