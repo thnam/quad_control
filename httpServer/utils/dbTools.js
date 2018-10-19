@@ -23,9 +23,16 @@ function getPulserStatus() {
   return result;
 }
 
+function getSparkInfo(){
+  const collection = db.get().db("quad").collection('spark');
+  const result = collection.find().sort({$natural: -1}).limit(1).toArray();
+  return result;
+}
+
 module.exports = {
   getPulseMode: getPulseMode,
   getCV: getCV,
   getLastCV: getLastCV,
   getPulserStatus: getPulserStatus,
+  getSparkInfo: getSparkInfo,
 }

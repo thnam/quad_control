@@ -25,6 +25,7 @@ app.use('/pulsemode', require(global.appRoot + '/routes/pulseMode'));
 app.use('/cv', require(global.appRoot + '/routes/cv'));
 app.use('/lastcv', require(global.appRoot + '/routes/lastCV'));
 app.use('/pulserStatus', require(global.appRoot + '/routes/pulserStatus'));
+app.use('/spark', require(global.appRoot + '/routes/sparkInfo'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

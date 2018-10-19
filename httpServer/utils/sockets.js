@@ -37,6 +37,16 @@ io.on('connection', function (socket) {
       next(e);
     }
   }, 5000);
+
+  setInterval(async ()=>{
+    try {
+      const spark = await dbTool.getSparkInfo();
+      // console.log(cv);
+      socket.emit("spark", spark);
+    } catch (e) {
+      next(e);
+    }
+  }, 10000);
 });
 
 module.exports = io;

@@ -8,12 +8,16 @@ socket.on("pulserStatus", (data) => {
 
   for (var i = len - 1; i >= 0; i--) {
     var ps = JSON.parse(values[i].message);
+    try {
+      timestamp.push(new Date(values[i].timestamp));
+      trace[0].push(parseFloat(ps.pos.fault) + 0.03);
+      trace[1].push(parseFloat(ps.nos.fault) + 0.01);
+      trace[2].push(parseFloat(ps.pts.fault) + -0.01);
+      trace[3].push(parseFloat(ps.nts.fault) + -0.03);
+    } catch (e) {
+      /* handle error */
+    }
 
-    timestamp.push(new Date(values[i].timestamp));
-    trace[0].push(parseFloat(ps.pos.fault) + 0.03);
-    trace[1].push(parseFloat(ps.nos.fault) + 0.01);
-    trace[2].push(parseFloat(ps.pts.fault) + -0.01);
-    trace[3].push(parseFloat(ps.nts.fault) + -0.03);
   };
 
   for (var i = 0; i < 4; i++) {
