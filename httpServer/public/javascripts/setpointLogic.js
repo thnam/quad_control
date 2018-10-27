@@ -1,4 +1,4 @@
-function findPreset(newPreset) {
+function presetFound(newPreset) {
   sel = document.getElementById('vSetpoint');
   opts = sel.options;
   for (var i = 0, len = opts.length; i < len; i++) 

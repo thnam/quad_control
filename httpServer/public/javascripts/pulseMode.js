@@ -7,7 +7,7 @@ function changePulseMode(newMode) {
       if (currentMode === newMode) 
         alert("Already in " + newMode + "!");
       else {
-        console.log("Start changing pulsemode from " + currentMode + " to " + newMode);
+        console.info("Start changing pulsemode from " + currentMode + " to " + newMode);
 
         if (currentMode !== "Stop")  // stop pulsing if necessary before changing
           setPulseMode("Stop").then(()=>{
@@ -27,7 +27,7 @@ function setPulseMode(newMode) {
       url: baseUrl + '/pulsemode',
       data: {mode: newMode},
       success: (res) =>{
-        console.log(res + ", pulse mode changed to " + newMode);
+        console.info(res + ", pulse mode changed to " + newMode);
         displayPulseMode(newMode);
         resolve(true);
       },

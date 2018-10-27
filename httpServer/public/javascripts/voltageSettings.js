@@ -17,11 +17,15 @@ function setVoltage(vSet) {
       url: baseUrl + "/cv",
       data: vSet,
       success: (res) => { // confirm the voltage first, then done
+        window.inTransition = true;
         var done = setInterval(()=>{
-          if (confirmVoltage(0.1)) clearInterval(done); }, 1000);
+          if (confirmVoltage(0.1))
+            clearInterval(done); 
+        }, 1000);
 
-        console.log(res + ", voltage set to " + JSON.stringify(vSet));
+        console.info(res + ", voltage set to " + JSON.stringify(vSet));
         resolve(true);
+        window.inTransition = false;
       },
       error: (err, stat) =>{
         resolve(false);
@@ -38,33 +42,26 @@ function zeroVoltage() {
 };
 
 function increaseVoltages(deltaV){
-  if (window.vRead === undefined) {
-    getVoltage().then((val) =>{
-      window.vRead = JSON.parse(val);
-    })
-  }
+  console.info("Increase all voltages by ", deltaV, "kV");
 
-  let vFS = (window.vRead.fs.pv + Math.abs(window.vRead.fs.nv)) / 2;
-  let vSS = (window.vRead.ss.pv + Math.abs(window.vRead.ss.nv)) / 2;
-  let vOS = (window.vRead.os.pv + Math.abs(window.vRead.os.nv)) / 2;
+  normVoltage = normVRead();
+  console.info("Current voltages: [FS, OS, SS] =", normVoltage);
 
   if (window.vSet === undefined) window.vSet = {};
 
-  window.vSet.fs = vFS + deltaV;
-  window.vSet.ss = vSS + deltaV;
-  window.vSet.os = vSS + deltaV;
+  window.vSet.fs = normVoltage[0] + deltaV;
+  window.vSet.ss = normVoltage[1] + deltaV;
+  window.vSet.os = normVoltage[2] + deltaV;
 
   if (window.vSet.fs < 0.0) window.vSet.fs = 0.0;
   if (window.vSet.ss < 0.0) window.vSet.ss = 0.0;
   if (window.vSet.os < 0.0) window.vSet.os = 0.0;
 
-  console.log(window.vRead.fs, window.vRead.os, window.vRead.ss);
-  console.log(window.vSet);
-
   str = window.vSet.fs.toFixed(1) + ", " + window.vSet.ss.toFixed(1);
-  console.log(str);
+  console.info("Target voltages:", str);
 
-  if (!findPreset(str)) {
+  // add this setpoint into the preset list
+  if (!presetFound(str)) {
     let newOpt = document.createElement("option");
     newOpt.value = str;
     newOpt.innerHTML = str;
@@ -74,6 +71,7 @@ function increaseVoltages(deltaV){
     sel.appendChild(newOpt);
   }
 
+  // and change the manual entries also
   $("#vSetpoint").val(str).trigger("change");
 
   // do the work
@@ -91,23 +89,110 @@ function increaseVoltages(deltaV){
 };
 
 function changeVoltage() {
-  validateSetpoint();
+  if (!validateSetpoint()){ // return upon bad request 
+    console.error("Bad setpoint, abort changeVoltage function");
+    return;
+  }
 
-  if (!window.ramping) 
+  if (!window.ramping) { // window.ramping should be determined correctly in setpoint validation
+    console.warn("window.ramping =", window.ramping, ", voltage is set directly");
     setVoltage(window.vSet);
+    return;
+  }
 
+  console.info("Ramping in progress ...");
+  // precompute the steps needed
+  let normVoltage = normVRead();
+  let nStep = {"fs": Math.ceil(window.vGap.fs / window.vStep),
+    "ss": Math.ceil(window.vGap.ss / window.vStep),
+    "os": Math.ceil(window.vGap.os / window.vStep)};
+
+  console.log("Steps needed: ", nStep);
+  let nStepMin = nStep.fs;
+  let nStepMax = nStep.ss;
+  if (nStepMin > nStep.ss) nStepMin = nStep.ss;
+  if (nStepMax < nStep.ss) nStepMax = nStep.ss;
+
+  let steps = [];
+  if (nStepMax > nStepMin) {
+    // raise second step before working on first step
+    for (var i = 0, len = nStepMax - nStepMin; i < len; i++) {
+      let targetFS = normVoltage[0];
+      let targetSS = normVoltage[1] + (i + 1) * window.vStep;
+      let targetOS = normVoltage[2] + (i + 1) * window.vStep;
+      if (targetSS - targetFS >= 7.) { targetFS = targetSS - 7.; }
+      if (targetFS > window.vSet.fs) targetFS = window.vSet.fs;
+      if (targetSS > window.vSet.ss) targetSS = window.vSet.ss;
+      if (targetOS > window.vSet.os) targetOS = window.vSet.os;
+      steps.push({ "fs": targetFS, "ss": targetSS, "os": targetOS});
+    }
+
+    lastStep = steps[steps.length - 1];
+
+    for (var i = 0; i < nStepMin; i++) {
+      let targetFS = lastStep.fs + (i + 1) * window.vStep;
+      let targetSS = lastStep.ss + (i + 1) * window.vStep;
+      let targetOS = lastStep.os + (i + 1) * window.vStep;
+      if (targetSS - targetFS >= 7.) { targetFS = targetSS - 7.; }
+      if (targetFS > window.vSet.fs) targetFS = window.vSet.fs;
+      if (targetSS > window.vSet.ss) targetSS = window.vSet.ss;
+      if (targetOS > window.vSet.os) targetOS = window.vSet.os;
+      steps.push({ "fs": targetFS, "ss": targetSS, "os": targetOS});
+    }
+  }
+  else{
+    for (var i = 0; i < nStepMin; i++) {
+      let targetFS = normVoltage[0] + (i + 1) * window.vStep;
+      let targetSS = normVoltage[1] + (i + 1) * window.vStep;
+      let targetOS = normVoltage[2] + (i + 1) * window.vStep;
+      if (targetSS - targetFS >= 7.) { targetFS = targetSS - 7.; }
+      if (targetFS > window.vSet.fs) targetFS = window.vSet.fs;
+      if (targetSS > window.vSet.ss) targetSS = window.vSet.ss;
+      if (targetOS > window.vSet.os) targetOS = window.vSet.os;
+      steps.push({ "fs": targetFS, "ss": targetSS, "os": targetOS});
+    }
+  }
+
+  console.log(steps);
+
+  // Do voltage steps while ramping is true
+    // await delay(Math.random() * 1000);
   getPulseMode()
     .then((currentMode) =>{
-      if (currentMode === "Stop") 
-        setVoltage(window.vSet);
-      else 
-        setPulseMode("Stop").then(()=>{
-          setVoltage(window.vSet).then(()=>{
-            setPulseMode(currentMode);
-          })
-        })
+          if (currentMode === "Stop"){
+            setVoltage(steps[i]);
+          } 
+
+          else {
+            (async function loop() {
+              for (let i = 0; i < steps.length; i++) {
+                console.info("Step", i, ":", steps[i]);
+                if (!window.ramping) {
+                  console.warn("Abort ramping");
+                  break;
+                } 
+                await setPulseMode("Stop").then(async ()=>{
+                  await setVoltage(steps[i]).then(async ()=>{
+                    await setPulseMode(currentMode).then(async() =>{
+                      await delay(Math.floor(window.vInterval) * 1000);
+                      console.log("Resolved");
+                    });
+                  })
+                })
+              }
+            })();
+          }
+
+      window.ramping = false; // put this back to false
     })
 };
+
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+function abortRamping() {
+  window.ramping = false;
+  alert("Ramping aborted!");
+}
 
 function getSetpoint() {
   window.vMode = $('input[name=vMode]:checked').val();
@@ -135,7 +220,7 @@ function getSetpoint() {
 
   window.vStep = Number.parseFloat($("#vStep").val());
   window.vInterval = Number.parseFloat($("#vInterval").val());
-  console.log("Voltage setpoint: " + JSON.stringify(window.vSet) + ", step: " 
+  console.info("Voltage setpoint: " + JSON.stringify(window.vSet) + ", step: " 
     + window.vStep + ", interval: " + window.vInterval);
 }
 
@@ -148,12 +233,24 @@ function confirmVoltage(tolerance) {
     let goodPFS = Math.abs(window.vSet["fs"] - window.vRead.fs.pv) <= tolerance;
     let goodNFS = Math.abs(window.vSet["fs"] + window.vRead.fs.nv) <= tolerance;
 
-    // console.log(JSON.stringify(window.vSet));
-    // console.log(JSON.stringify(window.vRead));
     return goodPOS && goodNOS && goodPSS && goodNSS && goodPFS && goodNFS;
   } catch (e) {
     return false;
   }
+}
+
+function normVRead() {
+  if (window.vRead === undefined) {
+    getVoltage().then((val) =>{ window.vRead = JSON.parse(val); })
+  }
+
+  let vFS = (window.vRead.fs.pv + Math.abs(window.vRead.fs.nv)) / 2;
+  let vSS = (window.vRead.ss.pv + Math.abs(window.vRead.ss.nv)) / 2;
+  let vOS = (window.vRead.os.pv + Math.abs(window.vRead.os.nv)) / 2;
+  let normFS = parseFloat(vFS.toFixed(1));
+  let normSS = parseFloat(vSS.toFixed(1));
+  let normOS = parseFloat(vOS.toFixed(1));
+  return [normFS, normSS, normOS];
 }
 
 function validateSetpoint() {
@@ -171,15 +268,14 @@ function validateSetpoint() {
 
   let allGood = zero || (goodOS && goodSS && goodFS && goodGap);
 
-  if (window.vRead === undefined) 
-    getVoltage().then((val) =>{ window.vRead = JSON.parse(val); })
-  let vStep = {};
-  vStep.fs = window.vSet["fs"] - (window.vRead.fs.pv - window.vRead.fs.nv)/2;
-  vStep.os = window.vSet["os"] - (window.vRead.os.pv - window.vRead.os.nv)/2;
-  vStep.ss = window.vSet["ss"] - (window.vRead.ss.pv - window.vRead.ss.nv)/2;
-  console.log(vStep);
+  window.vGap = {};
+  let normVoltage = normVRead();
+  window.vGap.fs = window.vSet["fs"] - normVoltage[0];
+  window.vGap.os = window.vSet["os"] - normVoltage[1];
+  window.vGap.ss = window.vSet["ss"] - normVoltage[1];
+  console.info("Voltage gap:", window.vGap);
 
-  if (vStep.fs >= 0.2 && vStep.ss >= 0.2 && vStep.os >= 0.2)
+  if (window.vGap.fs >= 0.2 || window.vGap.ss >= 0.2 || window.vGap.os >= 0.2)
     window.ramping = true;
   else
     window.ramping = false;
@@ -205,9 +301,8 @@ function validateSetpoint() {
     msg += "than 3 kV when first step is above 10 kV."
     alert(msg);
     return false;
-  } else
-    return true;
-
-  return allGood;
+  } 
+  else
+    return allGood;
 }
 
