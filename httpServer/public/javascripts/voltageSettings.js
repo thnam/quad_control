@@ -156,7 +156,6 @@ function changeVoltage() {
   console.log(steps);
 
   // Do voltage steps while ramping is true
-    // await delay(Math.random() * 1000);
   getPulseMode()
     .then((currentMode) =>{
           if (currentMode === "Stop"){
@@ -175,15 +174,16 @@ function changeVoltage() {
                   await setVoltage(steps[i]).then(async ()=>{
                     await setPulseMode(currentMode).then(async() =>{
                       await delay(Math.floor(window.vInterval) * 1000);
-                      console.log("Resolved");
+                      console.info("Done step", i);
                     });
                   })
                 })
               }
+              // all done
+              window.ramping = false;
+              alert("Ramping completed!");
             })();
           }
-
-      window.ramping = false; // put this back to false
     })
 };
 
