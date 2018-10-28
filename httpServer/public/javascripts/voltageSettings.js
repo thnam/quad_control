@@ -163,26 +163,46 @@ function changeVoltage() {
           } 
 
           else {
-            (async function loop() {
-              for (let i = 0; i < steps.length; i++) {
-                console.info("Step", i, ":", steps[i]);
-                if (!window.ramping) {
-                  console.warn("Abort ramping");
-                  break;
-                } 
-                await setPulseMode("Stop").then(async ()=>{
-                  await setVoltage(steps[i]).then(async ()=>{
-                    await setPulseMode(currentMode).then(async() =>{
-                      await delay(Math.floor(window.vInterval) * 1000);
-                      console.info("Done step", i);
-                    });
+            if (window.vStep > 0.2) { // stop -> start
+              (async function loop() {
+                for (let i = 0; i < steps.length; i++) {
+                  console.info("Step", i, ":", steps[i]);
+                  if (!window.ramping) {
+                    console.warn("Abort ramping");
+                    break;
+                  } 
+                  await setPulseMode("Stop").then(async ()=>{
+                    await setVoltage(steps[i]).then(async ()=>{
+                      await setPulseMode(currentMode).then(async() =>{
+                        await delay(Math.floor(window.vInterval) * 1000);
+                        console.info("Done step", i);
+                      });
+                    })
                   })
-                })
-              }
-              // all done
-              window.ramping = false;
-              alert("Ramping completed!");
-            })();
+                }
+                // all done
+                window.ramping = false;
+                alert("Ramping completed!");
+              })();
+            }
+            else { // dont stop if the step is lower than 0.2
+              (async function loop() {
+                for (let i = 0; i < steps.length; i++) {
+                  console.info("Step", i, ":", steps[i]);
+                  if (!window.ramping) {
+                    console.warn("Abort ramping");
+                    break;
+                  } 
+                  await setVoltage(steps[i]).then(async ()=>{
+                    await delay(Math.floor(window.vInterval) * 1000);
+                    console.info("Done step", i);
+                  })
+                }
+                // all done
+                window.ramping = false;
+                alert("Ramping completed!");
+              })();
+            }
           }
     })
 };

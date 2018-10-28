@@ -3,7 +3,8 @@ module.exports = {
     name: 'logger',
     script: 'dataLogger/app.js',
     // node_args: "--inspect=127.0.0.1:9230",
-    watch: ["./dataLogger/loggers", "hwInterface",
+    watch: ["./dataLogger/loggers", 
+      // "hwInterface",
       "./dataLogger/app.js"],
     env: { NODE_ENV: "development" }
   }, {
