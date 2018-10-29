@@ -100,9 +100,21 @@ function changeVoltage() {
     return;
   }
 
+  let normVoltage = normVRead();
+  // handle the start from 0 -> 0.8/1.6
+  if (normVoltage[0] < 0.1 && normVoltage[1] < 0.1 && normVoltage[2] < 0.1){
+    alert("Starting from zero, will only go to 0.8/1.6 kV, then the pulsers will be put in Burst mode.");
+    window.vSet = {fs: 0.8, ss: 1.6, os: 1.6};
+    (async function startFromZero() {
+      await setVoltage(window.vSet).then(async() => {
+        await setPulseMode("Burst");
+      });
+    })();
+    return;
+  }
+
   console.info("Ramping in progress ...");
   // precompute the steps needed
-  let normVoltage = normVRead();
   let nStep = {"fs": Math.ceil(window.vGap.fs / window.vStep),
     "ss": Math.ceil(window.vGap.ss / window.vStep),
     "os": Math.ceil(window.vGap.os / window.vStep)};
