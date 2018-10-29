@@ -107,15 +107,26 @@ function changeVoltage() {
     "ss": Math.ceil(window.vGap.ss / window.vStep),
     "os": Math.ceil(window.vGap.os / window.vStep)};
 
-  console.log("Steps needed: ", nStep);
   let nStepMin = nStep.fs;
-  let nStepMax = nStep.ss;
+  let nStepMax = nStep.fs;
   if (nStepMin > nStep.ss) nStepMin = nStep.ss;
   if (nStepMax < nStep.ss) nStepMax = nStep.ss;
+  console.info("Steps needed: ", nStep, ", min:", nStepMin, ", max:", nStepMax);
 
   let steps = [];
-  if (nStepMax > nStepMin) {
-    // raise second step before working on first step
+  if (nStepMin === 0 || nStepMax === nStepMin) { // easy, raise all every time
+    for (var i = 0, len = nStepMax; i < len; i++) {
+      let targetFS = normVoltage[0] + (i + 1) * window.vStep;
+      let targetSS = normVoltage[1] + (i + 1) * window.vStep;
+      let targetOS = normVoltage[2] + (i + 1) * window.vStep;
+      if (targetSS - targetFS >= 7.) { targetFS = targetSS - 7.; }
+      if (targetFS > window.vSet.fs) targetFS = window.vSet.fs;
+      if (targetSS > window.vSet.ss) targetSS = window.vSet.ss;
+      if (targetOS > window.vSet.os) targetOS = window.vSet.os;
+      steps.push({ "fs": targetFS, "ss": targetSS, "os": targetOS});
+    }
+  }
+  else{ // raise second step before working on first step
     for (var i = 0, len = nStepMax - nStepMin; i < len; i++) {
       let targetFS = normVoltage[0];
       let targetSS = normVoltage[1] + (i + 1) * window.vStep;
@@ -128,23 +139,10 @@ function changeVoltage() {
     }
 
     lastStep = steps[steps.length - 1];
-
     for (var i = 0; i < nStepMin; i++) {
       let targetFS = lastStep.fs + (i + 1) * window.vStep;
       let targetSS = lastStep.ss + (i + 1) * window.vStep;
       let targetOS = lastStep.os + (i + 1) * window.vStep;
-      if (targetSS - targetFS >= 7.) { targetFS = targetSS - 7.; }
-      if (targetFS > window.vSet.fs) targetFS = window.vSet.fs;
-      if (targetSS > window.vSet.ss) targetSS = window.vSet.ss;
-      if (targetOS > window.vSet.os) targetOS = window.vSet.os;
-      steps.push({ "fs": targetFS, "ss": targetSS, "os": targetOS});
-    }
-  }
-  else{
-    for (var i = 0; i < nStepMin; i++) {
-      let targetFS = normVoltage[0] + (i + 1) * window.vStep;
-      let targetSS = normVoltage[1] + (i + 1) * window.vStep;
-      let targetOS = normVoltage[2] + (i + 1) * window.vStep;
       if (targetSS - targetFS >= 7.) { targetFS = targetSS - 7.; }
       if (targetFS > window.vSet.fs) targetFS = window.vSet.fs;
       if (targetSS > window.vSet.ss) targetSS = window.vSet.ss;
@@ -200,7 +198,7 @@ function changeVoltage() {
                 }
                 // all done
                 window.ramping = false;
-                alert("Ramping completed!");
+                $.jGrowl("Ramping completed", { life: 10000 });
               })();
             }
           }
