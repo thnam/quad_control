@@ -7,18 +7,24 @@ const cvLogger = require(global.appRoot + '/loggers/cvLogger.js');
 const statusLogger = require(global.appRoot + '/loggers/statusLogger.js');
 const sparkLogger = require(global.appRoot + '/loggers/sparkLogger.js');
 
-// Fake data
-const cvDataCmd = appRoot + '/../hwInterface/fakeCVData.py';
-const statusDataCmd = appRoot + '/../hwInterface/fakePulserStatus.py';
-const sparkDataCmd = appRoot + "/../hwInterface/fakeSparkData.py";
+let env = process.env.NODE_ENV;
+console.log("Running mode: " + env);
 
-// Labjack data
-// const cvDataCmd = appRoot + '/../hwInterface/ljCVData.py';
-// const statusDataCmd = appRoot + '/../hwInterface/ljPulserStatus.py';
-// const sparkDataCmd = appRoot + "/../hwInterface/ljSparkData.py";
-//
-// BU electronics data
-// const statusDataCmd = appRoot + '/../hwInterface/fakePulserStatus.py';
+var cvDataCmd, sparkDataCmd, statusDataCmd;
+
+if (env == "development") { // Fake data
+  cvDataCmd = appRoot + '/../hwInterface/fakeCVData.py';
+  statusDataCmd = appRoot + '/../hwInterface/fakePulserStatus.py';
+  sparkDataCmd = appRoot + "/../hwInterface/fakeSparkData.py";
+} else{
+  // Labjack data
+  cvDataCmd = appRoot + '/../hwInterface/ljCVData.py';
+  statusDataCmd = appRoot + '/../hwInterface/ljPulserStatus.py';
+  sparkDataCmd = appRoot + "/../hwInterface/ljSparkData.py";
+  // BU electronics data
+  // const statusDataCmd = appRoot + '/../hwInterface/fakePulserStatus.py';
+}
+
 
 setInterval( () => {
     const command = exec(cvDataCmd);
