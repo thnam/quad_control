@@ -45,17 +45,25 @@ function displaySparkInfo() {
 function readSparkThreshold() {
   $.get(baseUrl + "/camacThreshold").done((data) =>{
     if (!data.error) {
-      let thr = JSON.parse(data[0].message);
+      try {
+        let thr = JSON.parse(data[0].message);
 
-      Object.keys(thr).forEach(slot =>{
-        entry = "#slot" + slot.toString() + "Th";
-        $(entry).text(thr[slot] + " mV");
+        Object.keys(thr).forEach(slot =>{
+          entry = "#slot" + slot.toString() + "Th";
+          $(entry).text(thr[slot] + " mV");
 
-        if (thr[slot] >= 800) 
-          $(entry).css({"color": $(".btn-success").css("background-color")});
-        else
-          $(entry).css({"color": $(".btn-danger").css("background-color")});
-      });
+          if (thr[slot] >= 800) 
+            $(entry).css({"color": $(".btn-success").css("background-color")});
+          else
+            $(entry).css({"color": $(".btn-danger").css("background-color")});
+        });
+      } catch (e) {
+        console.error(e);
+        $("#slot3Th").text(`ERROR!`);
+        $("#slot3Th").css({"color": $(".btn-danger").css("background-color")});
+        $("#slot6Th").text(`ERROR!`);
+        $("#slot6Th").css({"color": $(".btn-danger").css("background-color")});
+      }
     } else {
       $("#slot3Th").text(`ERROR!`);
       $("#slot3Th").css({"color": $(".btn-danger").css("background-color")});
@@ -65,3 +73,9 @@ function readSparkThreshold() {
   })
 };
 
+function handleSparkEvent(msg) {
+  changePulseMode("Stop");
+  // reset the spark bit here
+  //
+  alert(msg);
+}
