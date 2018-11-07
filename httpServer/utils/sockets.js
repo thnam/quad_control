@@ -21,30 +21,36 @@ io.on('connection', function (socket) {
   setInterval(async ()=>{
     try {
       const cv = await dbTool.getCV();
-      // console.log(cv);
       socket.emit("cv", {cv: cv});
+
+      const lastCV = JSON.parse(cv[0].message);
+      if (lastCV.spark >= 2) {
+
+        // console.log("spark");
+      }
+      // else
+        // console.log("no spark");
+
     } catch (e) {
-      next(e);
+      console.error(e);
     }
   }, 3333);
 
   setInterval(async ()=>{
     try {
       const pulserStatus = await dbTool.getPulserStatus();
-      // console.log(cv);
       socket.emit("pulserStatus", {pulserStatus: pulserStatus});
     } catch (e) {
-      next(e);
+      console.error(e);
     }
   }, 5000);
 
   setInterval(async ()=>{
     try {
       const spark = await dbTool.getSparkInfo();
-      // console.log(cv);
-      socket.emit("spark", spark);
+      socket.emit("sparkPattern", spark);
     } catch (e) {
-      next(e);
+      console.error(e);
     }
   }, 10000);
 });

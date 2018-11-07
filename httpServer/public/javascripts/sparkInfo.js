@@ -1,5 +1,5 @@
 var socket = io.connect(baseUrl);
-socket.on("spark", (data) => {
+socket.on("sparkPattern", (data) => {
   window.spark = JSON.parse(data[0].message);
   displaySparkInfo();
 });
