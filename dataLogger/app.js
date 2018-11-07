@@ -6,6 +6,7 @@ global.appRoot = require('app-root-path').toString();
 const cvLogger = require(global.appRoot + '/loggers/cvLogger.js');
 const statusLogger = require(global.appRoot + '/loggers/statusLogger.js');
 const sparkLogger = require(global.appRoot + '/loggers/sparkLogger.js');
+const thrLogger = require(global.appRoot + '/loggers/sparkThresholdLogger.js');
 
 let env = process.env.NODE_ENV;
 console.log("Running mode: " + env);
@@ -16,11 +17,13 @@ if (env == "development") { // Fake data
   cvDataCmd = appRoot + '/../hwInterface/fakeCVData.py';
   statusDataCmd = appRoot + '/../hwInterface/fakePulserStatus.py';
   sparkDataCmd = appRoot + "/../hwInterface/fakeSparkData.py";
+  sparkThresholdCmd = appRoot + "/../hwInterface/fakeSparkThreshold.py";
 } else{
   // Labjack data
   cvDataCmd = appRoot + '/../hwInterface/ljCVData.py';
   statusDataCmd = appRoot + '/../hwInterface/ljPulserStatus.py';
   sparkDataCmd = appRoot + "/../hwInterface/ljSparkData.py";
+  sparkThresholdCmd = appRoot + "/../hwInterface/ljSparkThreshold.py";
   // BU electronics data
   // const statusDataCmd = appRoot + '/../hwInterface/fakePulserStatus.py';
 }
@@ -82,4 +85,22 @@ setInterval( () => {
     });
 
   }, config.get("logger.pulserStatePollingPeriod")
+);
+
+setInterval( () => {
+    const command = exec(sparkThresholdCmd);
+    var thr = {};
+    command.stdout.on('data', function(data){
+      console.log(data);
+      thr = JSON.parse(data);
+      thr["error"] = false;
+      thrLogger.info(JSON.stringify(thr));
+    });
+
+    command.stderr.on('error', function(err){
+      thr["error"] = true;
+      thr["message"] = JSON.stringify(err).slice(1, -4);
+      thrLogger.error(JSON.stringify(thr));
+    });
+  }, config.get("logger.sparkThresholdPollingPeriod")
 );

@@ -8,6 +8,8 @@ $(() =>{
   getPulseMode().then((currentMode)=>{
     displayPulseMode(currentMode);
   });
+
+  readSparkThreshold();
   // 
   $("#setVoltages").click(()=>{ changeVoltage() });
   $("#zeroVoltages").click(()=>{ zeroVoltage() });

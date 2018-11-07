@@ -4,18 +4,6 @@ socket.on("spark", (data) => {
   displaySparkInfo();
 });
 
-async function getSparkInfo() {
-  const ret = await $.ajax({
-    type: 'GET',
-    url: baseUrl + '/spark',
-    success: function(data) { },
-    error: (xhr)=>{
-      alert("Error", xhr);
-    },
-  })
-  return ret.message;
-};
-
 function displaySparkInfo() {
   let sparkTable = document.getElementById("sparkTable");
   let plate = ["t", "b", "i", "o"];
@@ -52,4 +40,28 @@ function displaySparkInfo() {
       }
     }
   }
-}
+};
+
+function readSparkThreshold() {
+  $.get(baseUrl + "/camacThreshold").done((data) =>{
+    if (!data.error) {
+      let thr = JSON.parse(data[0].message);
+
+      Object.keys(thr).forEach(slot =>{
+        entry = "#slot" + slot.toString() + "Th";
+        $(entry).text(thr[slot] + " mV");
+
+        if (thr[slot] >= 800) 
+          $(entry).css({"color": $(".btn-success").css("background-color")});
+        else
+          $(entry).css({"color": $(".btn-danger").css("background-color")});
+      });
+    } else {
+      $("#slot3Th").text(`ERROR!`);
+      $("#slot3Th").css({"color": $(".btn-danger").css("background-color")});
+      $("#slot6Th").text(`ERROR!`);
+      $("#slot6Th").css({"color": $(".btn-danger").css("background-color")});
+    }
+  })
+};
+
