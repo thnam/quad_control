@@ -5,7 +5,7 @@ const exec = require('child_process').exec;
 global.appRoot = require('app-root-path').toString();
 const cvLogger = require(global.appRoot + '/loggers/cvLogger.js');
 const statusLogger = require(global.appRoot + '/loggers/statusLogger.js');
-const sparkLogger = require(global.appRoot + '/loggers/sparkLogger.js');
+const sparkPatternLogger = require(global.appRoot + '/loggers/sparkPatternLogger.js');
 const thrLogger = require(global.appRoot + '/loggers/sparkThresholdLogger.js');
 const sparkHistLogger = require(global.appRoot + '/loggers/sparkHistoryLogger.js');
 
@@ -81,13 +81,13 @@ setInterval( () => {
     command.stdout.on('data', function(data){
       spark = JSON.parse(data);
       spark["error"] = false;
-      sparkLogger.info(JSON.stringify(spark));
+      sparkPatternLogger.info(JSON.stringify(spark));
     });
 
     command.stderr.on('error', function(err){
       spark["error"] = true;
       spark["message"] = JSON.stringify(err).slice(1, -4);
-      sparkLogger.error(JSON.stringify(spark));
+      sparkPatternLogger.error(JSON.stringify(spark));
     });
 
   }, config.get("logger.pulserStatePollingPeriod")

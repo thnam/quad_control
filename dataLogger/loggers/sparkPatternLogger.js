@@ -5,14 +5,15 @@ var sparkOptions = {
     outputName: "spark"
   },
   db: {
-    name: "spark",
-    enable: true
+    enable: false
   },
   console: {
     enable: true
   },
   dbOnline: {
-    enable: false,
+    enable: true,
+    name: "sparkPattern",
+    nPoints: 1
   }
 };
 

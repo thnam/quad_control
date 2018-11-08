@@ -24,8 +24,8 @@ function getPulserStatus() {
 }
 
 function getSparkInfo(){
-  const collection = db.get().db("quad").collection('spark');
-  const result = collection.find().sort({$natural: -1}).limit(1).toArray();
+  const collection = db.get().db("quad").collection('sparkPattern');
+  const result = collection.find().toArray();
   return result;
 }
 
