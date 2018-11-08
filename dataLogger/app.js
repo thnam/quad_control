@@ -8,9 +8,24 @@ const statusLogger = require(global.appRoot + '/loggers/statusLogger.js');
 const sparkPatternLogger = require(global.appRoot + '/loggers/sparkPatternLogger.js');
 const thrLogger = require(global.appRoot + '/loggers/sparkThresholdLogger.js');
 const sparkHistLogger = require(global.appRoot + '/loggers/sparkHistoryLogger.js');
+const flagLogger = require(global.appRoot + '/loggers/flagLogger.js');
+
+const mongoClient = require('mongodb').MongoClient;
+const dbUrl = "mongodb://" + config.get("mongo.user") + ":"
+  + config.get("mongo.password") + "@" + config.get("mongo.host") + ":"
+  + config.get("mongo.port").toString() +
+  "/" + config.get("mongo.db");
 
 let env = process.env.NODE_ENV;
 console.log("Running mode: " + env);
+
+setFlag(false, false);
+
+var flag;
+(async function aaa(){
+  flag = await readFlag();
+  console.log(flag);
+})();
 
 var cvDataCmd, sparkDataCmd, statusDataCmd;
 
@@ -38,23 +53,38 @@ setInterval( () => {
       cv["error"] = false;
       cvLogger.info(JSON.stringify(cv));
 
-      // if sparks, record the pattern in the sparkHist collection
+      // if sparks, record the pattern in the sparkHistory collection
       if (cv.spark >= 2.) {
-        const patternCmd = exec(sparkDataCmd);
-        var pattern = {};
-        patternCmd.stdout.on('data', function(data){
-          pattern = JSON.parse(data);
-          pattern["error"] = false;
-          pattern["sparkBit"] = cv.spark;
-          sparkHistLogger.info(JSON.stringify(pattern));
-        });
+        if (!flag.spark) {
+          console.log("sparked, setting the flag");
+          setFlag(true, flag.fault);
 
-        patternCmd.stderr.on('error', function(err){
-          pattern["error"] = true;
-          pattern["sparkBit"] = cv.spark;
-          pattern["message"] = JSON.stringify(err).slice(1, -4);
-          sparkPatternLogger.error(JSON.stringify(pattern));
-        });
+          (async () =>{
+            flag = await readFlag();
+          })();
+
+          const patternCmd = exec(sparkDataCmd);
+          var pattern = {};
+          patternCmd.stdout.on('data', function(data){
+            pattern = JSON.parse(data);
+            pattern["error"] = false;
+            pattern["sparkBit"] = cv.spark;
+            sparkHistLogger.info(JSON.stringify(pattern));
+          });
+
+          patternCmd.stderr.on('error', function(err){
+            pattern["error"] = true;
+            pattern["sparkBit"] = cv.spark;
+            pattern["message"] = JSON.stringify(err).slice(1, -4);
+            sparkPatternLogger.error(JSON.stringify(pattern));
+          });
+        }
+
+        setTimeout(()=>{
+          setFlag(false, flag.fault);
+          (async () => { flag = await readFlag(); })();
+        }, 60000);
+
       }
     });
 
@@ -113,7 +143,6 @@ setInterval( () => {
     const command = exec(sparkThresholdCmd);
     var thr = {};
     command.stdout.on('data', function(data){
-      console.log(data);
       thr = JSON.parse(data);
       thr["error"] = false;
       thrLogger.info(JSON.stringify(thr));
@@ -126,3 +155,19 @@ setInterval( () => {
     });
   }, config.get("logger.sparkThresholdPollingPeriod")
 );
+
+// useful flags for not spamming the db 
+function readFlag() {
+  return mongoClient.connect(dbUrl, {useNewUrlParser: true})
+    .then(function(db) {
+      var collection = db.db("quad").collection("flag");
+      return collection.findOne();})
+    .then(function(item) {
+      return JSON.parse(item.message);
+  });
+}
+
+function setFlag(spark, fault) {
+  flagLogger.info(JSON.stringify({"spark": spark, "fault": fault}));
+}
+

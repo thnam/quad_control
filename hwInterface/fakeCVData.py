@@ -45,7 +45,7 @@ for ps in pulsers:
       gauss(setpoint["c"][ps], setpoint["v"]["sigma"]),
       gauss(-1 * setpoint["c"][ps], setpoint["v"]["sigma"]))
 
-ostr += ' "spark": %s}' % float('%.3g' % gauss(-.4, .2))
-#  ostr += ' "spark": %s}' % float('%.3g' % gauss(2, .2))
+#  ostr += ' "spark": %s}' % float('%.3g' % gauss(-.4, .2))
+ostr += ' "spark": %s}' % float('%.3g' % gauss(2, .2))
 
 print(ostr)
