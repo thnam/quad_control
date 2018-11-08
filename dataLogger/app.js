@@ -38,9 +38,23 @@ setInterval( () => {
       cv["error"] = false;
       cvLogger.info(JSON.stringify(cv));
 
-      // if sparks, record this and pattern
+      // if sparks, record the pattern in the sparkHist collection
       if (cv.spark >= 2.) {
-        sparkHistLogger.info(JSON.stringify(cv));
+        const patternCmd = exec(sparkDataCmd);
+        var pattern = {};
+        patternCmd.stdout.on('data', function(data){
+          pattern = JSON.parse(data);
+          pattern["error"] = false;
+          pattern["sparkBit"] = cv.spark;
+          sparkHistLogger.info(JSON.stringify(pattern));
+        });
+
+        patternCmd.stderr.on('error', function(err){
+          pattern["error"] = true;
+          pattern["sparkBit"] = cv.spark;
+          pattern["message"] = JSON.stringify(err).slice(1, -4);
+          sparkPatternLogger.error(JSON.stringify(pattern));
+        });
       }
     });
 
@@ -75,24 +89,26 @@ setInterval( () => {
   }, config.get("logger.pulserStatePollingPeriod")
 );
 
+// Periodic spark pattern for online display
 setInterval( () => {
     const command = exec(sparkDataCmd);
-    var spark = {};
+    var pattern = {};
     command.stdout.on('data', function(data){
-      spark = JSON.parse(data);
-      spark["error"] = false;
-      sparkPatternLogger.info(JSON.stringify(spark));
+      pattern = JSON.parse(data);
+      pattern["error"] = false;
+      sparkPatternLogger.info(JSON.stringify(pattern));
     });
 
     command.stderr.on('error', function(err){
-      spark["error"] = true;
-      spark["message"] = JSON.stringify(err).slice(1, -4);
-      sparkPatternLogger.error(JSON.stringify(spark));
+      pattern["error"] = true;
+      pattern["message"] = JSON.stringify(err).slice(1, -4);
+      sparkPatternLogger.error(JSON.stringify(pattern));
     });
 
-  }, config.get("logger.pulserStatePollingPeriod")
+  }, config.get("logger.sparkPollingPeriod")
 );
 
+// Spark threshold, periodically read, just for the record
 setInterval( () => {
     const command = exec(sparkThresholdCmd);
     var thr = {};
