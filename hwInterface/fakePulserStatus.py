@@ -12,7 +12,10 @@ pulsers = ["pos", "nos", "pts", "nts"]
 ostr = '{'
 for ps in pulsers:
   ostr += '"%s" : {"enable": %.1f, "fault": %.1f, "interlock": %.1f},' % (
-    ps, uniform(4, 5), uniform(0, 0.2), uniform(4, 5))
+      ps,
+      int(uniform(4, 5)/3.5),
+      int(uniform(0, 0.2)/3.5),
+      int(uniform(4, 5)/3.5))
 
 ostr = ostr[:-1]
 ostr += '}'

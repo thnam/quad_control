@@ -9,6 +9,7 @@ var mainOptions = {
   },
   db: {
     name: "mainLog",
+    enable: true
   },
   dbOnline:{ enable: false }
 };

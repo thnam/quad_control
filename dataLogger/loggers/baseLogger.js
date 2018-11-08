@@ -56,6 +56,24 @@ module.exports = function (options){
       handleExceptions: false,
       level: "info",
       options:{ useNewUrlParser: true }
+    },
+
+    console : {
+      level: "debug",
+      handleExceptions: true,
+      json: false,
+      format: combine(timestamp(), consoleTimestampFormat),
+    },
+
+    dbOnline : {
+      db : dbUrl,
+      collection : options.dbOnline.name,
+      name: options.dbOnline.name + "_onlineDB",
+      level : 'info',
+      capped: "true",
+      handleExceptions: false,
+      cappedMax: options.dbOnline.nPoints,
+      options:{ useNewUrlParser: true }
     }
   };
 
@@ -66,29 +84,15 @@ module.exports = function (options){
     logger.add(new transports.File(loggerOptions.file));
   };
 
-  logger.add( new transports.MongoDB(loggerOptions.db));
+  if (options.db.enable) {
+    logger.add( new transports.MongoDB(loggerOptions.db));
+  }
 
   if (options.console.enable) {
-    loggerOptions.console = {
-      level: "debug",
-      handleExceptions: true,
-      json: false,
-      format: combine(timestamp(), consoleTimestampFormat),
-    };
     logger.add(new transports.Console(loggerOptions.console));
   };
 
   if (options.dbOnline.enable) {
-    loggerOptions.dbOnline = {
-      db : dbUrl,
-      collection : options.dbOnline.name,
-      name: options.dbOnline.name + "_onlineDB",
-      level : 'info',
-      capped: "true",
-      handleExceptions: false,
-      cappedMax: options.dbOnline.nPoints,
-      options:{ useNewUrlParser: true }
-    };
     logger.add(new transports.MongoDB(loggerOptions.dbOnline));
   };
 

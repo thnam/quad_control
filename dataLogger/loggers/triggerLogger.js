@@ -9,6 +9,7 @@ var triggerOptions = {
   },
   db: {
     name: "mainLog",
+    enable: true
   },
   dbOnline:{
     enable: true,

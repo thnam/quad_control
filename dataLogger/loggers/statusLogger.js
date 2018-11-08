@@ -6,6 +6,7 @@ var statusOptions = {
   },
   db: {
     name: "pulserStatus",
+    enable: true
   },
   console: {
     enable: true

@@ -7,6 +7,7 @@ const cvLogger = require(global.appRoot + '/loggers/cvLogger.js');
 const statusLogger = require(global.appRoot + '/loggers/statusLogger.js');
 const sparkLogger = require(global.appRoot + '/loggers/sparkLogger.js');
 const thrLogger = require(global.appRoot + '/loggers/sparkThresholdLogger.js');
+const sparkHistLogger = require(global.appRoot + '/loggers/sparkHistoryLogger.js');
 
 let env = process.env.NODE_ENV;
 console.log("Running mode: " + env);
@@ -36,6 +37,11 @@ setInterval( () => {
       cv = JSON.parse(data);
       cv["error"] = false;
       cvLogger.info(JSON.stringify(cv));
+
+      // if sparks, record this and pattern
+      if (cv.spark >= 2.) {
+        sparkHistLogger.info(JSON.stringify(cv));
+      }
     });
 
     command.stderr.on('error', function(err){

@@ -6,6 +6,7 @@ var thrOptions = {
   },
   db: {
     name: "sparkThreshold",
+    enable: true
   },
   console: {
     enable: true

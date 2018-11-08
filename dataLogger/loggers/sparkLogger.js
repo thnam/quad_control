@@ -6,6 +6,7 @@ var sparkOptions = {
   },
   db: {
     name: "spark",
+    enable: true
   },
   console: {
     enable: true
