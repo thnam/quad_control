@@ -5,15 +5,15 @@ VoltageLabjackDevType = 7
 VoltageLabjackConnType = 3
 
 # ports
-psVCReadoutPort = {"FS": ["AIN0", "AIN1", "AIN6", "AIN7"], 
+psVCReadoutPort = {"fs": ["AIN0", "AIN1", "AIN6", "AIN7"], 
                    #FS:     NC      NV      PC      PV
-                   "SS": ["AIN2", "AIN3", "AIN4", "AIN5"],
+                   "ss": ["AIN2", "AIN3", "AIN4", "AIN5"],
                    #SS:     NC      NV      PC      PV
-                   "OS": ["AIN8", "AIN9", "AIN10", "AIN11"],
+                   "os": ["AIN8", "AIN9", "AIN10", "AIN11"],
                    #OS:     NC      NV      PC      PV
                    "Spark": ["AIN12"]}
-vScaleFactor = {"FS": 3., "SS": 4., "OS": 4.}
-cScaleFactor = {"FS": 6.6, "SS": 5.0, "OS": 7.5}
+vScaleFactor = {"fs": 3., "ss": 4., "os": 4.}
+cScaleFactor = {"fs": 6.6, "ss": 5.0, "os": 7.5}
 
 from labjack import ljm
 def main(devAddress, ports,
@@ -33,7 +33,7 @@ def main(devAddress, ports,
     return ret
 
 if __name__ == "__main__":
-    ports = psVCReadoutPort["FS"] + psVCReadoutPort["SS"] + psVCReadoutPort["OS"] + psVCReadoutPort["Spark"]
+    ports = psVCReadoutPort["fs"] + psVCReadoutPort["ss"] + psVCReadoutPort["os"] + psVCReadoutPort["Spark"]
 
     vals = main(VoltageLabjackIP, ports, VoltageLabjackDevType, VoltageLabjackConnType)
 
@@ -41,20 +41,20 @@ if __name__ == "__main__":
     ps = ["fs", "ss", "os"]
 
     if len(vals) == 13:
-        vals[0] *= cScaleFactor["FS"]
-        vals[1] *= vScaleFactor["FS"]
-        vals[2] *= cScaleFactor["FS"]
-        vals[3] *= vScaleFactor["FS"]
+        vals[0] *= cScaleFactor["fs"]
+        vals[1] *= vScaleFactor["fs"]
+        vals[2] *= cScaleFactor["fs"]
+        vals[3] *= vScaleFactor["fs"]
 
-        vals[4] *= cScaleFactor["SS"]
-        vals[5] *= vScaleFactor["SS"]
-        vals[6] *= cScaleFactor["SS"]
-        vals[7] *= vScaleFactor["SS"]
+        vals[4] *= cScaleFactor["ss"]
+        vals[5] *= vScaleFactor["ss"]
+        vals[6] *= cScaleFactor["ss"]
+        vals[7] *= vScaleFactor["ss"]
 
-        vals[8] *= cScaleFactor["OS"]
-        vals[9] *= vScaleFactor["OS"]
-        vals[10] *= cScaleFactor["OS"]
-        vals[11] *= vScaleFactor["OS"]
+        vals[8] *= cScaleFactor["os"]
+        vals[9] *= vScaleFactor["os"]
+        vals[10] *= cScaleFactor["os"]
+        vals[11] *= vScaleFactor["os"]
 
         #  out = '{'
         #  out += '"fs":' + vals[:4].__str__() + ", "

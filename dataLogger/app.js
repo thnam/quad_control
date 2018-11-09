@@ -66,6 +66,11 @@ setInterval( () => {
           })
         } else if (env == "production") {
           // labjack reset here
+          const newCmd = exec(appRoot + "/../hwInterface/ljSparkRecover.py");
+          newCmd.stdout.on("data", (data) =>{
+            console.log("Spark pin reset");
+          })
+
         }
 
         const patternCmd = exec(sparkDataCmd);
