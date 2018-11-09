@@ -75,7 +75,43 @@ function readSparkThreshold() {
 
 function handleSparkEvent(msg) {
   changePulseMode("Stop");
-  // reset the spark bit here
-  //
+  // reset the spark bit is done automatically in dataLogger
   alert(msg);
+}
+
+function showLastSpark() {
+  $.get(baseUrl + "/lastSpark").done((data)=>{
+    timestamp = new Date(data.timestamp);
+    timestamp = moment(timestamp).format('YYYY-MM-DD HH:mm:ss');
+
+    sparkedQuads = [];
+    quadType = ["l", "s"];
+
+    pattern = JSON.parse(data.message);
+
+    for (var i = 0, len = 4; i < len; i++) {
+      quadStr = "q" + (i + 1).toString();
+
+      for (var j = 0; j < 2; j++) {
+        nSparks = sumSpark(pattern[quadStr][quadType[j]]);
+        if (nSparks > 0) {
+          sparkedQuads.push((quadStr + quadType[j]).toUpperCase());
+        }
+      }
+    }
+
+    $("#lastSpark").text("Last: " + timestamp);
+    $("#sparkedQuads").text("on: " + sparkedQuads);
+
+  })
+}
+
+function sumSpark(obj){
+  var sum = 0;
+  for( var el in obj ){
+    if( obj.hasOwnProperty(el)){
+      sum += obj[el]; 
+    }
+  }
+  return sum;
 }

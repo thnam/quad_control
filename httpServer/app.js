@@ -26,6 +26,7 @@ app.use('/cv', require(global.appRoot + '/routes/cv'));
 app.use('/lastcv', require(global.appRoot + '/routes/lastCV'));
 app.use('/pulserStatus', require(global.appRoot + '/routes/pulserStatus'));
 app.use('/spark', require(global.appRoot + '/routes/sparkInfo'));
+app.use('/lastSpark', require(global.appRoot + '/routes/lastSpark'));
 app.use('/camacThreshold', require(global.appRoot + '/routes/camacThreshold'));
 
 // catch 404 and forward to error handler

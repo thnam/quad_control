@@ -10,6 +10,7 @@ $(() =>{
   });
 
   readSparkThreshold();
+  showLastSpark();
   // 
   $("#setVoltages").click(()=>{ changeVoltage() });
   $("#zeroVoltages").click(()=>{ zeroVoltage() });

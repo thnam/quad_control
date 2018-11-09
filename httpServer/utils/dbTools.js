@@ -29,6 +29,12 @@ function getSparkInfo(){
   return result;
 }
 
+function getLastSpark(){
+  const collection = db.get().db("quad").collection('sparkHistory');
+  const result = collection.find().sort({$natural: -1}).limit(1).toArray();
+  return result;
+}
+
 function getSparkThreshold(){
   const collection = db.get().db("quad").collection('sparkThreshold');
   const result = collection.find().sort({$natural: -1}).limit(1).toArray();
@@ -42,4 +48,5 @@ module.exports = {
   getPulserStatus: getPulserStatus,
   getSparkInfo: getSparkInfo,
   getSparkThreshold: getSparkThreshold,
+  getLastSpark: getLastSpark,
 }
