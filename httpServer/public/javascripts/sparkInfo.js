@@ -76,6 +76,7 @@ function readSparkThreshold() {
 function handleSparkEvent(msg) {
   changePulseMode("Stop");
   // reset the spark bit is done automatically in dataLogger
+  playAlarmSound(window.sparkAlarmAudio);
   alert(msg);
 }
 
@@ -117,4 +118,10 @@ function sumSpark(obj){
     }
   }
   return sum;
+}
+
+function playAlarmSound(audio, period=20) {
+  audio.loop = true;
+  setTimeout(()=>{audio.loop = false}, period * 1000);
+  audio.play();
 }
