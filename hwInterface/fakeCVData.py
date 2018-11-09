@@ -27,6 +27,12 @@ if len(sys.argv) > 1:
         setpoint["v"]["fs"] = float(sys.argv[1])
         setpoint["v"]["ss"] = float(sys.argv[2])
         setpoint["v"]["os"] = float(sys.argv[2])
+    if len(sys.argv) == 5:
+        setpoint["v"]["fs"] = float(sys.argv[1])
+        setpoint["v"]["ss"] = float(sys.argv[2])
+        setpoint["v"]["os"] = float(sys.argv[3])
+        setpoint["spark"]["value"] = float(sys.argv[4])
+        print(setpoint)
     else:
         exit(-1)
 
@@ -46,6 +52,7 @@ for ps in pulsers:
       gauss(-1 * setpoint["c"][ps], setpoint["v"]["sigma"]))
 
 #  ostr += ' "spark": %s}' % float('%.3g' % gauss(-.4, .2))
-ostr += ' "spark": %s}' % float('%.3g' % gauss(2, .2))
+ostr += ' "spark": %s}' % float('%.3g' % gauss(setpoint["spark"]["value"],
+                                               setpoint["spark"]["sigma"]))
 
 print(ostr)
