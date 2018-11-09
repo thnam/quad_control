@@ -37,6 +37,9 @@ plotColor = [
   '#bcbd22',  // curry yellow-green
 ];
 
+window.sparkAlarmAudio = document.getElementById("sparkAlarmAudio");
+window.faultAlarmAudio = document.getElementById("faultAlarmAudio");
+
 window.ramping = false;
 
 const baseUrl = "http://" + document.location.hostname + ":" + document.location.port

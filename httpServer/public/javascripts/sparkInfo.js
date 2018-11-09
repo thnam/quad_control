@@ -80,30 +80,33 @@ function handleSparkEvent(msg) {
 }
 
 function showLastSpark() {
-  $.get(baseUrl + "/lastSpark").done((data)=>{
-    timestamp = new Date(data.timestamp);
-    timestamp = moment(timestamp).format('YYYY-MM-DD HH:mm:ss');
+  $.get(baseUrl + "/lastSpark")
+    .done((data)=>{
+      timestamp = new Date(data.timestamp);
+      timestamp = moment(timestamp).format('YYYY-MM-DD HH:mm:ss');
 
-    sparkedQuads = [];
-    quadType = ["l", "s"];
+      sparkedQuads = [];
+      quadType = ["l", "s"];
 
-    pattern = JSON.parse(data.message);
+      pattern = JSON.parse(data.message);
 
-    for (var i = 0, len = 4; i < len; i++) {
-      quadStr = "q" + (i + 1).toString();
+      for (var i = 0, len = 4; i < len; i++) {
+        quadStr = "q" + (i + 1).toString();
 
-      for (var j = 0; j < 2; j++) {
-        nSparks = sumSpark(pattern[quadStr][quadType[j]]);
-        if (nSparks > 0) {
-          sparkedQuads.push((quadStr + quadType[j]).toUpperCase());
+        for (var j = 0; j < 2; j++) {
+          nSparks = sumSpark(pattern[quadStr][quadType[j]]);
+          if (nSparks > 0) {
+            sparkedQuads.push((quadStr + quadType[j]).toUpperCase());
+          }
         }
       }
-    }
 
-    $("#lastSpark").text("Last: " + timestamp);
-    $("#sparkedQuads").text("on: " + sparkedQuads);
-
-  })
+      $("#lastSpark").text("Last: " + timestamp);
+      $("#sparkedQuads").text("on: " + sparkedQuads);
+    })
+    .fail(()=>{
+      $("#lastSpark").text("Last: None");
+    })
 }
 
 function sumSpark(obj){
