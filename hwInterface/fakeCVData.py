@@ -27,7 +27,7 @@ if len(sys.argv) > 1:
         setpoint["v"]["fs"] = float(sys.argv[1])
         setpoint["v"]["ss"] = float(sys.argv[2])
         setpoint["v"]["os"] = float(sys.argv[2])
-    if len(sys.argv) == 5:
+    elif len(sys.argv) == 5:
         setpoint["v"]["fs"] = float(sys.argv[1])
         setpoint["v"]["ss"] = float(sys.argv[2])
         setpoint["v"]["os"] = float(sys.argv[3])

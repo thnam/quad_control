@@ -166,10 +166,18 @@ function changeVoltage() {
   console.log(steps);
 
   // Do voltage steps while ramping is true
+  toggleControlInRamping();
   getPulseMode()
     .then((currentMode) =>{
           if (currentMode === "Stop"){
             setVoltage(steps[i]);
+            (async () =>{
+              await delay(Math.floor(window.vInterval) * 1000);
+              console.info("Done step", i);
+            })();
+                window.ramping = false;
+                alert("Ramping completed!");
+                toggleControlInRamping();
           } 
 
           else {
@@ -192,7 +200,8 @@ function changeVoltage() {
                 }
                 // all done
                 window.ramping = false;
-                alert("Ramping completed!");
+                toggleControlInRamping();
+                $.jGrowl("Ramping completed", { life: 10000 });
               })();
             }
             else { // dont stop if the step is lower than 0.2
@@ -211,6 +220,7 @@ function changeVoltage() {
                 // all done
                 window.ramping = false;
                 $.jGrowl("Ramping completed", { life: 10000 });
+                toggleControlInRamping();
               })();
             }
           }
@@ -221,6 +231,7 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 function abortRamping() {
   window.ramping = false;
+                toggleControlInRamping();
   alert("Ramping aborted!");
 }
 

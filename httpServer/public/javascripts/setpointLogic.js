@@ -102,3 +102,13 @@ function lockFlattop() {
   }
   reflectVManual();
 }
+
+function toggleControlInRamping() {
+  buttons = ["p1kV", "m1kV", "m2kV", "m3kV", "m4kV", "m10kV",
+    "setVoltages", "zeroVoltages"];
+
+  if (window.ramping) 
+    buttons.forEach(btn =>{ document.getElementById(btn).disabled = true; })
+  else
+    buttons.forEach(btn =>{ document.getElementById(btn).disabled = false; })
+}
