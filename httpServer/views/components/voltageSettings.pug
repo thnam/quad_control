@@ -22,22 +22,24 @@
     .row
       .form-row
         label.col-6(for='vPreset') Set point
-        select#vSetpoint.form-control.col-5.combobox(name='vSetpoint', onchange='reflectVPreset()')
-          option(value='0.0, 0.0') 0.0, 0.0
-          option(value='0.8, 1.6') 0.8, 1.6 
-          option(value='4.0, 5.0') 4.0, 5.0 
-          option(value='4.0, 7.0') 4.0, 7.0 
-          option(value='7.0, 10.0') 7.0, 10.0 
-          option(value='10.0, 13.0') 10.0, 13.0
-          option(value='10.7, 15.0') 10.7, 15.0
-          option(value='12.0, 15.0') 12.0, 15.0
-          option(value='12.6, 17.6') 12.6, 17.6
-          option(value='14.4, 20.2') 14.4, 20.2
-          option(value='16.0, 23.0') 16.0, 23.0
+        input#vSetpoint.col-5(list='vSetpointList', onchange='reflectVPreset()', size='1')
         label.col-6(for='vStep') Step
         input#vStep.col-5(name='vStep', value='1.0', step='0.1', min='0.01', max='1.1', type='number')
         label.col-6(for='vInterval') Interval [s]
         input#vInterval.col-5(min='10', step='5', name='vInterval', value='30', type='number')
+
+        datalist#vSetpointList
+          option(value='0.0, 0.0')
+          option(value='0.8, 1.6') 
+          option(value='4.0, 5.0') 
+          option(value='4.0, 7.0') 
+          option(value='7.0, 10.0') 
+          option(value='10.0, 13.0')
+          option(value='10.7, 15.0')
+          option(value='12.0, 15.0')
+          option(value='12.6, 17.6')
+          option(value='14.4, 20.2')
+          option(value='16.0, 23.0')
 
 .row.mt-2.mb-2
   .col-4

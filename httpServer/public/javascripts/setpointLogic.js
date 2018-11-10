@@ -72,19 +72,8 @@ function reflectVManual() {
   let str = Number.parseFloat($("#manualVFS").val()).toFixed(1) + ", ";
   str += Number.parseFloat($("#manualVSS").val()).toFixed(1);
 
-  let newOpt = document.createElement("option");
-  newOpt.value = str;
-  newOpt.innerHTML = str;
-  sel = document.getElementById('vSetpoint')
-  sel.appendChild(newOpt);
-
-  opts = sel.options;
-  for (var opt, j = 0; opt = opts[j]; j++) {
-    if (opt.value == str) {
-      sel.selectedIndex = j;
-      break;
-    }
-  }
+  $('#vSetpointList').append("<option value='" + str + "'>");
+  document.getElementById('vSetpoint').value = str;
 }
 
 function checkFlattopLock() {
