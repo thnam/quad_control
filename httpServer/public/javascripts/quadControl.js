@@ -57,5 +57,12 @@ window.onload = () => {
   initCVCharts();
   initPSCharts();
   setupVoltageGroup();
+
+  let normVoltage = normVRead();
+  console.info("Current voltages: [FS, OS, SS] =", normVoltage);
+
+  let str = normVoltage[0].toString() + ", " + normVoltage[2].toString();
+  $('#vSetpointList').append("<option value='" + str + "'>");
+  document.getElementById('vSetpoint').value = str;
 };
 

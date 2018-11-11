@@ -1,12 +1,3 @@
-function presetFound(newPreset) {
-  sel = document.getElementById('vSetpoint');
-  opts = sel.options;
-  for (var i = 0, len = opts.length; i < len; i++) 
-    if (opts[i].value == newPreset) 
-      return true;
-  return false;
-}
-
 function setupVoltageGroup() {
   // Toggling manual/preset mode
   if($('input[name=vMode]:checked').val() == "vPreset"){

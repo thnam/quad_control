@@ -61,18 +61,8 @@ function increaseVoltages(deltaV){
   console.info("Target voltages:", str);
 
   // add this setpoint into the preset list
-  if (!presetFound(str)) {
-    let newOpt = document.createElement("option");
-    newOpt.value = str;
-    newOpt.innerHTML = str;
-    sel = document.getElementById('vSetpoint')
-    opts = sel.options;
-    opts.forEach
-    sel.appendChild(newOpt);
-  }
-
-  // and change the manual entries also
-  $("#vSetpoint").val(str).trigger("change");
+  $('#vSetpointList').append("<option value='" + str + "'>");
+  document.getElementById('vSetpoint').value = str;
 
   // do the work
   getPulseMode()
