@@ -51,7 +51,7 @@ setInterval( () => {
     command.stdout.on('data', function(data){
       cv = JSON.parse(data);
       cv["error"] = false;
-      cvLogger.info(JSON.stringify(cv));
+      cvLogger.info({message: " ", meta: cv});
 
       // if sparks, record the pattern in the sparkHistory collection, and
       // reset the spark pin,
@@ -79,14 +79,14 @@ setInterval( () => {
           pattern = JSON.parse(data);
           pattern["error"] = false;
           pattern["sparkBit"] = cv.spark;
-          sparkHistLogger.info(JSON.stringify(pattern));
+          sparkHistLogger.info({message: " ", meta: pattern});
         });
 
         patternCmd.stderr.on('error', function(err){
           pattern["error"] = true;
           pattern["sparkBit"] = cv.spark;
           pattern["message"] = JSON.stringify(err).slice(1, -4);
-          sparkPatternLogger.error(JSON.stringify(pattern));
+          sparkHistLogger.error({message: " ", meta: pattern});
         });
       }
 
@@ -97,7 +97,7 @@ setInterval( () => {
       // capture the error message, remove extra characters only useful on
       // console
       cv["message"] = JSON.stringify(err).slice(1, -4);
-      cvLogger.error(JSON.stringify(cv));
+      cvLogger.error({message: " ", meta: cv});
     });
 
 
@@ -130,13 +130,13 @@ setInterval( () => {
     command.stdout.on('data', function(data){
       pattern = JSON.parse(data);
       pattern["error"] = false;
-      sparkPatternLogger.info(JSON.stringify(pattern));
+      sparkPatternLogger.info({message: " ", meta: pattern});
     });
 
     command.stderr.on('error', function(err){
       pattern["error"] = true;
       pattern["message"] = JSON.stringify(err).slice(1, -4);
-      sparkPatternLogger.error(JSON.stringify(pattern));
+      sparkPatternLogger.error({message: " ", meta: pattern});
     });
 
   }, config.get("logger.sparkPollingPeriod")
@@ -149,13 +149,13 @@ setInterval( () => {
     command.stdout.on('data', function(data){
       thr = JSON.parse(data);
       thr["error"] = false;
-      thrLogger.info(JSON.stringify(thr));
+      thrLogger.info({message: " ", meta: thr});
     });
 
     command.stderr.on('error', function(err){
       thr["error"] = true;
       thr["message"] = JSON.stringify(err).slice(1, -4);
-      thrLogger.error(JSON.stringify(thr));
+      thrLogger.error({message: " ", meta: thr});
     });
   }, config.get("logger.sparkThresholdPollingPeriod")
 );
