@@ -1,6 +1,6 @@
 var socket = io.connect(baseUrl);
 socket.on("sparkPattern", (data) => {
-  window.spark = JSON.parse(data[0].message);
+  window.spark = data[0].meta;
   displaySparkInfo();
 });
 
@@ -46,7 +46,7 @@ function readSparkThreshold() {
   $.get(baseUrl + "/camacThreshold").done((data) =>{
     if (!data.error) {
       try {
-        let thr = JSON.parse(data[0].message);
+        let thr = data[0].meta;
 
         Object.keys(thr).forEach(slot =>{
           entry = "#slot" + slot.toString() + "Th";
@@ -89,7 +89,7 @@ function showLastSpark() {
       sparkedQuads = [];
       quadType = ["l", "s"];
 
-      pattern = JSON.parse(data.message);
+      pattern = data.meta;
 
       for (var i = 0, len = 4; i < len; i++) {
         quadStr = "q" + (i + 1).toString();

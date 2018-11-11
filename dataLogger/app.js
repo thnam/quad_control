@@ -110,13 +110,13 @@ setInterval( () => {
     command.stdout.on('data', function(data){
       pulserState = JSON.parse(data);
       pulserState["error"] = false;
-      statusLogger.info(JSON.stringify(pulserState));
+      statusLogger.info({message: " ", meta: pulserState});
     });
 
     command.stderr.on('error', function(err){
       pulserState["error"] = true;
       pulserState["message"] = JSON.stringify(err).slice(1, -4);
-      statusLogger.error(JSON.stringify(pulserState));
+      statusLogger.error({message: " ", meta: pulserState});
     });
 
 

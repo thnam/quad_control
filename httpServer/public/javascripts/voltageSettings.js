@@ -7,7 +7,7 @@ async function getVoltage() {
       alert("Error", xhr);
     },
   })
-  return ret.message;
+  return ret.meta;
 };
 
 function setVoltage(vSet) {
@@ -272,7 +272,7 @@ function confirmVoltage(tolerance) {
 
 function normVRead() {
   if (window.vRead === undefined) {
-    getVoltage().then((val) =>{ window.vRead = JSON.parse(val); })
+    getVoltage().then((val) =>{ window.vRead = val; })
   }
 
   let vFS = (window.vRead.fs.pv + Math.abs(window.vRead.fs.nv)) / 2;

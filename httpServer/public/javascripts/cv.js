@@ -8,7 +8,7 @@ socket.on("cv", (data) => {
   const values = data.cv;
 
   // update the voltages and currents first
-  window.vRead = JSON.parse(values[0].message);
+  window.vRead = values[0].meta;
   // spark alert
   if (window.vRead.spark >= 2) {
     if (window.ramping) {
@@ -38,7 +38,7 @@ socket.on("cv", (data) => {
   var vTrace = [[], [], [], [], [], []];
 
   for (var i = len - 1; i >= 0; i--) {
-    var cv = JSON.parse(values[i].message);
+    var cv = values[i].meta;
 
     time.push(new Date(values[i].timestamp));
     vTrace[0].push(formatVC(cv.os.pv));

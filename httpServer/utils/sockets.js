@@ -23,14 +23,6 @@ io.on('connection', function (socket) {
       const cv = await dbTool.getCV();
       socket.emit("cv", {cv: cv});
 
-      const lastCV = JSON.parse(cv[0].message);
-      if (lastCV.spark >= 2) {
-
-        // console.log("spark");
-      }
-      // else
-        // console.log("no spark");
-
     } catch (e) {
       console.error(e);
     }

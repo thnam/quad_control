@@ -7,7 +7,7 @@ socket.on("pulserStatus", (data) => {
   var trace = [[], [], [], []];
 
   for (var i = len - 1; i >= 0; i--) {
-    var ps = JSON.parse(values[i].message);
+    var ps = values[i].meta;
     try {
       timestamp.push(new Date(values[i].timestamp));
       trace[0].push(parseFloat(ps.pos.fault) + 0.03);
