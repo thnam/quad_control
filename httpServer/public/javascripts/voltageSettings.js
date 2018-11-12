@@ -45,7 +45,6 @@ function increaseVoltages(deltaV){
   console.info("Increase all voltages by ", deltaV, "kV");
 
   normVoltage = normVRead();
-  console.info("Current voltages: [FS, OS, SS] =", normVoltage);
 
   if (window.vSet === undefined) window.vSet = {};
 
@@ -272,16 +271,26 @@ function confirmVoltage(tolerance) {
 
 function normVRead() {
   if (window.vRead === undefined) {
-    getVoltage().then((val) =>{ window.vRead = val; })
+    getVoltage().then((val) =>{
+      window.vRead = val; 
+      let vFS = (window.vRead.fs.pv + Math.abs(window.vRead.fs.nv)) / 2;
+      let vSS = (window.vRead.ss.pv + Math.abs(window.vRead.ss.nv)) / 2;
+      let vOS = (window.vRead.os.pv + Math.abs(window.vRead.os.nv)) / 2;
+      let normFS = parseFloat(vFS.toFixed(1));
+      let normSS = parseFloat(vSS.toFixed(1));
+      let normOS = parseFloat(vOS.toFixed(1));
+      return [normFS, normSS, normOS];
+    })
   }
-
-  let vFS = (window.vRead.fs.pv + Math.abs(window.vRead.fs.nv)) / 2;
-  let vSS = (window.vRead.ss.pv + Math.abs(window.vRead.ss.nv)) / 2;
-  let vOS = (window.vRead.os.pv + Math.abs(window.vRead.os.nv)) / 2;
-  let normFS = parseFloat(vFS.toFixed(1));
-  let normSS = parseFloat(vSS.toFixed(1));
-  let normOS = parseFloat(vOS.toFixed(1));
-  return [normFS, normSS, normOS];
+  else{
+      let vFS = (window.vRead.fs.pv + Math.abs(window.vRead.fs.nv)) / 2;
+      let vSS = (window.vRead.ss.pv + Math.abs(window.vRead.ss.nv)) / 2;
+      let vOS = (window.vRead.os.pv + Math.abs(window.vRead.os.nv)) / 2;
+      let normFS = parseFloat(vFS.toFixed(1));
+      let normSS = parseFloat(vSS.toFixed(1));
+      let normOS = parseFloat(vOS.toFixed(1));
+      return [normFS, normSS, normOS];
+  }
 }
 
 function validateSetpoint() {

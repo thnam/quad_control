@@ -58,11 +58,17 @@ window.onload = () => {
   initPSCharts();
   setupVoltageGroup();
 
-  let normVoltage = normVRead();
-  console.info("Current voltages: [FS, OS, SS] =", normVoltage);
+  (async ()=>{
+    let vRead = await getVoltage();
 
-  let str = normVoltage[0].toString() + ", " + normVoltage[2].toString();
-  $('#vSetpointList').append("<option value='" + str + "'>");
-  document.getElementById('vSetpoint').value = str;
+    let vFS = parseFloat(((vRead.fs.pv + Math.abs(vRead.fs.nv)) / 2).toFixed(1));
+    let vSS = parseFloat(((vRead.ss.pv + Math.abs(vRead.ss.nv)) / 2).toFixed(1));
+    let vOS = parseFloat(((vRead.os.pv + Math.abs(vRead.os.nv)) / 2).toFixed(1));
+
+    let str = vFS.toString() + ", " + vSS.toString();
+    $('#vSetpointList').append("<option value='" + str + "'>");
+    document.getElementById('vSetpoint').value = str;
+    reflectVPreset();
+  })();
 };
 
