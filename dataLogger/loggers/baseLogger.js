@@ -14,7 +14,8 @@ const dbUrl = "mongodb://" + config.get("mongo.user") + ":" + config.get("mongo.
 const consoleTimestampFormat = printf(info => {
   var date = new Date();
   dateStr = date.toDateString() + " - " + date.toLocaleTimeString();
-  return `${dateStr} - ${info.message}`
+  meta = JSON.stringify(info.meta);
+  return `${dateStr} - ${meta}` 
 });
 
 const logTimestampFormat = consoleTimestampFormat;
