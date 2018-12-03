@@ -24,16 +24,16 @@ html(lang='en')
         a.nav-link.active(data-toggle='tab', href='#mainTab', role='tab') Main Control
       li.nav-item
         a.nav-link(data-toggle='tab', href='#pulserTab', role='tab') Pulser Status
-      li.nav-item
-        a.nav-link(data-toggle='tab', href='#logTab', role='tab') Log Messages
-      li.nav-item
-        a.nav-link(data-toggle='tab', href='#timingTab', role='tab') Pulse Timing
+      //- li.nav-item
+        //- a.nav-link(data-toggle='tab', href='#logTab', role='tab') Log Messages
+      //- li.nav-item
+        //- a.nav-link(data-toggle='tab', href='#timingTab', role='tab') Pulse Timing
 
     .tab-content
       include mainTab.pug
       include pulserTab.pug
-      include logTab.pug
-      include timingTab.pug
+      //- include logTab.pug
+      //- include timingTab.pug
 
     //- script sequence is important
     script(src='javascripts/jquery-3.3.1.min.js')
