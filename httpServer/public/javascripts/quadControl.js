@@ -11,6 +11,16 @@ $(() =>{
 
   readSparkThreshold();
   showLastSpark();
+
+  $("#btnSparkAlarmReset").click(() => {
+    window.sparkAlarmAudio.pause();
+    window.sparkAlarmAudio.currentTime = 0.0;
+  });
+
+  $("#btnFaultAlarmReset").click(() => {
+    window.faultAlarmAudio.pause();
+    window.faultAlarmAudio.currentTime = 0.0;
+  });
   // 
   $("#setVoltages").click(()=>{ changeVoltage() });
   $("#zeroVoltages").click(()=>{ zeroVoltage() });
