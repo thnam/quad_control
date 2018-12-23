@@ -1,8 +1,10 @@
 const mongoClient = require('mongodb').MongoClient;
 const config = require('config');
-const dbUrl = "mongodb://" + config.get("mongo.user") + ":"
-  + config.get("mongo.password") + "@" + config.get("mongo.host") + ":"
-  + config.get("mongo.port").toString() +
+
+var dbUrl = "mongodb://";
+if (process.env.NODE_ENV == "production") 
+  dbUrl += config.get("mongo.user") + ":" + config.get("mongo.password") + "@";
+dbUrl += config.get("mongo.host") + ":" + config.get("mongo.port").toString() +
   "/" + config.get("mongo.db");
 
 let mongodb;

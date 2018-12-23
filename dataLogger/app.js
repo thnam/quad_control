@@ -11,13 +11,15 @@ const sparkHistLogger = require(global.appRoot + '/loggers/sparkHistoryLogger.js
 const flagLogger = require(global.appRoot + '/loggers/flagLogger.js');
 
 const mongoClient = require('mongodb').MongoClient;
-const dbUrl = "mongodb://" + config.get("mongo.user") + ":"
-  + config.get("mongo.password") + "@" + config.get("mongo.host") + ":"
-  + config.get("mongo.port").toString() +
-  "/" + config.get("mongo.db");
 
 let env = process.env.NODE_ENV;
 console.log("Running mode: " + env);
+
+var dbUrl = "mongodb://";
+if (env == "production") 
+  dbUrl += config.get("mongo.user") + ":" + config.get("mongo.password") + "@";
+dbUrl += config.get("mongo.host") + ":" + config.get("mongo.port").toString() +
+  "/" + config.get("mongo.db");
 
 setFlag(false, false);
 

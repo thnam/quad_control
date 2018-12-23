@@ -5,8 +5,12 @@ require('winston-daily-rotate-file');
 
 // getting database login info from config/default.js
 const config = require('config');
-const dbUrl = "mongodb://" + config.get("mongo.user") + ":" + config.get("mongo.password") +
-  "@" + config.get("mongo.host") + ":" + config.get("mongo.port").toString() +
+const env = process.env.NODE_ENV;
+
+var dbUrl = "mongodb://";
+if (env == "production") 
+  dbUrl += config.get("mongo.user") + ":" + config.get("mongo.password") + "@";
+dbUrl += config.get("mongo.host") + ":" + config.get("mongo.port").toString() +
   "/" + config.get("mongo.db");
 
 
