@@ -15,6 +15,7 @@ $(() =>{
   $("#btnSparkAlarmReset").click(() => {
     window.sparkAlarmAudio.pause();
     window.sparkAlarmAudio.currentTime = 0.0;
+    clearSparkDisplay();
   });
 
   $("#btnClearSparkDiplay").click(() => {clearSparkDisplay();});

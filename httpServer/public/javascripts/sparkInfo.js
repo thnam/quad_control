@@ -75,7 +75,7 @@ function readSparkThreshold() {
 
 function handleSparkEvent(msg) {
   changePulseMode("Stop");
-  // reset the spark bit is done automatically in dataLogger
+  // reseting the spark bit is done automatically in dataLogger
   playAlarmSound(window.sparkAlarmAudio);
   alert(msg);
 }
@@ -134,6 +134,7 @@ function clearSparkDisplay() {
       url: baseUrl + '/clearSparkDisplay',
       success: (res) =>{
         resolve(true);
+        displaySparkInfo();
       },
       error: (err, stat) =>{
         resolve(false);
