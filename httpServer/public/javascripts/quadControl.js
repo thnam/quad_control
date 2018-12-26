@@ -17,6 +17,8 @@ $(() =>{
     window.sparkAlarmAudio.currentTime = 0.0;
   });
 
+  $("#btnClearSparkDiplay").click(() => {clearSparkDisplay();});
+
   $("#btnFaultAlarmReset").click(() => {
     window.faultAlarmAudio.pause();
     window.faultAlarmAudio.currentTime = 0.0;

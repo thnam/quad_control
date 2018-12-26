@@ -125,3 +125,19 @@ function playAlarmSound(audio, period=20) {
   setTimeout(()=>{audio.loop = false}, period * 1000);
   audio.play();
 }
+
+
+function clearSparkDisplay() {
+  return new Promise(function (resolve, reject) {
+    $.ajax({
+      type: 'POST',
+      url: baseUrl + '/clearSparkDisplay',
+      success: (res) =>{
+        resolve(true);
+      },
+      error: (err, stat) =>{
+        resolve(false);
+        alert("Failed to clear spark display: " + err.responseText);
+      } });
+  });
+};
