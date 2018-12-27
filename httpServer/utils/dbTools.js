@@ -29,9 +29,9 @@ function getSparkInfo(){
   return result;
 }
 
-function getLastSpark(){
+function getLastSpark(nSparks=1){
   const collection = db.get().db("quad").collection('sparkHistory');
-  const result = collection.find().sort({$natural: -1}).limit(1).toArray();
+  const result = collection.find().sort({$natural: -1}).limit(nSparks).toArray();
   return result;
 }
 

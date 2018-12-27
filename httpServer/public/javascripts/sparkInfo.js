@@ -126,7 +126,6 @@ function playAlarmSound(audio, period=20) {
   audio.play();
 }
 
-
 function clearSparkDisplay() {
   return new Promise(function (resolve, reject) {
     $.ajax({
@@ -142,3 +141,41 @@ function clearSparkDisplay() {
       } });
   });
 };
+
+function showSparkHistory() {
+  $.get(baseUrl + "/sparkHistory")
+    .done((data)=>{
+      let table = document.getElementById('sparkHistoryTable');
+      let tr = document.createElement('tr');
+      table.appendChild(tr);
+      var td = document.createElement("td");
+      td.text("falkdjf");
+      tr.appendChild(td);
+
+      console.log(data[0]);
+
+      // timestamp = new Date(data.timestamp);
+      // timestamp = moment(timestamp).format('YYYY-MM-DD HH:mm:ss');
+
+      // sparkedQuads = [];
+      // quadType = ["l", "s"];
+
+      // pattern = data.meta;
+
+      // for (var i = 0, len = 4; i < len; i++) {
+        // quadStr = "q" + (i + 1).toString();
+
+        // for (var j = 0; j < 2; j++) {
+          // nSparks = sumSpark(pattern[quadStr][quadType[j]]);
+          // if (nSparks > 0) {
+            // sparkedQuads.push((quadStr + quadType[j]).toUpperCase());
+          // }
+        // }
+      // }
+
+    })
+    .fail(()=>{
+      alert("Cannot get spark history ...");
+    })
+  
+}
