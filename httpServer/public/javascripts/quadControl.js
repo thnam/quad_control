@@ -35,6 +35,7 @@ $(() =>{
   $("#m4kV").click(()=>{ increaseVoltages(-4);});
   $("#m10kV").click(()=>{ increaseVoltages(-10);});
 
+  $("#btnRefreshSparkHistory").click(() => {showSparkHistory();});
 })
 
 plotColor = [
