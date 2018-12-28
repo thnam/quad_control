@@ -122,7 +122,7 @@ function initCVTrendLineChart() {
       tickfont: {color: 'rgb(148, 103, 189)'},
       overlaying: 'y',
       side: 'right',
-      range: [0, 3]
+      range: [0, 10]
     },
     // bargap :0.1,
     paper_bgcolor: 'rgba(0, 0, 0, 0)',
