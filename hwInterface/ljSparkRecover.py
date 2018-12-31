@@ -11,7 +11,7 @@ try:
                     VoltageLabjackIP)
     info = ljm.getHandleInfo(hndl)
     if info[0] == 7:
-        ljm.eWriteName(hndl. resetPort, -0.8)
+        ljm.eWriteName(hndl, resetPort, -0.8)
         ljm.close(hndl)
         exit(0)
     else:

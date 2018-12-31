@@ -1,6 +1,7 @@
 var socket = io.connect(baseUrl);
 socket.on("pulserStatus", (data) => {
   const values = data.pulserStatus;
+  displayPulserStatus(values[0].meta);
 
   let len = values.length;
   var timestamp = [];
@@ -65,3 +66,44 @@ function initPSTrendLineChart() {
     window.psTrendData, layout, {responsive: true});
 }
 
+function displayPulserStatus(data) {
+  let statTable = document.getElementById("pulserStatusTable");
+  let ps = ["pos", "nos", "pts", "nts"];
+  // let stat = ["enabled", "interlock", "enabled"];
+
+  let row = statTable.rows[1]; // enabled
+  for (var i = 0, len = ps.length; i < len; i++) {
+    if (data[ps[i]]["enabled"]) {
+      row.cells[i].innerHTML = "Enabled";
+      row.cells[i].classList.add("table-success");
+    }
+    else{
+      row.cells[i].innerHTML = "Disabled";
+      row.cells[i].classList.add("table-danger");
+    }
+  }
+
+  row = statTable.rows[2]; // interlock
+  for (var i = 0, len = ps.length; i < len; i++) {
+    if (data[ps[i]]["interlock"]) {
+      row.cells[i].innerHTML = "Interlocked";
+      row.cells[i].classList.add("table-success");
+    }
+    else{
+      row.cells[i].innerHTML = "Not interlocked";
+      row.cells[i].classList.add("table-danger");
+    }
+  }
+
+  row = statTable.rows[3]; // fault
+  for (var i = 0, len = ps.length; i < len; i++) {
+    if (data[ps[i]]["fault"]) {
+      row.cells[i].innerHTML = "Faulted";
+      row.cells[i].classList.add("table-danger");
+    }
+    else{
+      row.cells[i].innerHTML = "No fault";
+      row.cells[i].classList.add("table-success");
+    }
+  }
+}
