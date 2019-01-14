@@ -30,6 +30,7 @@ app.use('/clearSparkDisplay', require(global.appRoot + '/routes/clearSparkDispla
 app.use('/lastSpark', require(global.appRoot + '/routes/lastSpark'));
 app.use('/sparkHistory', require(global.appRoot + '/routes/sparkHistory'));
 app.use('/camacThreshold', require(global.appRoot + '/routes/camacThreshold'));
+app.use('/resetFault', require(global.appRoot + '/routes/resetFault'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

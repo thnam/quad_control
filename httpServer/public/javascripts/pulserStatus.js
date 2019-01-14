@@ -113,3 +113,20 @@ function displayPulserStatus(data) {
     }
   }
 }
+
+function resetFault(ps) {
+  return new Promise(function (resolve, reject) {
+    $.ajax({
+      type: 'POST',
+      url: baseUrl + '/resetFault',
+      data: {ps: ps},
+      success: (res) =>{
+        console.info(res + ", " + ps + " has been reset");
+        resolve(true);
+      },
+      error: (err, stat) =>{
+        resolve(false);
+        alert("Could not reset " + ps + ", " + err.responseText);
+      } });
+  });
+};

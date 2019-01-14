@@ -36,6 +36,10 @@ $(() =>{
   $("#m10kV").click(()=>{ increaseVoltages(-10);});
 
   $("#btnRefreshSparkHistory").click(() => {showSparkHistory();});
+  $("#btnResetPOSFault").click(() => {resetFault("POS")});
+  $("#btnResetNOSFault").click(() => {resetFault("NOS")});
+  $("#btnResetPTSFault").click(() => {resetFault("PTS")});
+  $("#btnResetNTSFault").click(() => {resetFault("NTS")});
 })
 
 plotColor = [
