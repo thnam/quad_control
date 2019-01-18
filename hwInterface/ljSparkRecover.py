@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from labjack import ljm
+from time import sleep
 
 VoltageLabjackIP = '192.168.30.85'
 VoltageLabjackDevType = 7
@@ -12,6 +13,8 @@ try:
     info = ljm.getHandleInfo(hndl)
     if info[0] == 7:
         ljm.eWriteName(hndl, resetPort, -0.8)
+        sleep(1)
+        ljm.eWriteName(hndl, resetPort, 0)
         ljm.close(hndl)
         exit(0)
     else:
