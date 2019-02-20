@@ -3,6 +3,13 @@
     "port": 4444
   },
 
+  "sqlConnection": {
+    "host" : "127.0.0.1",
+    "user" : "daq",
+    "password" : "g2muon",
+    "database" : "quad"
+  },
+
   "mongo": {
     "host": "localhost",
     "port": 27017,

@@ -13,13 +13,16 @@
     "config": "^2.0.1",
     "events": "^3.0.0",
     "fs": "0.0.1-security",
+    "knex": "^0.16.3",
     "log-timestamp": "^0.1.2",
     "moment": "^2.22.2",
     "mongodb": "^3.1.9",
+    "mysql": "^2.16.0",
     "path": "^0.12.7",
     "winston": "^3.0.0",
     "winston-daily-rotate-file": "^3.3.1",
-    "winston-mongodb": "^4.0.3"
+    "winston-mongodb": "^4.0.3",
+    "winston-sql-transport": "^1.0.0"
   },
   "repository": {
     "type": "git",
