@@ -10,7 +10,8 @@ dbUrl += config.get("mongo.host") + ":" + config.get("mongo.port").toString() +
 let mongodb;
 
 function connect(callback){
-  mongoClient.connect(dbUrl, {useNewUrlParser: true}, (err, db) => {
+  mongoClient.connect(dbUrl,
+    {useNewUrlParser: true, useUnifiedTopology: true}, (err, db) => {
     mongodb = db;
     callback();
   });
