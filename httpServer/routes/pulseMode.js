@@ -22,11 +22,12 @@ router
       let cmd = "";
       if (env === "production") {
         // BU electronics interface
-        // cmd += global.appRoot + "/../hwInterface/setPulseModeWrapper.sh";
+        cmd += global.appRoot + "/../hwInterface/bu/setPulseModeWrapper";
+        cmd += ' "' + newMode + '"';
         
         // Sten module interface
-        cmd += '/home/daq/gm2daq/frontends/ESQ_slow/quadcontrol/ljUtils/pulseControl.py --mode ';
-        cmd += ' "' + newMode + '" --ntry 3';
+        // cmd += '/home/daq/gm2daq/frontends/ESQ_slow/quadcontrol/ljUtils/pulseControl.py --mode ';
+        // cmd += ' "' + newMode + '" --ntry 3';
       } else 
         cmd += global.appRoot + "/../hwInterface/success 2";
 
