@@ -32,16 +32,16 @@ var flag;
 var cvDataCmd, sparkDataCmd, statusDataCmd;
 
 if (env == "development") { // Fake data
-  cvDataCmd = appRoot + '/../hwInterface/fakeCVData.py';
-  statusDataCmd = appRoot + '/../hwInterface/fakePulserStatus.py';
-  sparkDataCmd = appRoot + "/../hwInterface/fakeSparkData.py";
-  sparkThresholdCmd = appRoot + "/../hwInterface/fakeSparkThreshold.py";
+  cvDataCmd = appRoot + '/../hwInterface/lj/fakeCVData.py';
+  statusDataCmd = appRoot + '/../hwInterface/lj/fakePulserStatus.py';
+  sparkDataCmd = appRoot + "/../hwInterface/lj/fakeSparkData.py";
+  sparkThresholdCmd = appRoot + "/../hwInterface/lj/fakeSparkThreshold.py";
 } else{
   // Labjack data
-  cvDataCmd = appRoot + '/../hwInterface/ljCVData.py';
-  statusDataCmd = appRoot + '/../hwInterface/ljPulserStatus.py';
-  sparkDataCmd = appRoot + "/../hwInterface/ljSparkData.py";
-  sparkThresholdCmd = appRoot + "/../hwInterface/ljSparkThreshold.py";
+  cvDataCmd = appRoot + '/../hwInterface/lj/ljCVData.py';
+  statusDataCmd = appRoot + '/../hwInterface/lj/ljPulserStatus.py';
+  sparkDataCmd = appRoot + "/../hwInterface/lj/ljSparkData.py";
+  sparkThresholdCmd = appRoot + "/../hwInterface/lj/ljSparkThreshold.py";
   // BU electronics data
   // const statusDataCmd = appRoot + '/../hwInterface/fakePulserStatus.py';
 }
@@ -68,7 +68,7 @@ setInterval( () => {
           })
         } else if (env == "production") {
           // labjack reset here
-          const newCmd = exec(appRoot + "/../hwInterface/ljSparkRecover.py");
+          const newCmd = exec(appRoot + "/../hwInterface/lj/ljSparkRecover.py");
           newCmd.stdout.on("data", (data) =>{
             console.log("Spark pin reset");
           })
