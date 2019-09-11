@@ -28,12 +28,15 @@ html(lang='en')
         a.nav-link(data-toggle='tab', href='#sparkHistory', role='tab') Spark History
       li.nav-item
         a.nav-link(data-toggle='tab', href='#faultHistory', role='tab') Fault History
+      li.nav-item
+        a.nav-link(data-toggle='tab', href='#timingSettings', role='tab') Pulser Timing
 
     .tab-content
       include mainTab.pug
       include pulserTab.pug
       include sparkHistory.pug
       include faultHistory.pug
+      include timing.pug
 
     //- script sequence is important
     script(src='javascripts/jquery-3.3.1.min.js')

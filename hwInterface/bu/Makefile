@@ -12,7 +12,7 @@ LIBS += -Wl,-rpath=$(G2QUAD_COMPILETIME_PATH)/lib
 src = ./src
 obj = ./obj
 
-targets = test pulserStatus setPulseMode getFaultPattern
+targets = test pulserStatus setPulseMode getFaultPattern readPulserSettings
 
 all: $(targets)
 
