@@ -1,6 +1,0 @@
-#!/bin/bash
-BuDriverDir=/home/daq/ESQ/jscontrol/hwInterface/bu
-source $BuDriverDir/env.sh
-$BuDriverDir/setPulseMode -m "$1"
-
-# vim: ft=sh

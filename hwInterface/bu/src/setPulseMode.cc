@@ -75,7 +75,7 @@ int main(int argc, char *argv[])
       std::this_thread::sleep_for(std::chrono::milliseconds(tsleep));
       pulser->Write("TRIGGER.FREE_RUN.ENABLE", 0x1);
     }
-    else if (mode_s == "Oneshot"){ // single pulse on all channels
+    else if (mode_s == "Single"){ // single pulse on all channels
       pulser->Write("TRIGGER.FREE_RUN.ENABLE", 0x0);
       pulser->Write("TRIGGER.STATUS.ENABLE_PULSERS", 0x1);
       pulser->Write("ADCBOARD.1.FP_PULSER.USER_PULSE", 0x1);
@@ -125,7 +125,7 @@ int main(int argc, char *argv[])
 
 
   }catch(const std::exception& e) {
-    std::cout << e.what() << std::endl;
+    std::cerr << e.what() << std::endl;
     return -1;
   }
   return 0;

@@ -3,6 +3,10 @@ const router = express.Router();
 const httpLog = require(global.appRoot + '/loggers/httpLogger.js');
 const modeLog = require(global.appRoot + '/loggers/pulseModeLogger.js');
 const { exec } = require('child_process');
+const BUEnv = {
+  G2QUAD_ADDRESS_TABLE: "/home/daq/ESQ/host-carrier.trunk/os/software/g2quad/tables/Carrier.adt",
+  ADDRESS_TABLE_PATH: "/home/daq/ESQ/host-carrier.trunk/os/software/g2quad/tables/"
+};
 
 // use the same route for both set and get pulse mode
 router
@@ -22,8 +26,8 @@ router
       let cmd = "";
       if (env === "production") {
         // BU electronics interface
-        cmd += global.appRoot + "/../hwInterface/bu/setPulseModeWrapper";
-        cmd += ' "' + newMode + '"';
+        cmd += global.appRoot + "/../hwInterface/bu/setPulseMode";
+        cmd += ' -m "' + newMode + '"';
         
         // Sten module interface
         // cmd += '/home/daq/gm2daq/frontends/ESQ_slow/quadcontrol/ljUtils/pulseControl.py --mode ';
@@ -31,8 +35,8 @@ router
       } else 
         cmd += global.appRoot + "/../hwInterface/success 2";
 
-      httpLog.info(cmd);
-      var child = exec(cmd);
+      httpLog.info("Command:" + cmd);
+      var child = exec(cmd, {env: BUEnv});
 
       promiseFromChild(child).then(
         function (result) {
