@@ -59,5 +59,10 @@
     "pos": ["AIN07", "AIN06", "FIO4"],
     "pts": ["AIN05", "AIN04", "FIO2"],
     "nts": ["AIN03", "AIN02", "FIO0"]
+  },
+
+  "BUEnv":{
+  "G2QUAD_ADDRESS_TABLE": "/home/daq/ESQ/host-carrier.trunk/os/software/g2quad/tables/Carrier.adt",
+  "ADDRESS_TABLE_PATH": "/home/daq/ESQ/host-carrier.trunk/os/software/g2quad/tables/"
   }
 }

@@ -3,11 +3,7 @@ const router = express.Router();
 const httpLog = require(global.appRoot + '/loggers/httpLogger.js');
 const modeLog = require(global.appRoot + '/loggers/pulseModeLogger.js');
 const exec = require('util').promisify(require('child_process').exec);
-
-const BUEnv = {
-  G2QUAD_ADDRESS_TABLE: "/home/daq/ESQ/host-carrier.trunk/os/software/g2quad/tables/Carrier.adt",
-  ADDRESS_TABLE_PATH: "/home/daq/ESQ/host-carrier.trunk/os/software/g2quad/tables/"
-};
+const BUEnv = require('config').BUEnv;
 
 // use the same route for both set and get pulse mode
 router
