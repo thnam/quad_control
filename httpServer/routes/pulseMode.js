@@ -1,9 +1,8 @@
 const express = require('express');
-const util = require('util');
 const router = express.Router();
 const httpLog = require(global.appRoot + '/loggers/httpLogger.js');
 const modeLog = require(global.appRoot + '/loggers/pulseModeLogger.js');
-const exec = util.promisify(require('child_process').exec);
+const exec = require('util').promisify(require('child_process').exec);
 
 const BUEnv = {
   G2QUAD_ADDRESS_TABLE: "/home/daq/ESQ/host-carrier.trunk/os/software/g2quad/tables/Carrier.adt",
