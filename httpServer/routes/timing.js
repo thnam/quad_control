@@ -6,7 +6,7 @@ const BUEnv = require('config').BUEnv;
 
 router
   .get('/', async(req, res, next) => {
-    var cmd = global.appRoot + "/../hwInterface/bu/readPulserSettings";
+    var cmd = global.appRoot + "/../hwInterface/bu/readPulserTiming";
 
     exec(cmd, {env: BUEnv}).then((data)=>{
       httpLog.info("Read pulser timing successfully");

@@ -57,7 +57,7 @@ module.exports = function (options){
       name: options.db.name + "_db",
       handleExceptions: false,
       level: "info",
-      options:{ useNewUrlParser: true }
+      options:{ useNewUrlParser: true, useUnifiedTopology: true}
     }
   };
 
@@ -89,7 +89,7 @@ module.exports = function (options){
       capped: "true",
       handleExceptions: false,
       cappedMax: options.dbOnline.nPoints,
-      options:{ useNewUrlParser: true }
+      options:{ useNewUrlParser: true, useUnifiedTopology: true}
     };
     logger.add(new transports.MongoDB(loggerOptions.dbOnline));
   };
