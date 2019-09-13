@@ -8,8 +8,8 @@ const config = require('config');
 const env = process.env.NODE_ENV;
 
 var dbUrl = "mongodb://";
-if (env == "production") 
-  dbUrl += config.get("mongo.user") + ":" + config.get("mongo.password") + "@";
+// if (env == "production") 
+  // dbUrl += config.get("mongo.user") + ":" + config.get("mongo.password") + "@";
 dbUrl += config.get("mongo.host") + ":" + config.get("mongo.port").toString() +
   "/" + config.get("mongo.db");
 
