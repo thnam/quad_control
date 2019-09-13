@@ -1,132 +1,125 @@
 #timingTab.tab-pane.container.fade(role='tabpanel')
   #container(style='width:100%;')
-    div(stdpulsertable='')
-      table(style='undefined;table-layout: fixed; width: 80%')
-        colgroup
-          col(style='width: 10%')
-          col(style='width: 10%')
-          col(style='width: 10%')
-          col(style='width: 10%')
-          col(style='width: 10%')
-          col(style='width: 10%')
-          col(style='width: 10%')
-          col(style='width: 10%')
-          col(style='width: 10%')
-        tbody
-          tr
-            th
-            th(colspan='2')
-              br
-              | Pulser 1
-              br
-              | (POS)
-              br
-            th(colspan='2')
-              br
-              | Pulser 2
-              br
-              | (NOS)
-              br
-            th(colspan='2')
-              br
-              | Pulser 3
-              br
-              | (PTS)
-              br
-            th(colspan='2')
-              br
-              | Pulser 4
-              br
-              | (NTS)
-              br
-          tr
-            td
-            td Active
-            td Set
-            td Active
-            td
-              | Set
-              br
-            td Active
-            td Set
-            td Active
-            td Set
-          tr
-            td
-              | 2-step Pulser?
-              br
-            td
-              | False
-              br
-            td
-            td
-              | False
-              br
-            td
-            td True
-            td
-            td True
-            td
-          tr
-            td Charge start
-            td
-            td
-            td
-            td
-            td
-            td
-            td
-            td
-          tr
-            td Step 1 end
-            td N/A
-            td
-            td N/A
-            td
-            td
-            td
-            td
-            td
-          tr
-            td Step 2 start
-            td
-              | N/A
-              br
-            td
-            td N/A
-            td
-            td
-            td
-            td
-            td
-          tr
-            td Charge stop
-            td
-            td
-            td
-            td
-            td
-            td
-            td
-            td
-          tr
-            td Discharge start
-            td
-            td
-            td
-            td
-            td
-            td
-            td
-            td
-          tr
-            td Discharge end
-            td
-            td
-            td
-            td
-            td
-            td
-            td
-            td
+    .table-responsive
+    table.table.table-hover.table-bordered#timingInfoTable(style='width:80%,float:center')
+      colgroup
+        col(style='width: 20%')
+        col(style='width: 10%')
+        col(style='width: 10%')
+        col(style='width: 10%')
+        col(style='width: 10%')
+        col(style='width: 10%')
+        col(style='width: 10%')
+        col(style='width: 10%')
+        col(style='width: 10%')
+      tbody
+        tr
+          th(rowspan='2')
+          th(colspan='2',style='text-align:center')
+            br
+            | Pulser 1
+            br
+            | (POS)
+            br
+          th(colspan='2',style='text-align:center')
+            br
+            | Pulser 2
+            br
+            | (NOS)
+            br
+          th(colspan='2',style='text-align:center')
+            br
+            | Pulser 3
+            br
+            | (PTS)
+            br
+          th(colspan='2',style='text-align:center')
+            br
+            | Pulser 4
+            br
+            | (NTS)
+            br
+        tr
+          td(style='text-align:center') Active
+          td(style='text-align:center') 
+            button#btnSetP1Timing.btn.btn-block.btn-warning Set
+          td(style='text-align:center') Active               
+          td(style='text-align:center') 
+            button#btnSetP1Timing.btn.btn-block.btn-warning Set
+          td(style='text-align:center') Active               
+          td(style='text-align:center') 
+            button#btnSetP1Timing.btn.btn-block.btn-warning Set
+          td(style='text-align:center') Active               
+          td(style='text-align:center') 
+            button#btnSetP1Timing.btn.btn-block.btn-warning Set
+        tr
+          td 2-step Pulser?
+          td(style='text-align:center') False
+          td(style='text-align:center')
+          td(style='text-align:center') False
+          td(style='text-align:center')
+          td(style='text-align:center') True
+          td(style='text-align:center')
+          td(style='text-align:center') True
+          td(style='text-align:center')
+        tr
+          td Charge start
+          td
+          td
+          td
+          td
+          td
+          td
+          td
+          td
+        tr
+          td Step 1 end
+          td(style='text-align:center') N/A
+          td
+          td(style='text-align:center') N/A
+          td
+          td
+          td
+          td
+          td
+        tr
+          td Step 2 start
+          td(style='text-align:center') N/A
+          td
+          td(style='text-align:center') N/A
+          td
+          td
+          td
+          td
+          td
+        tr
+          td Charge stop
+          td
+          td
+          td
+          td
+          td
+          td
+          td
+          td
+        tr
+          td Discharge start
+          td
+          td
+          td
+          td
+          td
+          td
+          td
+          td
+        tr
+          td Discharge end
+          td
+          td
+          td
+          td
+          td
+          td
+          td
+          td
 
