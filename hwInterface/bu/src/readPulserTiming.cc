@@ -80,11 +80,17 @@ std::string PulserSettingsJson(unsigned int chn){
   for (auto param : params){
     std::string key = prefix0 + prefix1.at(0) + "." + param;
     unsigned int ret0 = 10 * (quad->Read(key));
-    setting[prefix1.at(0)][param] = ret0;
 
     key = prefix0 + prefix1.at(1) + "." + param;
     unsigned int ret1 = 10 * (quad->Read(key));
-    setting[prefix1.at(1)][param] = ret1;
+    if (param != "ENABLE_2STEP"){
+      setting[prefix1.at(0)][param] = ret0;
+      setting[prefix1.at(1)][param] = ret1;
+    } 
+    else{
+      setting[prefix1.at(0)][param] = ret0/10;
+      setting[prefix1.at(1)][param] = ret1/10;
+    }
   }
 
   std::stringstream os;
