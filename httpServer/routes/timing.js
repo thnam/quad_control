@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const httpLog = require(global.appRoot + '/loggers/httpLogger.js');
+const timingLog = require(global.appRoot + '/loggers/timingLogger.js');
 const exec = require('util').promisify(require('child_process').exec);
 const BUEnv = require('config').BUEnv;
 
@@ -10,8 +11,9 @@ router
 
     exec(cmd, {env: BUEnv}).then((data)=>{
       httpLog.info("Read pulser timing successfully");
-      console.log(data.stdout);
-      res.status(200).json(JSON.parse(data.stdout));
+      setting = JSON.parse(data.stdout.toLowerCase());
+      timingLog.info({message: " ", meta: setting});
+      res.status(200).json(setting);
     }).catch((err)=>{
       httpLog.error("Cannot read pulser timing, " + err.stderr);
       res.status(500).send(err.stderr);
