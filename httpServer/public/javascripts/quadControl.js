@@ -75,6 +75,7 @@ window.onload = () => {
   initCVCharts();
   initPSCharts();
   setupVoltageGroup();
+  showTimingInfo();
 
   (async ()=>{
     let vRead = await getVoltage();
