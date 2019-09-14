@@ -25,8 +25,7 @@ function showTimingInfo() {
                 else 
                   row.cells[colN].innerHTML = "N/A";
               }
-            }
-            else {
+            } else {
               row.cells[colN].firstChild.defaultValue = Number(content);
             }
           }
@@ -34,6 +33,7 @@ function showTimingInfo() {
       }
     })
     .fail(()=>{
+      alert("Could not get timing settings ...");
     })
 
 }
