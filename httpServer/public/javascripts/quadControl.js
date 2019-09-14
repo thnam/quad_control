@@ -75,7 +75,6 @@ window.onload = () => {
   initCVCharts();
   initPSCharts();
   setupVoltageGroup();
-  showTimingInfo();
 
   (async ()=>{
     let vRead = await getVoltage();
@@ -89,5 +88,7 @@ window.onload = () => {
     document.getElementById('vSetpoint').value = str;
     reflectVPreset();
   })();
+
+  showTimingInfo();
 };
 
