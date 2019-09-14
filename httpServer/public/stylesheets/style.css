@@ -81,3 +81,9 @@ canvas {
   border: 2px solid grey;
   width: 8.33%;
 }
+
+td input {
+  width: 100%;
+  float: right;
+  /* box-sizing: border-box; */
+}
