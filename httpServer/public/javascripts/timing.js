@@ -1,10 +1,11 @@
-function showTimingInfo() {
-  let pulser = ["1", "2", "3", "4"];
-  let timingTab = document.getElementById("timingInfoTable");
-  let attr = ["enable_2step", "charge_start", "step1_end",
-    "step2_start", "charge_end", "discharge_start", "discharge_end"];
-  let state = ["active", "proposed"];
 
+let pulser = ["1", "2", "3", "4"];
+let timingTab = document.getElementById("timingInfoTable");
+let attr = ["enable_2step", "charge_start", "step1_end",
+  "step2_start", "charge_end", "discharge_start", "discharge_end"];
+let state = ["active", "proposed"];
+
+function showTimingInfo() {
   $.get(baseUrl + "/timing")
     .done((data)=>{
       let tInfo = data.pulser;
@@ -34,6 +35,29 @@ function showTimingInfo() {
     })
     .fail(()=>{
       alert("Could not get timing settings ...");
-    })
+    });
+}
 
+function configPulser(chn) {
+  let colN = 2 * Number(pulser[chn - 1]);
+  let is2Step = timingTab.rows[2].cells[colN].firstChild.value;
+  let setting = {"chn": chn};
+  for (var i = 0, leni = attr.length; i < leni; i++) {
+    setting[attr[i]] = timingTab.rows[2 + i].cells[colN].firstChild.value;
+  }
+
+  return new Promise((resolve, reject)=>{
+    $.ajax({
+      type: 'POST',
+      url: baseUrl + '/timing',
+      data: {setting: setting},
+      success: (res) =>{
+        console.log(res + ", timing on pulser " + chn + " is configured successfully: " + JSON.stringify(setting));
+        resolve(true);
+      },
+      error: (err, stat) =>{
+        resolve(false);
+        alert("Could not config pulser timing" + err.responseText);
+      }});
+  })
 }

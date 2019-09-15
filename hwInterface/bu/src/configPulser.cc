@@ -28,8 +28,8 @@ int main(int argc, char *argv[])
 {
   std::string addressTable(std::getenv("G2QUAD_ADDRESS_TABLE"));
   std::string ipAddress("192.168.30.89");
-
   quad = new g2quad(addressTable, ipAddress);
+
   std::map<std::string, uint32_t> setting;
   setting[params[0]] = 0;
   setting[params[1]] = 10;

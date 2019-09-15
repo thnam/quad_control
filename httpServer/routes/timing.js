@@ -12,12 +12,18 @@ router
     exec(cmd, {env: BUEnv}).then((data)=>{
       httpLog.info("Read pulser timing successfully");
       setting = JSON.parse(data.stdout.toLowerCase());
-      timingLog.info({message: " ", meta: setting});
+      timingLog.info({message: "read", meta: setting});
       res.status(200).json(setting);
     }).catch((err)=>{
       httpLog.error("Cannot read pulser timing, " + err.stderr);
       res.status(500).send(err.stderr);
     });
   })
+  .post("/", (req, res, next)=>{
+    const setting = req.body.setting;
+    console.log(setting);
+    res.sendStatus(200);
+  });
+
 
 module.exports = router;
