@@ -1,5 +1,5 @@
+*
+!*.cc
+!Makefile
+!*.sh
 obj
-test
-setPulseMode
-pulserStatus
-getFaultPattern
