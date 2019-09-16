@@ -5,6 +5,11 @@ $(() =>{
   $("#btnInternal").click(()=>{
     changePulseMode($("#internalMode").val()) });
 
+  $("#btnSetP1Timing").click(()=>{ configPulser(1);});
+  $("#btnSetP2Timing").click(()=>{ configPulser(2);});
+  $("#btnSetP3Timing").click(()=>{ configPulser(3);});
+  $("#btnSetP4Timing").click(()=>{ configPulser(4);});
+
   getPulseMode().then((currentMode)=>{
     displayPulseMode(currentMode);
   });

@@ -43,17 +43,21 @@ function configPulser(chn) {
   let is2Step = timingTab.rows[2].cells[colN].firstChild.value;
   let setting = {"chn": chn};
   for (var i = 0, leni = attr.length; i < leni; i++) {
-    setting[attr[i]] = timingTab.rows[2 + i].cells[colN].firstChild.value;
+    setting[attr[i]] = parseInt(timingTab.rows[2 + i].cells[colN].firstChild.value);
   }
 
   return new Promise((resolve, reject)=>{
     $.ajax({
       type: 'POST',
       url: baseUrl + '/timing',
-      data: {setting: setting},
+      contentType: "application/json; charset=utf-8",
+      data: JSON.stringify(setting),
+      traditional: true,
       success: (res) =>{
-        console.log(res + ", timing on pulser " + chn + " is configured successfully: " + JSON.stringify(setting));
         resolve(true);
+        console.log(res + ", timing on pulser " + chn +
+          " is configured successfully: " + JSON.stringify(setting));
+        showTimingInfo();
       },
       error: (err, stat) =>{
         resolve(false);

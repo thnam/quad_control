@@ -20,9 +20,31 @@ router
     });
   })
   .post("/", (req, res, next)=>{
-    const setting = req.body.setting;
-    console.log(setting);
-    res.sendStatus(200);
+    const s = req.body;
+    httpLog.info("Timing config request: " + JSON.stringify(s));
+
+    let cmd = global.appRoot + "/../hwInterface/bu/configPulser";
+    if (s.enable_2step === 1) {
+      cmd += " " + s.chn + " " + s.charge_start +
+        " " + (s.step1_end - s.charge_start) + " " + s.step2_start +
+        " " + (s.charge_end - s.step2_start) + " " + s.discharge_start +
+        " " + (s.discharge_end - s.discharge_start);
+      httpLog.info("Command: " + cmd);
+    }
+    else if(s.enable_2step === 0){
+      cmd += " " + s.chn + " " + s.charge_start +
+        " " + (s.charge_end - s.charge_start) +
+        " " + s.discharge_start + " " + (s.discharge_end - s.discharge_start);
+      httpLog.info("Command: " + cmd);
+    }
+
+    exec(cmd, {env: BUEnv}).then((data)=>{
+      httpLog.info("Timing config done for pulser " + s.chn);
+      res.sendStatus(200);
+    }).catch((err)=>{
+      httpLog.error("Config unsucessfully, " + err.stderr);
+      res.status(500).send(err.stderr);
+    });
   });
 
 

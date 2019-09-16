@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
     setting["DISCHARGE_END"] = atoi(argv[5]) / 10 + setting["DISCHARGE_START"];
   }
   else if (argc == 8){
-    setting["ENABLE_2STEP"] = 0;
+    setting["ENABLE_2STEP"] = 1;
     setting["CHARGE_START"] = atoi(argv[2]) / 10;
     setting["STEP1_END"] = atoi(argv[3])/10 + setting["CHARGE_START"];
     setting["STEP2_START"] = atoi(argv[4]) / 10;
