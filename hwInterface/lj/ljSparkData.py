@@ -13,7 +13,7 @@ ptype = ["s", "l"]
   #  "fs": {"pv": 1., "nv": 1., "pc": 0.1, "nc": 0.1},
   #  "ss": {"pv": 1., "nv": 1., "pc": 0.1, "nc": 0.1},
 #  };
-readSparkCmd = "/home/daq/ESQ/jscontrol/hwInterface/camacSparkRead.sh"
+readSparkCmd = "/home/daq/ESQ/jscontrol/hwInterface/lj/camacSparkRead.sh"
 proc = Popen((readSparkCmd), stdout=PIPE, stderr=PIPE)
 out, err = proc.communicate()
 

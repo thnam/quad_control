@@ -4,8 +4,8 @@
 from subprocess import Popen, PIPE, DEVNULL
 import sys
 
-readThresholdCmd = "/home/daq/ESQ/jscontrol/hwInterface/camacSparkThresholdRead.sh"
-setThresholdCmd = "/home/daq/ESQ/jscontrol/hwInterface/camacSparkThresholdSet.sh"
+readThresholdCmd = "/home/daq/ESQ/jscontrol/hwInterface/lj/camacSparkThresholdRead.sh"
+setThresholdCmd = "/home/daq/ESQ/jscontrol/hwInterface/lj/camacSparkThresholdSet.sh"
 
 if len(sys.argv) == 1: # read threshold if there is no argument
     proc = Popen((readThresholdCmd), stdout=PIPE, stderr=PIPE)
