@@ -23,7 +23,19 @@ router
     const s = req.body;
     httpLog.info("Timing config request: " + JSON.stringify(s));
 
-    let cmd = global.appRoot + "/../hwInterface/bu/configPulser";
+    // rf
+    let cmd = "";
+    if (s.width > 0){
+      cmd += global.appRoot + "/../hwInterface/bu/configRFPulser";
+      cmd += " " + s.chn + " " + s.delay1 + " " + s.delay2 +
+        " " + s.delay3 + " " + s.delay4;
+      cmd += " " + s.width + " && ";
+    }
+    else
+      httpLog.info("No RF config since width is 0");
+
+    // pulser
+    cmd += global.appRoot + "/../hwInterface/bu/configPulser";
     if (s.enable_2step === 1) {
       cmd += " " + s.chn + " " + s.charge_start +
         " " + (s.step1_end - s.charge_start) + " " + s.step2_start +
@@ -46,6 +58,7 @@ router
       httpLog.error("Config unsucessfully, " + err.stderr);
       res.status(500).send(err.stderr);
     });
+
   });
 
 module.exports = router;
