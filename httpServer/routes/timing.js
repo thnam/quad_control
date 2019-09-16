@@ -40,12 +40,12 @@ router
 
     exec(cmd, {env: BUEnv}).then((data)=>{
       httpLog.info("Timing config done for pulser " + s.chn);
+      timingLog.info({message: "change", meta: s});
       res.sendStatus(200);
     }).catch((err)=>{
       httpLog.error("Config unsucessfully, " + err.stderr);
       res.status(500).send(err.stderr);
     });
   });
-
 
 module.exports = router;
