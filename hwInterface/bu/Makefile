@@ -13,7 +13,7 @@ src = ./src
 obj = ./obj
 
 targets = test pulserStatus setPulseMode getFaultPattern readPulserTiming\
-					configPulser
+					configPulser configRFPulser
 
 all: $(targets)
 
