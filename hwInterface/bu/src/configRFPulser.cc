@@ -19,12 +19,12 @@
 g2quad * quad;
 
 void showUsage(char * name);
-void readRFSettings(unsigned int chn = 1);
+std::string readRFSettings(unsigned int chn = 1);
 
 int main(int argc, char *argv[])
 {
   // check arguments, only accept 2 cases
-  if (!(argc==7 || argc==6)) {
+  if (!(argc==7 || argc==6 || argc==1)) {
     std::cerr << "Invalid arguments" << std::endl;
     showUsage(argv[0]);
     return -1;
@@ -39,6 +39,20 @@ int main(int argc, char *argv[])
     std::cerr << "Could not connect to the Zynq at " << ipAddress << std::endl;
     std::cerr<< e.what() << std::endl;
     return -1;
+  }
+
+  // if there is no argument, just printout the settings
+  if (argc == 1) {
+    std::cout << "{\"RF\":{";
+    for (int i = 0; i < 4; ++i) {
+      std::cout << readRFSettings(i + 1); 
+      if (i == 3) 
+        std::cout << "}}";
+      else
+        std::cout << ",";
+    }
+    std::cout << std::endl;
+    return 0;
   }
 
   char base[256];
@@ -58,18 +72,23 @@ int main(int argc, char *argv[])
   return 0;
 }
 
-void readRFSettings(unsigned int chn){
+std::string readRFSettings(unsigned int chn){
   char base[120];
   char reg[256];
   sprintf(base, "ADCBOARD.%d.FP_RF_PULSER", chn);
 
-  std::cout << "RF pulser 1: " << std::endl;
+  std::stringstream os;
+  os << "\"" << chn <<"\":{";
+
   sprintf(reg, "%s.WIDTH", base);
-  std::cout << reg << ": " << quad->Read(std::string(reg)) * 10 << std::endl;
+  os << "\"width\":" << quad->Read(std::string(reg)) * 10 << ",";
   for (int i = 0; i < 4; ++i) {
     sprintf(reg, "%s.START.%d", base, i + 1);
-    std::cout << reg << ": " << quad->Read(std::string(reg)) * 10 << std::endl;
+    os << "\"delay" << i + 1 << "\":" << quad->Read(std::string(reg)) * 10 << ",";
   }
+  os.seekp(-1, std::ios_base::end);
+  os << "}";
+  return os.str();
 }
 
 void showUsage(char * name){
