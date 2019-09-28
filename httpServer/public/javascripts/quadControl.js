@@ -95,5 +95,6 @@ window.onload = () => {
   })();
 
   showTimingInfo();
+  showSparkHistory();
 };
 
