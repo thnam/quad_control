@@ -9,8 +9,9 @@
     .row.mt-4
       .table-responsive
         table.table.table-hover.table-bordered#sparkHistoryTable
-          tr
-            th(width='15%') Timestamp
-            th(width='75%') Spark pattern
-            th(width='10%') Spark bit
+          thead
+            tr
+              th(width='15%',data-field='timestamp') Timestamp
+              th(width='75%',data-field='sparkPattern') Spark pattern
+              th(width='10%',data-field='sparkBit') Spark bit
 
