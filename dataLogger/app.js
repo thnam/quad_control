@@ -68,12 +68,12 @@ setInterval( () => {
           })
         } else if (env == "production") {
           // stop pulsing
-          cmd = global.appRoot + "/../hwInterface/bu/setPulseMode";
-          cmd += ' -m "Stop"';
-          const stopPulsingCmd = exec(cmd);
-          stopPulsingCmd.stdout.on("data", (data)=>{
-            console.log("Stop pulsing due to spark");
-          })
+          // cmd = global.appRoot + "/../hwInterface/bu/setPulseMode";
+          // cmd += ' -m "Stop"';
+          // const stopPulsingCmd = exec(cmd);
+          // stopPulsingCmd.stdout.on("data", (data)=>{
+            // console.log("Stop pulsing due to spark");
+          // })
           // labjack reset here
           const newCmd = exec(appRoot + "/../hwInterface/lj/ljSparkRecover.py");
           newCmd.stdout.on("data", (data) =>{

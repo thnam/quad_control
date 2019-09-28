@@ -25,7 +25,7 @@
     "sparkPollingPeriod": 2000,
     "sparkThresholdPollingPeriod": 30000,
     "periodUnit": "ms -- just a comment, changing this would have no effect",
-    "onlineDataPoints": 300,
+    "onlineDataPoints": 500,
     "onlineStatusDataPoints": 1000,
     "maxLogSize": 524,
     "maxNumFile": 10
