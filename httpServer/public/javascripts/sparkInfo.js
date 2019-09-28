@@ -8,12 +8,12 @@ function displaySparkInfo() {
   let sparkTable = document.getElementById("sparkTable");
   let plate = ["t", "b", "i", "o"];
 
-  for (var iRow = 0, len = sparkTable.rows.length; iRow < len; iRow++) {
+  for (var iRow = 0; iRow < sparkTable.rows.length; iRow++) {
     let qName = "q" + (iRow + 1).toString();
     let row = sparkTable.rows[iRow];
 
     let cellId = 1;
-    for (var iP = 0, len = plate.length; iP < len; iP++) {
+    for (var iP = 0; iP < plate.length; iP++) {
       let sparkNum = parseInt(window.spark[qName].s[plate[iP]]);
       row.cells[cellId + iP].innerHTML = plate[iP].toUpperCase() + ": " + sparkNum.toString();
       if (sparkNum > 0) {
@@ -147,9 +147,7 @@ function showSparkHistory() {
     .done((data)=>{
       var sparkData = [];
       console.log(data.length);
-      // for (var i = 0, len = data.length; i < len; i++) {
-      for (var i = 0, len = 10; i < len; i++) {
-        console.log(i, len);
+      for (var i = 0; i < 10; i++) {
         timestamp = new Date(data[i].timestamp);
         timestamp = moment(timestamp).format('YYYY-MM-DD HH:mm:ss');
 
@@ -159,7 +157,7 @@ function showSparkHistory() {
 
         pattern = data[i].meta;
 
-        for (var k = 0, len = 4; k < len; k++) {
+        for (var k = 0; k < 4; k++) {
           quadStr = "q" + (k + 1).toString();
 
           for (var j = 0; j < 2; j++) {
