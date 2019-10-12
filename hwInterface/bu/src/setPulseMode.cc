@@ -108,6 +108,7 @@ int main(int argc, char *argv[])
         return -1;
       }
 
+      pulser->Write("TRIGGER.FREE_RUN.BURST_MODE", 0x0);
       pulser->Write("TRIGGER.FREE_RUN.ENABLE", 0x0);
 
       pulser->Write("TRIGGER.FREE_RUN.EN_FR_TRIG", 0x1);
