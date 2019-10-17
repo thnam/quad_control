@@ -13,7 +13,7 @@ import sys
   #  "ss": {"pv": 1., "nv": 1., "pc": 0.1, "nc": 0.1},
 #  };
 
-spFile = "./hwInterface/setpoint.json"
+spFile = "./hwInterface/dummy/setpoint.json"
 with open(spFile) as f:
     setpoint = json.load(f)
 
@@ -51,8 +51,7 @@ for ps in pulsers:
       gauss(setpoint["c"][ps], setpoint["v"]["sigma"]),
       gauss(-1 * setpoint["c"][ps], setpoint["v"]["sigma"]))
 
-#  ostr += ' "spark": %s}' % float('%.3g' % gauss(-.4, .2))
-ostr += ' "spark": %s}' % float('%.3g' % gauss(setpoint["spark"]["value"],
-                                               setpoint["spark"]["sigma"]))
+ostr += ' "spark": %s}' % float('%.3g' % gauss(-.4, .2))
+#  ostr += ' "spark": %s}' % float('%.3g' % gauss(setpoint["spark"]["value"], setpoint["spark"]["sigma"]))
 
 print(ostr)

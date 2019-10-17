@@ -24,10 +24,22 @@ socket.on("cv", (data) => {
     formatVC(window.vRead.ss.pv), formatVC(window.vRead.ss.nv), 
     formatVC(window.vRead.fs.pv), formatVC(window.vRead.fs.nv)];
 
-  window.lastCvBarChartData[0].x = lastCvValue;
-  window.lastCvBarChartData[0].text = lastCvValue;
+  document.getElementById("lfspv").innerHTML = window.vRead.fs.pv;
+  document.getElementById("lfsnv").innerHTML = window.vRead.fs.nv;
+  document.getElementById("lfspc").innerHTML = window.vRead.fs.pc;
+  document.getElementById("lfsnc").innerHTML = window.vRead.fs.nc;
+  document.getElementById("lsspv").innerHTML = window.vRead.ss.pv;
+  document.getElementById("lssnv").innerHTML = window.vRead.ss.nv;
+  document.getElementById("lsspc").innerHTML = window.vRead.ss.pc;
+  document.getElementById("lssnc").innerHTML = window.vRead.ss.nc;
+  document.getElementById("lospv").innerHTML = window.vRead.os.pv;
+  document.getElementById("losnv").innerHTML = window.vRead.os.nv;
+  document.getElementById("lospc").innerHTML = window.vRead.os.pc;
+  document.getElementById("losnc").innerHTML = window.vRead.os.nc;
+  // window.lastCvBarChartData[0].x = lastCvValue;
+  // window.lastCvBarChartData[0].text = lastCvValue;
 
-  Plotly.redraw(document.getElementById('bcLastCV'));
+  // Plotly.redraw(document.getElementById('bcLastCV'));
 
 
   // then cv table
@@ -69,7 +81,7 @@ socket.on("cv", (data) => {
 })
 
 function initCVCharts() {
-  initLastCVBarChart();
+  // initLastCVBarChart();
   initCVTrendLineChart();
 };
 

@@ -32,10 +32,10 @@ var flag;
 var cvDataCmd, sparkDataCmd, statusDataCmd;
 
 if (env == "development") { // Fake data
-  cvDataCmd = appRoot + '/../hwInterface/lj/fakeCVData.py';
-  statusDataCmd = appRoot + '/../hwInterface/lj/fakePulserStatus.py';
-  sparkDataCmd = appRoot + "/../hwInterface/lj/fakeSparkData.py";
-  sparkThresholdCmd = appRoot + "/../hwInterface/lj/fakeSparkThreshold.py";
+  cvDataCmd = appRoot + '/../hwInterface/dummy/fakeCVData.py';
+  statusDataCmd = appRoot + '/../hwInterface/dummy/fakePulserStatus.py';
+  sparkDataCmd = appRoot + "/../hwInterface/dummy/fakeSparkData.py";
+  sparkThresholdCmd = appRoot + "/../hwInterface/dummy/fakeSparkThreshold.py";
 } else{
   // Labjack data
   cvDataCmd = appRoot + '/../hwInterface/lj/ljCVData.py';
