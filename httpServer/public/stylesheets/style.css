@@ -1,13 +1,9 @@
 .container {
-    max-width: 80%;
+    max-width: 82%;
 }
 
 .mainTabBG{
-  background-color: AliceBlue;
-}
-
-.alterTabBG{
-  background-color: Azure;
+  background-color: #ECE8E4;
 }
 
 .btn-fill{
@@ -86,4 +82,16 @@ td input {
   width: 100%;
   float: right;
   /* box-sizing: border-box; */
+}
+
+.blockTitle{
+  color: #4FD2CD;
+  padding-top: 5px;
+}
+
+.tabBG1{
+  background-color: #E9E5E1;
+}
+.tabBG2{
+  background-color: #E7E5E1;
 }
