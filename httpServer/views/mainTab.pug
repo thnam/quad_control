@@ -2,20 +2,17 @@
 #mainTab.tab-pane.fade.in.show.active.container.mainTabBG(role='tabpanel')
   .row
     .col-6
-      include components/pulsingControl
-    .col-6
-      include components/voltageSettings
-  .row.mb-4.mt-4
-    .col-6
+      .container-fluid.bg-light
+        include components/pulsingControl
+      include components/sparkControl
       include components/sparkTable
     .col-6
+      include components/voltageSettings
       include components/lastVoltageTable
-  .row.mt-4
-    .col-5
-      include components/sparkControl
-    .col-7
-      #container(style='width: 100%;height:350px;')
-        #lcCVTrend(style='width:100%;height:100%;')
+
+  .row
+    #container(style='width: 100%;height:350px;')
+      #lcCVTrend(style='width:100%;height:100%;')
 
 audio#sparkAlarmAudio
   source(src='sparkAlarm.wav', type='audio/wav')
