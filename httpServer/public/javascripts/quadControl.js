@@ -2,8 +2,12 @@ $(() =>{
   // pulse mode buttons
   $("#btnExternal").click(()=>{ changePulseMode("External");});
   $("#btnStop").click(()=>{ changePulseMode("Stop");});
-  $("#btnInternal").click(()=>{
-    changePulseMode($("#internalMode").val()) });
+  $("#btnInternal1Hz").click(()=>{ changePulseMode("1 Hz");});
+  $("#btnInternal2Hz").click(()=>{ changePulseMode("2 Hz");});
+  $("#btnInternal5Hz").click(()=>{ changePulseMode("5 Hz");});
+  $("#btnInternal10Hz").click(()=>{ changePulseMode("10 Hz");});
+  $("#btnInternalBurst").click(()=>{ changePulseMode("Burst");});
+  $("#btnInternalSingle").click(()=>{ changePulseMode("Single");});
 
   $("#btnSetP1Timing").click(()=>{ configPulser(1);});
   $("#btnSetP2Timing").click(()=>{ configPulser(2);});
