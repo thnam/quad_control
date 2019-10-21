@@ -146,7 +146,6 @@ function showSparkHistory() {
   $.get(baseUrl + "/sparkHistory")
     .done((data)=>{
       var sparkData = [];
-      console.log(data.length);
       for (var i = 0; i < 10; i++) {
         timestamp = new Date(data[i].timestamp);
         timestamp = moment(timestamp).format('YYYY-MM-DD HH:mm:ss');
@@ -174,7 +173,6 @@ function showSparkHistory() {
         sparkData.push({"timestamp": timestamp,
           "sparkPattern": patternStr, "sparkBit": sparkBit});
       }
-      console.log(sparkData);
       var $histSparkTable = $('#sparkHistoryTable');
       $histSparkTable.bootstrapTable({data: sparkData});
 
