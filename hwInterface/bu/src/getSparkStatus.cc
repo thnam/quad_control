@@ -18,8 +18,10 @@
 g2quad * quad;
 
 // brd 1 <-> Q1, channel: 1-st, 2-sb, 3-si, 4-so, 5-lt, 6-lb, 7-li, 8-lo
-std::vector<std::string> qPlates = {"st", "sb", "si", "so",
-  "lt", "lb", "li", "lo"};
+// std::vector<std::string> qPlates = {"st", "sb", "si", "so",
+  // "lt", "lb", "li", "lo"};
+std::vector<std::string> qTypes = {"s", "l"};
+std::vector<std::string> qPlates = {"t", "b", "i", "o"};
 
 int main(int argc, char *argv[]) {
   std::string addressTable(std::getenv("G2QUAD_ADDRESS_TABLE"));
@@ -41,11 +43,18 @@ int main(int argc, char *argv[]) {
     std::stringstream reg;
     reg << "ADCBOARD." << iboard << ".ED.ARMED";
     uint32_t ret = quad->Read(reg.str()) & 0xFF;
-    for (uint32_t j = 0; j < qPlates.size(); ++j) {
-      os << "\"" << qPlates.at(j) <<"\""<< ":" << ((ret & (1 << j)) >> j);
-      if (j != qPlates.size() - 1) {
-        os << ",";
+    for (uint32_t k = 0; k < qTypes.size(); ++k) {
+      os << "\"" << qTypes.at(k) << "\": {"; 
+      for (uint32_t j = 0; j < qPlates.size(); ++j) {
+        uint32_t shift = k * qPlates.size() + j;
+        os << "\"" << qPlates.at(j) <<"\""<< ":" << ((ret & (1 << shift)) >> shift);
+        if (j != qPlates.size() - 1) 
+          os << ",";
+        else
+          os << "}";
       }
+      if (k != qTypes.size() - 1) 
+        os << ",";
     }
 
     if (iboard != 4) 
