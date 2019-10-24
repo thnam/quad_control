@@ -1,6 +1,8 @@
 // This class periodically reads out currents and voltages from the Labjack
 const config = require('config');
 const exec = require('child_process').exec;
+const exec2 = require('util').promisify(require('child_process').exec);
+const BUEnv = require('config').BUEnv;
 
 global.appRoot = require('app-root-path').toString();
 const cvLogger = require(global.appRoot + '/loggers/cvLogger.js');
@@ -40,10 +42,11 @@ if (env == "development") { // Fake data
   // Labjack data
   cvDataCmd = appRoot + '/../hwInterface/lj/ljCVData.py';
   statusDataCmd = appRoot + '/../hwInterface/lj/ljPulserStatus.py';
-  sparkDataCmd = appRoot + "/../hwInterface/lj/ljSparkData.py";
+  // sparkDataCmd = appRoot + "/../hwInterface/lj/ljSparkData.py";
   sparkThresholdCmd = appRoot + "/../hwInterface/lj/ljSparkThreshold.py";
   // BU electronics data
   // const statusDataCmd = appRoot + '/../hwInterface/fakePulserStatus.py';
+  sparkDataCmd = appRoot + "/../hwInterface/bu/getSparkStatus";
 }
 
 
@@ -58,45 +61,7 @@ setInterval( () => {
       // if sparks, record the pattern in the sparkHistory collection, and
       // reset the spark pin,
       if (cv.spark >= 2.) {
-
-        if (env=="development") {
-          const newCmd = (cvDataCmd + " " + cv.fs.pv + " " + cv.ss.pv +
-            " " + cv.os.pv + " -0.4"); 
-          const proc = exec(newCmd);
-          proc.stdout.on("data", (data) => {
-            console.log("Spark bit reset");
-          })
-        } else if (env == "production") {
-          // stop pulsing
-          // cmd = global.appRoot + "/../hwInterface/bu/setPulseMode";
-          // cmd += ' -m "Stop"';
-          // const stopPulsingCmd = exec(cmd);
-          // stopPulsingCmd.stdout.on("data", (data)=>{
-            // console.log("Stop pulsing due to spark");
-          // })
-          // labjack reset here
-          const newCmd = exec(appRoot + "/../hwInterface/lj/ljSparkRecover.py");
-          newCmd.stdout.on("data", (data) =>{
-            console.log("Spark pin reset");
-          })
-
-        }
-
-        const patternCmd = exec(sparkDataCmd);
-        var pattern = {};
-        patternCmd.stdout.on('data', function(data){
-          pattern = JSON.parse(data);
-          pattern["error"] = false;
-          pattern["sparkBit"] = cv.spark;
-          sparkHistLogger.info({message: " ", meta: pattern});
-        });
-
-        patternCmd.stderr.on('error', function(err){
-          pattern["error"] = true;
-          pattern["sparkBit"] = cv.spark;
-          pattern["message"] = JSON.stringify(err).slice(1, -4);
-          sparkHistLogger.error({message: " ", meta: pattern});
-        });
+        // this is NIM/camac way to handle spark, lets skip this for BU box
       }
 
     });
@@ -134,19 +99,17 @@ setInterval( () => {
 
 // Periodic spark pattern for online display
 setInterval( () => {
-    const command = exec(sparkDataCmd);
-    var pattern = {};
-    command.stdout.on('data', function(data){
-      pattern = JSON.parse(data);
+  exec2(sparkDataCmd, {env: BUEnv})
+    .then((data)=>{
+      pattern = JSON.parse(data.stdout);
       pattern["error"] = false;
       sparkPatternLogger.info({message: " ", meta: pattern});
-    });
-
-    command.stderr.on('error', function(err){
+    })
+    .catch((err)=>{
       pattern["error"] = true;
-      pattern["message"] = JSON.stringify(err).slice(1, -4);
+      pattern["message"] = JSON.stringify(err.stderr);
       sparkPatternLogger.error({message: " ", meta: pattern});
-    });
+    })
 
   }, config.get("logger.sparkPollingPeriod")
 );
