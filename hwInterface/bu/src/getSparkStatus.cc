@@ -47,7 +47,9 @@ int main(int argc, char *argv[]) {
       os << "\"" << qTypes.at(k) << "\": {"; 
       for (uint32_t j = 0; j < qPlates.size(); ++j) {
         uint32_t shift = k * qPlates.size() + j;
-        os << "\"" << qPlates.at(j) <<"\""<< ":" << ((ret & (1 << shift)) >> shift);
+        // armed status means no spark detected 
+        bool sparked = !((ret & (1 << shift)) >> shift);
+        os << "\"" << qPlates.at(j) <<"\""<< ":" << sparked;
         if (j != qPlates.size() - 1) 
           os << ",";
         else
