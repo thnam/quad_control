@@ -9,15 +9,15 @@ socket.on("cv", (data) => {
 
   // update the voltages and currents first
   window.vRead = values[0].meta;
-  // spark alert
-  if (window.vRead.spark >= 2) {
-    if (window.ramping) {
-      window.ramping = false;
-      handleSparkEvent("Spark! Ramping is aborted.");
-    } else {
-      handleSparkEvent("Spark!");
-    }
-  }
+  // spark alert --> no longer working if BU controller takes over
+  // if (window.vRead.spark >= 2) {
+    // if (window.ramping) {
+      // window.ramping = false;
+      // handleSparkEvent("Spark! Ramping is aborted.");
+    // } else {
+      // handleSparkEvent("Spark!");
+    // }
+  // }
 
   var lastCvValue = [
     formatVC(window.vRead.os.pv), formatVC(window.vRead.os.nv), 

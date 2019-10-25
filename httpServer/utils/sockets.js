@@ -2,6 +2,7 @@
 const io = require('socket.io')(require(global.appRoot + "/bin/www"));
 const httpLog = require(global.appRoot + '/loggers/httpLogger.js');
 const dbTool = require(global.appRoot + "/utils/dbTools.js");
+const config = require('config');
 
 io.on('connection', function (socket) {
   httpLog.info("Client connected from: "  + socket.handshake.address);
@@ -26,7 +27,7 @@ io.on('connection', function (socket) {
     } catch (e) {
       console.error(e);
     }
-  }, 3333);
+  }, config.get("logger.voltagePollingPeriod"));
 
   setInterval(async ()=>{
     try {
@@ -35,7 +36,7 @@ io.on('connection', function (socket) {
     } catch (e) {
       console.error(e);
     }
-  }, 5000);
+  }, config.get("logger.pulserStatePollingPeriod"));
 
   setInterval(async ()=>{
     try {
@@ -44,7 +45,7 @@ io.on('connection', function (socket) {
     } catch (e) {
       console.error(e);
     }
-  }, 10000);
+  }, config.get("logger.sparkPollingPeriod"));
 });
 
 module.exports = io;

@@ -13,7 +13,8 @@ src = ./src
 obj = ./obj
 
 targets = test pulserStatus setPulseMode getFaultPattern readPulserTiming\
-					configPulser configRFPulser armSparkDetection getSparkStatus
+					configPulser configRFPulser armSparkDetection getSparkStatus\
+					readSparkThreshold
 
 all: $(targets)
 
