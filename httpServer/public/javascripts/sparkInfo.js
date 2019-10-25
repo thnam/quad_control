@@ -5,7 +5,20 @@ socket.on("sparkPattern", (data) => {
 });
 
 socket.on("sparked", (data) =>{
-  console.log("Sparked message received!");
+  if (window.handlingSparkEvent == false) {
+    console.log("Sparked message received!");
+    if (window.ramping) {
+      window.ramping = false;
+      handleSparkEvent("Spark! Ramping is aborted.");
+    } else {
+      handleSparkEvent("Spark!");
+    }
+    window.handlingSparkEvent = true;
+    // not handle this again for next 60 sec
+    setTimeout(function(){
+      window.handlingSparkEvent = false;
+    }, 60*1000);
+  }
 });
 
 function displaySparkInfo() {
@@ -79,7 +92,6 @@ function readSparkThreshold() {
 
 function handleSparkEvent(msg) {
   changePulseMode("Stop");
-  // reseting the spark bit is done automatically in dataLogger
   playAlarmSound(window.sparkAlarmAudio);
   alert(msg);
 }

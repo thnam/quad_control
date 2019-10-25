@@ -68,6 +68,7 @@ window.sparkAlarmAudio = document.getElementById("sparkAlarmAudio");
 window.faultAlarmAudio = document.getElementById("faultAlarmAudio");
 
 window.ramping = false;
+window.handlingSparkEvent = false;
 
 const baseUrl = "http://" + document.location.hostname + ":" + document.location.port
 var socket = io.connect(baseUrl);

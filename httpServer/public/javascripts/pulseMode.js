@@ -1,4 +1,4 @@
-function changePulseMode(newMode) {
+function changePulseMode(newMode, msg) {
   if (newMode === "Stop")  // stop always works
     setPulseMode("Stop");
   else{
