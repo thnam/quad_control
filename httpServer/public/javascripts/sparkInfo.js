@@ -4,6 +4,10 @@ socket.on("sparkPattern", (data) => {
   displaySparkInfo();
 });
 
+socket.on("sparked", (data) =>{
+  console.log("Sparked message received!");
+});
+
 function displaySparkInfo() {
   let sparkTable = document.getElementById("sparkTable");
   let plate = ["t", "b", "i", "o"];

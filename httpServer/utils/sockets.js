@@ -40,8 +40,23 @@ io.on('connection', function (socket) {
 
   setInterval(async ()=>{
     try {
-      const spark = await dbTool.getSparkInfo();
-      socket.emit("sparkPattern", spark);
+      const sparkEntry = await dbTool.getSparkInfo();
+      const sparkInfo = sparkEntry[0].meta;
+      let nSparkedChannel = 0;
+      for (let q in sparkInfo) {
+        if (q.length == 2) { // choose only q*
+          for (let l in sparkInfo[q]) { // s, l
+            for (var p in sparkInfo[q][l]) { // i, o, t, b
+              nSparkedChannel += (sparkInfo[q][l][p]);
+            }
+          }
+        }
+      }
+      socket.emit("sparkPattern", sparkEntry);
+
+      if (nSparkedChannel > 0) {
+        socket.emit("sparked", sparkEntry);
+      }
     } catch (e) {
       console.error(e);
     }
