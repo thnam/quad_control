@@ -42,19 +42,21 @@ io.on('connection', function (socket) {
     try {
       const sparkEntry = await dbTool.getSparkInfo();
       const sparkInfo = sparkEntry[0].meta;
-      let nSparkedChannel = 0;
+      // simply add all channels to give a global spark indicator
+      let nSparks = 0;
       for (let q in sparkInfo) {
         if (q.length == 2) { // choose only q*
           for (let l in sparkInfo[q]) { // s, l
             for (var p in sparkInfo[q][l]) { // i, o, t, b
-              nSparkedChannel += (sparkInfo[q][l][p]);
+              nSparks += (sparkInfo[q][l][p]);
             }
           }
         }
       }
       socket.emit("sparkPattern", sparkEntry);
 
-      if (nSparkedChannel > 0) {
+      // push the message if needed
+      if (nSparks > 0) {
         socket.emit("sparked", sparkEntry);
       }
     } catch (e) {
