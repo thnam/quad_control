@@ -13,8 +13,9 @@ socket.on("sparked", (data) =>{
     } else {
       handleSparkEvent("Spark!");
     }
-    window.handlingSparkEvent = true;
+
     // not handle this again for next 60 sec
+    window.handlingSparkEvent = true;
     setTimeout(function(){
       window.handlingSparkEvent = false;
     }, 60*1000);
@@ -60,32 +61,24 @@ function displaySparkInfo() {
 };
 
 function readSparkThreshold() {
-  $.get(baseUrl + "/camacThreshold").done((data) =>{
-    if (!data.error) {
-      try {
-        let thr = data[0].meta;
+  $.get(baseUrl + "/sparkThreshold").done((data) =>{
+    try {
+      let thr = data[0].meta;
+      entry = "#upperThresholdReadback";
+      $(entry).text(thr.high.toString());
+      $(entry).css({"color": $(".btn-success").css("background-color")});
+      entry = "#lowerThresholdReadback";
+      $(entry).text(thr.low.toString());
+      $(entry).css({"color": $(".btn-success").css("background-color")});
 
-        Object.keys(thr).forEach(slot =>{
-          entry = "#slot" + slot.toString() + "Th";
-          $(entry).text(thr[slot] + " mV");
-
-          if (thr[slot] >= 800) 
-            $(entry).css({"color": $(".btn-success").css("background-color")});
-          else
-            $(entry).css({"color": $(".btn-danger").css("background-color")});
-        });
-      } catch (e) {
-        console.error(e);
-        $("#slot3Th").text(`ERROR!`);
-        $("#slot3Th").css({"color": $(".btn-danger").css("background-color")});
-        $("#slot6Th").text(`ERROR!`);
-        $("#slot6Th").css({"color": $(".btn-danger").css("background-color")});
-      }
-    } else {
-      $("#slot3Th").text(`ERROR!`);
-      $("#slot3Th").css({"color": $(".btn-danger").css("background-color")});
-      $("#slot6Th").text(`ERROR!`);
-      $("#slot6Th").css({"color": $(".btn-danger").css("background-color")});
+    } catch (e) {
+      console.error(e);
+      entry = "#upperThresholdReadback";
+      $(entry).text(`ERROR!`);
+      $(entry).css({"color": $(".btn-danger").css("background-color")});
+      entry = "#lowerThresholdReadback";
+      $(entry).text(`ERROR!`);
+      $(entry).css({"color": $(".btn-danger").css("background-color")});
     }
   })
 };

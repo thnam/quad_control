@@ -29,7 +29,7 @@ app.use('/spark', require(global.appRoot + '/routes/sparkInfo'));
 app.use('/clearSparkDisplay', require(global.appRoot + '/routes/clearSparkDisplay'));
 app.use('/lastSpark', require(global.appRoot + '/routes/lastSpark'));
 app.use('/sparkHistory', require(global.appRoot + '/routes/sparkHistory'));
-app.use('/camacThreshold', require(global.appRoot + '/routes/camacThreshold'));
+app.use('/sparkThreshold', require(global.appRoot + '/routes/sparkThreshold'));
 app.use('/resetFault', require(global.appRoot + '/routes/resetFault'));
 app.use('/timing', require(global.appRoot + '/routes/timing'));
 

@@ -14,7 +14,7 @@ obj = ./obj
 
 targets = test pulserStatus setPulseMode getFaultPattern readPulserTiming\
 					configPulser configRFPulser armSparkDetection getSparkStatus\
-					readSparkThreshold
+					readSparkThreshold resetPulserInhibits
 
 all: $(targets)
 

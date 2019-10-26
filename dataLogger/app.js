@@ -43,10 +43,11 @@ if (env == "development") { // Fake data
   cvDataCmd = appRoot + '/../hwInterface/lj/ljCVData.py';
   statusDataCmd = appRoot + '/../hwInterface/lj/ljPulserStatus.py';
   // sparkDataCmd = appRoot + "/../hwInterface/lj/ljSparkData.py";
-  sparkThresholdCmd = appRoot + "/../hwInterface/lj/ljSparkThreshold.py";
+  // sparkThresholdCmd = appRoot + "/../hwInterface/lj/ljSparkThreshold.py";
   // BU electronics data
   // const statusDataCmd = appRoot + '/../hwInterface/fakePulserStatus.py';
   sparkDataCmd = appRoot + "/../hwInterface/bu/getSparkStatus";
+  sparkThresholdCmd = appRoot + "/../hwInterface/bu/readSparkThreshold";
 }
 
 
@@ -116,18 +117,14 @@ setInterval( () => {
 
 // Spark threshold, periodically read, just for the record
 setInterval( () => {
-    const command = exec(sparkThresholdCmd);
-    var thr = {};
-    command.stdout.on('data', function(data){
-      thr = JSON.parse(data);
-      thr["error"] = false;
-      thrLogger.info({message: " ", meta: thr});
-    });
-
-    command.stderr.on('error', function(err){
-      thr["error"] = true;
-      thr["message"] = JSON.stringify(err).slice(1, -4);
-      thrLogger.error({message: " ", meta: thr});
+  exec2(sparkThresholdCmd, {env: BUEnv})
+    .then((data)=>{
+      console.log(data.stdout);
+      thrLogger.info(" ", {meta:JSON.parse(data.stdout)});
+    })
+    .catch((err)=>{
+      console.error(err.stderr);
+      thrLogger.error(" ",{meta: JSON.stringify(err.stderr)});
     });
   }, config.get("logger.sparkThresholdPollingPeriod")
 );

@@ -2,13 +2,21 @@
 
 .row.mb-3
   .col-4
-    button#btnReadThreshold.btn.btn-block.btn-info  Threshold
-  .col-4
-    | Slot 3: 
-    strong#slot3Th
-  .col-4
-    | Slot 6: 
-    strong#slot6Th
+    button#btnSetThreshold.btn.btn-block.btn-info  Set Threshold
+  .col-5
+    .row
+      | Upper: 
+      input(type='number')
+    .row
+      | Lower:
+      input(type='number')
+  .col-1
+  .col-2
+    .row
+      strong#upperThresholdReadback
+    .row
+      strong#lowerThresholdReadback
+
 .row.mb-3.mt-3
   .col-4
     | Spark count: 
