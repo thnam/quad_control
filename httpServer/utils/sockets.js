@@ -1,6 +1,7 @@
 // socket io for pushing periodic events
 const io = require('socket.io')(require(global.appRoot + "/bin/www"));
 const httpLog = require(global.appRoot + '/loggers/httpLogger.js');
+const sparkLog = require(global.appRoot + '/loggers/sparkLogger.js');
 const dbTool = require(global.appRoot + "/utils/dbTools.js");
 const config = require('config');
 
@@ -58,6 +59,7 @@ io.on('connection', function (socket) {
       // push the message if needed
       if (nSparks > 0) {
         socket.emit("sparked", sparkEntry);
+        sparkLog.info({message: " ", meta: sparkInfo});
       }
     } catch (e) {
       console.error(e);

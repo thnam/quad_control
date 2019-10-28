@@ -161,19 +161,6 @@ function playAlarmSound(audio, period=20) {
 function clearSparkDisplay() {
   console.log("Re-arm spark detection");
   setSparkThreshold();
-  // return new Promise(function (resolve, reject) {
-    // $.ajax({
-      // type: 'POST',
-      // url: baseUrl + '/clearSparkDisplay',
-      // success: (res) =>{
-        // resolve(true);
-        // displaySparkInfo();
-      // },
-      // error: (err, stat) =>{
-        // resolve(false);
-        // alert("Failed to clear spark display: " + err.responseText);
-      // } });
-  // });
 };
 
 function showSparkHistory() {
