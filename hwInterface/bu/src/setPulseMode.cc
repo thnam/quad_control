@@ -69,6 +69,12 @@ int main(int argc, char *argv[])
       pulser->Write("TRIGGER.FREE_RUN.ENABLE", 0x0);
     }
     else if (mode_s == "External"){ // disable fr_trig, enable ext_trig
+      for (uint32_t iBoard = 1; iBoard <= 4; ++iBoard) {
+        std::stringstream reg;
+        // ADCBOARD.1.FP_PULSER.RESET_INHIBIT
+        reg << "ADCBOARD." << iBoard << ".FP_PULSER.RESET_INHIBIT";
+        pulser->Write(reg.str(), 0x1);
+      }
       pulser->Write("TRIGGER.FREE_RUN.ENABLE", 0x0);
       pulser->Write("TRIGGER.FREE_RUN.EN_FR_TRIG", 0x0);
       pulser->Write("TRIGGER.FREE_RUN.EN_EXT_TRIG", 0x1);
@@ -76,6 +82,12 @@ int main(int argc, char *argv[])
       pulser->Write("TRIGGER.FREE_RUN.ENABLE", 0x1);
     }
     else if (mode_s == "Single"){ // single pulse on all channels
+      for (uint32_t iBoard = 1; iBoard <= 4; ++iBoard) {
+        std::stringstream reg;
+        // ADCBOARD.1.FP_PULSER.RESET_INHIBIT
+        reg << "ADCBOARD." << iBoard << ".FP_PULSER.RESET_INHIBIT";
+        pulser->Write(reg.str(), 0x1);
+      }
       pulser->Write("TRIGGER.FREE_RUN.ENABLE", 0x0);
       pulser->Write("TRIGGER.STATUS.ENABLE_PULSERS", 0x1);
       pulser->Write("ADCBOARD.1.FP_PULSER.USER_PULSE", 0x1);
@@ -85,6 +97,12 @@ int main(int argc, char *argv[])
       pulser->Write("TRIGGER.STATUS.ENABLE_PULSERS", 0x0);
     }
     else if (mode_s == "Burst"){
+      for (uint32_t iBoard = 1; iBoard <= 4; ++iBoard) {
+        std::stringstream reg;
+        // ADCBOARD.1.FP_PULSER.RESET_INHIBIT
+        reg << "ADCBOARD." << iBoard << ".FP_PULSER.RESET_INHIBIT";
+        pulser->Write(reg.str(), 0x1);
+      }
       pulser->Write("TRIGGER.FREE_RUN.ENABLE", 0x0);
 
       pulser->Write("TRIGGER.FREE_RUN.BURST_MASK", 0xFF0000FF);
@@ -108,6 +126,12 @@ int main(int argc, char *argv[])
         return -1;
       }
 
+      for (uint32_t iBoard = 1; iBoard <= 4; ++iBoard) {
+        std::stringstream reg;
+        // ADCBOARD.1.FP_PULSER.RESET_INHIBIT
+        reg << "ADCBOARD." << iBoard << ".FP_PULSER.RESET_INHIBIT";
+        pulser->Write(reg.str(), 0x1);
+      }
       pulser->Write("TRIGGER.FREE_RUN.BURST_MODE", 0x0);
       pulser->Write("TRIGGER.FREE_RUN.ENABLE", 0x0);
 
