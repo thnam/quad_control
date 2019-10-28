@@ -83,6 +83,29 @@ function readSparkThreshold() {
   })
 };
 
+function setSparkThreshold() {
+  thresholds = {"high": Number(document.getElementById("upperThreshold").value)
+    , "low": Number(document.getElementById("lowerThreshold").value)};
+
+  return new Promise(function (resolve, reject) {
+    $.ajax({
+      type: 'POST',
+      url: baseUrl + '/sparkThreshold',
+      contentType: "application/json; charset=utf-8",
+      data: JSON.stringify(thresholds),
+      traditional: true,
+      success: (res) =>{
+        resolve(true);
+        console.log("Thresholds set succesfully");
+        readSparkThreshold();
+      },
+      error: (err, stat) =>{
+        resolve(false);
+        alert("Could not set thresholds, " + err.responseText);
+      } });
+  });
+};
+
 function handleSparkEvent(msg) {
   changePulseMode("Stop");
   playAlarmSound(window.sparkAlarmAudio);
