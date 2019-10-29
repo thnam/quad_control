@@ -1,4 +1,6 @@
 var socket = io.connect(baseUrl);
+window.handlingFaultEvent = false;
+
 socket.on("pulserStatus", (data) => {
   const values = data.pulserStatus;
   displayPulserStatus(values[0].meta);
@@ -6,6 +8,24 @@ socket.on("pulserStatus", (data) => {
   let len = values.length;
   var timestamp = [];
   var trace = [[], [], [], []];
+
+  let nFaults = ps.pos.fault + ps.nos.fault + pt.pts.fault + ps.nts.fault;
+  if (nFaults > 0) {
+    if (window.handlingFaultEvent == false) {
+      console.log("Faulted!");
+      if (window.ramping) {
+        window.ramping = false;
+        handleFaultEvent("Fault detected, ramping is aborted");
+      }
+      else
+        handleFaultEvent("Fault detected");
+
+      window.handlingFaultEvent = true;
+      setTimeout(function(){
+        window.handlingFaultEvent = false;
+      }, 60*1000);
+    }
+  }
 
   for (var i = len - 1; i >= 0; i--) {
     var ps = values[i].meta;
@@ -28,6 +48,12 @@ socket.on("pulserStatus", (data) => {
 
   Plotly.redraw(document.getElementById("lcPSTrend"));
 });
+
+function handleFaultEvent(msg) {
+  changePulseMode("Stop");
+  playAlarmSound(window.faultAlarmAudio);
+  alert(msg);
+}
 
 function initPSCharts() {
   initPSTrendLineChart();
