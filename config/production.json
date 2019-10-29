@@ -3,6 +3,10 @@
     "port": 4444
   },
 
+  "monitor":{
+    "port": 5555
+  },
+
   "sqlConnection": {
     "host" : "127.0.0.1",
     "user" : "daq",
