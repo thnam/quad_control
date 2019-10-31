@@ -1,0 +1,38 @@
+.h6.blockTitle Spark information
+
+.row.mb-3
+  .col-3
+    .row.mt-1.mb-1
+      button#btnReadThreshold.btn.btn-block.btn-info  Read Threshold
+    .row.mt-1.mb-1
+      button#btnSetThreshold.btn.btn-block.btn-info  Set Threshold
+  .col-1
+  .col-5
+    .row.mt-1.mb-1
+      | Upper: 
+      input#upperThreshold(type='number', value=2450)
+    .row.mt-1.mb-1
+      | Lower:
+      input#lowerThreshold(type='number', value=1750)
+  .col-1
+  .col-2
+    .row.mt-1.mb-1
+      strong#upperThresholdReadback
+    .row.mt-1.mb-1
+      strong#lowerThresholdReadback
+
+.row.mb-3.mt-3
+  .col-4
+    | Spark count: 
+    big#nSparks(style='color: green;') 0
+  .col-8
+    #lastSpark
+    #sparkedQuads
+
+.row.mb-3.mt-3
+  .col-4
+    button#btnSparkCountReset.btn.btn-block.btn-warning Reset Count
+  .col-4
+    button#btnSparkAlarmReset.btn.btn-block.btn-success Reset Alarm
+  .col-4
+    button#btnClearSparkDiplay.btn.btn-block.btn-warning Clear Display

@@ -1,0 +1,43 @@
+// Second tab
+#pulserTab.tab-pane.container.fade(role='tabpanel')
+  #container(style='width:100%;')
+    .row.mt-4
+      .col-8
+        .table-responsive
+        table.table.table-hover.table-bordered#pulserStatusTable
+          tbody
+            tr
+              td POS
+              td NOS
+              td PTS
+              td NTS
+            tr
+              td Enable
+              td Enable
+              td Enable
+              td Enable
+            tr
+              td Interlock
+              td Interlock
+              td Interlock
+              td Interlock
+            tr
+              td Fault
+              td Fault
+              td Fault
+              td Fault
+            tr
+              td
+                button#btnResetPOSFault.btn.btn-block.btn-warning Reset fault
+              td
+                button#btnResetNOSFault.btn.btn-block.btn-warning Reset fault
+              td
+                button#btnResetPTSFault.btn.btn-block.btn-warning Reset fault
+              td
+                button#btnResetNTSFault.btn.btn-block.btn-warning Reset fault
+      .col-2
+        button#btnFaultReset.btn.btn-block.btn-warning Reset Faults
+        button#btnFaultPattern.btn.btn-block.btn-success Fault Pattern
+
+    .row.mt-4
+      #lcPSTrend
