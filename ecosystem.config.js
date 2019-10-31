@@ -19,7 +19,9 @@ module.exports = {
     }, {
       name: "monitor",
       script: "monitor/bin/www",
-      watch: [],
+      watch: ["./monitor/bin", "./monitor/app.js",
+        "./monitor/routes", "./monitor/views", "./monitor/utils"
+      ],
       env: {NODE_ENV: "development"}
     }
   ]
