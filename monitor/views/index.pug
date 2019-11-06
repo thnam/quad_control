@@ -7,7 +7,7 @@ html(lang='en')
     meta(name='author', content='Nam Tran')
     link(rel='icon', href='/favicon.ico')
 
-    title ESQ Slow Control Interface
+    title Quad System Monitor
 
     link(rel="stylesheet", href="stylesheets/bootstrap.min.css")
     link(rel="stylesheet", href="stylesheets/bootstrap-table.min.css")
@@ -18,11 +18,13 @@ html(lang='en')
     .container
       br
       header
-        h3.float-left ESQ Slow Control
+        h3.float-left ESQ Monitor
       #clock.float-right(style='color: red;')
     ul.nav.nav-tabs.container
       li.nav-item
-        a.nav-link.active(data-toggle='tab', href='#mainTab', role='tab') Main Control
+        a.nav-link.active(data-toggle='tab', href='#mainTab', role='tab') Main Window
+      li.nav-item
+        a.nav-link(data-toggle='tab', href='#voltageHistoryTab', role='tab') Voltage History
       li.nav-item
         a.nav-link(data-toggle='tab', href='#pulserTab', role='tab') Pulser Status
       li.nav-item
@@ -34,6 +36,7 @@ html(lang='en')
 
     .tab-content
       include mainTab.pug
+      include voltageHistory.pug
       include pulserTab.pug
       include sparkHistory.pug
       include faultHistory.pug

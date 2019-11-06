@@ -1,0 +1,72 @@
+{
+  "server": {
+    "port": 4444
+  },
+
+  "monitor":{
+    "port": 4488
+  },
+
+  "sqlConnection": {
+    "host" : "127.0.0.1",
+    "user" : "daq",
+    "password" : "g2muon",
+    "database" : "quad"
+  },
+
+  "mongo": {
+    "host": "localhost",
+    "port": 27017,
+    "db": "quad",
+    "user": "daq",
+    "password": "g2muon"
+  },
+
+  "logger": {
+    "clockPeriod": 1000,
+    "voltagePollingPeriod": 2000,
+    "pulserStatePollingPeriod": 5000,
+    "sparkPollingPeriod": 2000,
+    "sparkThresholdPollingPeriod": 30000,
+    "periodUnit": "ms -- just a comment, changing this would have no effect",
+    "onlineDataPoints": 500,
+    "onlineStatusDataPoints": 1000,
+    "maxLogSize": 524,
+    "maxNumFile": 10
+  },
+  "limits": {
+    "vFS": 20,
+    "vOS": 27,
+    "vSS": 27
+  },
+  "setVoltageLJ":{
+    "ip": "192.168.30.85",
+    "fs": "TDAC0",
+    "ss": "TDAC1",
+    "os": "TDAC7"
+  },
+
+  "vScaleFactor": {
+    "fs": 3.0,
+    "ss": 4.0,
+    "os": 4.0
+  },
+
+  "cScaleFactor": {
+    "fs": 6.6,
+    "ss": 5.0,
+    "os": 7.5
+  },
+
+  "psStatusReadoutPort":{
+    "nos": ["AIN09", "AIN08", "FIO6"],
+    "pos": ["AIN07", "AIN06", "FIO4"],
+    "pts": ["AIN05", "AIN04", "FIO2"],
+    "nts": ["AIN03", "AIN02", "FIO0"]
+  },
+
+  "BUEnv":{
+  "G2QUAD_ADDRESS_TABLE": "/home/daq/ESQ/host-carrier.trunk/os/software/g2quad/tables/Carrier.adt",
+  "ADDRESS_TABLE_PATH": "/home/daq/ESQ/host-carrier.trunk/os/software/g2quad/tables/"
+  }
+}
