@@ -67,6 +67,8 @@ int main(int argc, char *argv[])
     // back to pulsing
     if (mode_s == "Stop") { // easy one
       pulser->Write("TRIGGER.FREE_RUN.ENABLE", 0x0);
+      pulser->Write("TRIGGER.FREE_RUN.EN_FR_TRIG", 0x0);
+      pulser->Write("TRIGGER.FREE_RUN.EN_EXT_TRIG", 0x0);
     }
     else if (mode_s == "External"){ // disable fr_trig, enable ext_trig
       for (uint32_t iBoard = 1; iBoard <= 4; ++iBoard) {
