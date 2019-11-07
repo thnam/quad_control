@@ -60,12 +60,12 @@ int main(int argc, char *argv[])
   sprintf(base, "ADCBOARD.%s.FP_RF_PULSER", argv[1]);
   for (int i = 1; i < 5; ++i) {
     sprintf(reg, "%s.START.%d", base, i);
-    quad->Write(std::string(reg), atoi(argv[i + 1]));
+    quad->Write(std::string(reg), atoi(argv[i + 1]) / 10);
   }
 
   sprintf(reg, "%s.WIDTH", base);
   if (argc == 7) 
-    quad->Write(std::string(reg), atoi(argv[6]));
+    quad->Write(std::string(reg), atoi(argv[6]) / 10);
   else
     quad->Write(std::string(reg), 3000);
 
