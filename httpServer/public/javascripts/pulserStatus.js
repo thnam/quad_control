@@ -9,7 +9,8 @@ socket.on("pulserStatus", (data) => {
   var timestamp = [];
   var trace = [[], [], [], []];
 
-  let nFaults = ps.pos.fault + ps.nos.fault + pt.pts.fault + ps.nts.fault;
+  let ps0 = values[0].meta;
+  let nFaults = ps0.pos.fault + ps0.nos.fault + ps0.pts.fault + ps0.nts.fault;
   if (nFaults > 0) {
     if (window.handlingFaultEvent == false) {
       console.log("Faulted!");
