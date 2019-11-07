@@ -1,0 +1,15 @@
+.h6.blockTitle Spark pattern
+.table-responsive
+  table.table.table-hover.table-bordered#sparkTable
+    tbody
+      each val in [1, 2, 3, 4]
+        //- tr(style='height:20px;')
+        tr
+          th(scope='row')='Q' + val + 'S'
+          each val in ['T', 'B', 'O', 'I']
+            td= val + ': 0'
+  
+          th(scope='row')='Q' + val + 'L'
+          each val in ['T', 'B', 'O', 'I']
+            td= val + ': 0'
+  

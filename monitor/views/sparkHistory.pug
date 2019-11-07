@@ -1,0 +1,17 @@
+#sparkHistory.tab-pane.container.fade(role='tabpanel')
+  #container(style='width:100%;')
+    .row.mt-4
+      .col-4
+        |Number of entries: 
+      .col-4
+        button#btnRefreshSparkHistory.btn.btn-success Refresh Table
+      .col-4
+    .row.mt-4
+      .table-responsive
+        table.table.table-hover.table-bordered#sparkHistoryTable
+          thead
+            tr
+              th(width='15%',data-field='timestamp') Timestamp
+              th(width='75%',data-field='sparkPattern') Spark pattern
+              th(width='10%',data-field='sparkBit') Spark bit
+

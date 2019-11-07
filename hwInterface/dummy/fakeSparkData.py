@@ -15,8 +15,8 @@ ptype = ["s", "l"]
 ostr = '{'
 for idx in range(1, nQuads + 1):
     ostr += '"q%d":' % idx
-    ostr += ' {"s": {"o": %d, "t": %d, "i": %d, "b": %d},' % (0, 0, 0, 1)
-    ostr += ' "l": {"o": %d, "t": %d, "i": %d, "b": %d}},' % (1, 0, 0, 0)
+    ostr += ' {"s": {"o": %d, "t": %d, "i": %d, "b": %d},' % (0, 0, 0, 0)
+    ostr += ' "l": {"o": %d, "t": %d, "i": %d, "b": %d}},' % (0, 0, 0, 0)
 
 ostr = ostr[:-1]
 ostr += "}"
