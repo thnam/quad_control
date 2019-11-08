@@ -1,4 +1,4 @@
-var socket = io.connect(baseUrl);
+// var socket = io.connect(baseUrl);
 
 function formatVC(val) {
   return(Math.abs(parseFloat(val)));

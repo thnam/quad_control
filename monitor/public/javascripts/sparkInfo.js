@@ -1,4 +1,4 @@
-var socket = io.connect(baseUrl);
+// var socket = io.connect(baseUrl);
 socket.on("sparkPattern", (data) => {
   window.spark = data[0].meta;
   displaySparkInfo();
