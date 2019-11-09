@@ -8,6 +8,7 @@ $(() =>{
   showLastSpark();
 
   $(':button').prop('disabled', true);
+  $(':input').prop('disabled', true);
 })
 
 plotColor = [
