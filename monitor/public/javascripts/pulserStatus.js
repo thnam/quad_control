@@ -9,21 +9,10 @@ socket.on("pulserStatus", (data) => {
   var timestamp = [];
   var trace = [[], [], [], []];
 
-  let nFaults = ps.pos.fault + ps.nos.fault + pt.pts.fault + ps.nts.fault;
+  var ps0 = values[0].meta;
+  let nFaults = ps0.pos.fault + ps0.nos.fault + pt.pts.fault + ps0.nts.fault;
   if (nFaults > 0) {
     if (window.handlingFaultEvent == false) {
-      console.log("Faulted!");
-      if (window.ramping) {
-        window.ramping = false;
-        handleFaultEvent("Fault detected, ramping is aborted");
-      }
-      else
-        handleFaultEvent("Fault detected");
-
-      window.handlingFaultEvent = true;
-      setTimeout(function(){
-        window.handlingFaultEvent = false;
-      }, 60*1000);
     }
   }
 

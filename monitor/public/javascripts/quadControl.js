@@ -29,8 +29,8 @@ window.faultAlarmAudio = document.getElementById("faultAlarmAudio");
 window.ramping = false;
 window.handlingSparkEvent = false;
 
-// const baseUrl = "http://" + document.location.hostname + ":" + document.location.port
-const baseUrl = "http://gm2-01.dhcp.fnal.gov/quadMonitor/"
+const baseUrl = "http://" + document.location.hostname + ":" + document.location.port
+// const baseUrl = "http://gm2-01.dhcp.fnal.gov/quadMonitor/"
 // var socket = io.connect(baseUrl, {resource: '/socket.io'});
 var socket = io.connect(baseUrl);
 socket.on('greeting', function(data) {
