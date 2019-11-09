@@ -1,4 +1,3 @@
-var socket = io.connect(baseUrl);
 window.handlingFaultEvent = false;
 
 socket.on("pulserStatus", (data) => {
