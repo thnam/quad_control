@@ -109,6 +109,7 @@ function handleSparkEvent(msg) {
   changePulseMode("Stop");
   playAlarmSound(window.sparkAlarmAudio);
   alert(msg);
+  showSparkHistory();
 }
 
 function showLastSpark() {
