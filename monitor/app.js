@@ -38,6 +38,7 @@ app.use('/sparkHistory', require(global.appRoot + '/routes/sparkHistory'));
 app.use('/sparkThreshold', require(global.appRoot + '/routes/sparkThreshold'));
 app.use('/resetFault', require(global.appRoot + '/routes/resetFault'));
 app.use('/timing', require(global.appRoot + '/routes/timing'));
+app.use('/avgCV', require(global.appRoot + '/routes/avgCV'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
