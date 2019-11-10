@@ -1,4 +1,6 @@
 const db = require(global.appRoot + "/utils/db");
+// const httpLog = require(global.appRoot + '/loggers/httpLogger.js');
+const util = require('util');
 
 function getPulseMode() {
   const col = db.get().db("quad").collection("pulseMode");
@@ -43,19 +45,15 @@ function getSparkThreshold(){
 
 function getAvgCV(period, npoints){
   const collection = db.get().db("quad").collection('cv');
-  // const result = collection.find().sort({$natural: -1}).toArray();
+  const t0 = new Date(new Date().setDate(new Date().getDate() - 1));
+  // httpLog.info(t0);
   const result = collection.aggregate([
-    { "$match" : {
-      "timestamp":{
-        $gt: new Date(new Date().setDate(new Date().getDate()-2))}
-    }},
-    { "$project" : {
-      "_id": 0, "level": 0, "message": 0
-    }},
+    { "$match" : { "timestamp":{ $gt: t0} }},
+    { "$project" : { "_id": 0, "level": 0, "message": 0 }},
     { "$group": {
       "_id": { "$toDate": {
         "$subtract": [ { "$toLong": "$timestamp" },
-          { "$mod": [{ "$toLong": "$timestamp" }, 1000 * 60 * 60 ]}
+          { "$mod": [{ "$toLong": "$timestamp" }, 1000 * period ]}
         ]
       }},
       "ospv": {"$avg": "$meta.os.pv"},
