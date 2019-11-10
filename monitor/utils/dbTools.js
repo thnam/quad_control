@@ -43,9 +43,11 @@ function getSparkThreshold(){
   return result;
 }
 
+// Get entries from last period * npoints seconds
 function getAvgCV(period, npoints){
   const collection = db.get().db("quad").collection('cv');
-  const t0 = new Date(new Date().setDate(new Date().getDate() - 1));
+  // const t0 = new Date(new Date().setDate(new Date().getDate() - 1));
+  const t0 = new Date(new Date() - 1000 * period * npoints);
   // httpLog.info(t0);
   const result = collection.aggregate([
     { "$match" : { "timestamp":{ $gt: t0} }},
