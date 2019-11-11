@@ -4,6 +4,10 @@ function formatVC(val) {
   return(Math.abs(parseFloat(val)));
 }
 
+window.cvLongTermData = [];
+window.cvShortTermData = [];
+window.cvTrendData = [];
+
 socket.on("cv", (data) => {
   const values = data.cv;
 
@@ -11,12 +15,12 @@ socket.on("cv", (data) => {
   window.vRead = values[0].meta;
   // spark alert --> no longer working if BU controller takes over
   // if (window.vRead.spark >= 2) {
-    // if (window.ramping) {
-      // window.ramping = false;
-      // handleSparkEvent("Spark! Ramping is aborted.");
-    // } else {
-      // handleSparkEvent("Spark!");
-    // }
+  // if (window.ramping) {
+  // window.ramping = false;
+  // handleSparkEvent("Spark! Ramping is aborted.");
+  // } else {
+  // handleSparkEvent("Spark!");
+  // }
   // }
 
   var lastCvValue = [
@@ -157,26 +161,7 @@ function initCVTrendLineChart() {
     plot_bgcolor: 'rgba(0, 0, 0, 0)'
   };
 
-  var vTrace0 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[0]}, name: "PVOS", line: {dash: "solid"}};
-  var vTrace1 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[1]}, name: "NVOS", line: {dash: "solid"}};
-  var vTrace2 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[2]}, name: "PVSS", line: {dash: "solid"}};
-  var vTrace3 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[3]}, name: "NVSS", line: {dash: "solid"}};
-  var vTrace4 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[4]}, name: "PVFS", line: {dash: "solid"}};
-  var vTrace5 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[5]}, name: "NVFS", line: {dash: "solid"}};
-
-  var cTrace0 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[0]}, name: "PCOS", line: {dash: "dot"}, yaxis: 'y2'};
-  var cTrace1 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[1]}, name: "NCOS", line: {dash: "dot"}, yaxis: 'y2'};
-  var cTrace2 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[2]}, name: "PCSS", line: {dash: "dot"}, yaxis: 'y2'};
-  var cTrace3 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[3]}, name: "NCSS", line: {dash: "dot"}, yaxis: 'y2'};
-  var cTrace4 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[4]}, name: "PCFS", line: {dash: "dot"}, yaxis: 'y2'};
-  var cTrace5 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[5]}, name: "NCFS", line: {dash: "dot"}, yaxis: 'y2'};
-  window.cvTrendData = [
-    vTrace0, vTrace1, vTrace2, vTrace3, vTrace4, vTrace5,
-    cTrace0, cTrace1, cTrace2, cTrace3, cTrace4, cTrace5
-  ];
-
-  Plotly.newPlot(document.getElementById('lcCVTrend'),
-    window.cvTrendData, layout, {responsive: true});
+  initCVPlot(window.cvTrendData, "lcCVTrend", layout);
 }
 
 function initShortTermCVPlot() {
@@ -201,26 +186,7 @@ function initShortTermCVPlot() {
     plot_bgcolor: 'rgba(0, 0, 0, 0)'
   };
 
-  var vTrace0 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[0]}, name: "PVOS", line: {dash: "solid"}};
-  var vTrace1 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[1]}, name: "NVOS", line: {dash: "solid"}};
-  var vTrace2 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[2]}, name: "PVSS", line: {dash: "solid"}};
-  var vTrace3 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[3]}, name: "NVSS", line: {dash: "solid"}};
-  var vTrace4 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[4]}, name: "PVFS", line: {dash: "solid"}};
-  var vTrace5 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[5]}, name: "NVFS", line: {dash: "solid"}};
-
-  var cTrace0 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[0]}, name: "PCOS", line: {dash: "dot"}, yaxis: 'y2'};
-  var cTrace1 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[1]}, name: "NCOS", line: {dash: "dot"}, yaxis: 'y2'};
-  var cTrace2 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[2]}, name: "PCSS", line: {dash: "dot"}, yaxis: 'y2'};
-  var cTrace3 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[3]}, name: "NCSS", line: {dash: "dot"}, yaxis: 'y2'};
-  var cTrace4 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[4]}, name: "PCFS", line: {dash: "dot"}, yaxis: 'y2'};
-  var cTrace5 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[5]}, name: "NCFS", line: {dash: "dot"}, yaxis: 'y2'};
-  window.cvShortTermData = [
-    vTrace0, vTrace1, vTrace2, vTrace3, vTrace4, vTrace5,
-    cTrace0, cTrace1, cTrace2, cTrace3, cTrace4, cTrace5
-  ];
-
-  Plotly.newPlot(document.getElementById('lcCVTrendShortterm'),
-    window.cvShortTermData, layout, {responsive: true});
+  initCVPlot(window.cvShortTermData, "lcCVTrendShortterm", layout);
 }
 
 function initLongTermCVPlot() {
@@ -245,26 +211,7 @@ function initLongTermCVPlot() {
     plot_bgcolor: 'rgba(0, 0, 0, 0)'
   };
 
-  var vTrace0 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[0]}, name: "PVOS", line: {dash: "solid"}};
-  var vTrace1 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[1]}, name: "NVOS", line: {dash: "solid"}};
-  var vTrace2 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[2]}, name: "PVSS", line: {dash: "solid"}};
-  var vTrace3 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[3]}, name: "NVSS", line: {dash: "solid"}};
-  var vTrace4 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[4]}, name: "PVFS", line: {dash: "solid"}};
-  var vTrace5 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[5]}, name: "NVFS", line: {dash: "solid"}};
-
-  var cTrace0 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[0]}, name: "PCOS", line: {dash: "dot"}, yaxis: 'y2'};
-  var cTrace1 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[1]}, name: "NCOS", line: {dash: "dot"}, yaxis: 'y2'};
-  var cTrace2 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[2]}, name: "PCSS", line: {dash: "dot"}, yaxis: 'y2'};
-  var cTrace3 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[3]}, name: "NCSS", line: {dash: "dot"}, yaxis: 'y2'};
-  var cTrace4 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[4]}, name: "PCFS", line: {dash: "dot"}, yaxis: 'y2'};
-  var cTrace5 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[5]}, name: "NCFS", line: {dash: "dot"}, yaxis: 'y2'};
-  window.cvLongTermData = [
-    vTrace0, vTrace1, vTrace2, vTrace3, vTrace4, vTrace5,
-    cTrace0, cTrace1, cTrace2, cTrace3, cTrace4, cTrace5
-  ];
-
-  Plotly.newPlot(document.getElementById('lcCVTrendLongterm'),
-    window.cvLongTermData, layout, {responsive: true});
+  initCVPlot(window.cvLongTermData, "lcCVTrendLongterm", layout);
 }
 
 function drawShortTermCVTrendAtLoad() {
@@ -331,3 +278,26 @@ function redrawCVPlot(values, series, plotId) {
 
   Plotly.redraw(document.getElementById(plotId));
 };
+
+function initCVPlot(series, plotId, layout) {
+  var vTrace0 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[0]}, name: "PVOS", line: {dash: "solid"}};
+  var vTrace1 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[1]}, name: "NVOS", line: {dash: "solid"}};
+  var vTrace2 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[2]}, name: "PVSS", line: {dash: "solid"}};
+  var vTrace3 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[3]}, name: "NVSS", line: {dash: "solid"}};
+  var vTrace4 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[4]}, name: "PVFS", line: {dash: "solid"}};
+  var vTrace5 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[5]}, name: "NVFS", line: {dash: "solid"}};
+
+  var cTrace0 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[0]}, name: "PCOS", line: {dash: "dot"}, yaxis: 'y2'};
+  var cTrace1 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[1]}, name: "NCOS", line: {dash: "dot"}, yaxis: 'y2'};
+  var cTrace2 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[2]}, name: "PCSS", line: {dash: "dot"}, yaxis: 'y2'};
+  var cTrace3 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[3]}, name: "NCSS", line: {dash: "dot"}, yaxis: 'y2'};
+  var cTrace4 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[4]}, name: "PCFS", line: {dash: "dot"}, yaxis: 'y2'};
+  var cTrace5 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[5]}, name: "NCFS", line: {dash: "dot"}, yaxis: 'y2'};
+  series.push( 
+    vTrace0, vTrace1, vTrace2, vTrace3, vTrace4, vTrace5,
+    cTrace0, cTrace1, cTrace2, cTrace3, cTrace4, cTrace5
+  );
+
+  Plotly.newPlot(document.getElementById(plotId), series,
+    layout, {responsive: true});
+}
