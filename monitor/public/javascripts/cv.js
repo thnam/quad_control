@@ -161,24 +161,26 @@ function initCVTrendLineChart() {
     plot_bgcolor: 'rgba(0, 0, 0, 0)'
   };
 
-  initCVPlot(window.cvTrendData, "lcCVTrend", layout);
+  initPlotlyPlot(window.cvTrendData, "lcCVTrend", layout);
 }
 
 function initShortTermCVPlot() {
   var layout = {
-    title: 'Short term CV plot',
+    width: 1100,
+    height: 550,
     margin: { l: 40, r: 40, b: 40, t: 40, pad: 4 },
     // font:{ family: 'Raleway, sans-serif' },
     showlegend: false,
     // xaxis: { tickangle: -45 },
     // yaxis: { zeroline: true, gridwidth: 2 },
-    yaxis: {title: 'Voltage [kV]', range: cvPlotVoltageRange},
+    yaxis: {title: 'Voltage [kV]',automargin: true, range: cvPlotVoltageRange},
     yaxis2: {
       title: 'Current [mA]',
       titlefont: {color: 'rgb(148, 103, 189)'},
       tickfont: {color: 'rgb(148, 103, 189)'},
       overlaying: 'y',
       side: 'right',
+      automargin: true,
       range: cvPlotCurrentRange
     },
     // bargap :0.1,
@@ -186,24 +188,26 @@ function initShortTermCVPlot() {
     plot_bgcolor: 'rgba(0, 0, 0, 0)'
   };
 
-  initCVPlot(window.cvShortTermData, "lcCVTrendShortterm", layout);
+  initPlotlyPlot(window.cvShortTermData, "lcCVTrendShortterm", layout);
 }
 
 function initLongTermCVPlot() {
   var layout = {
-    title: 'Long term CV plot',
+    width: 1100,
+    height: 550,
     margin: { l: 40, r: 40, b: 40, t: 40, pad: 4 },
     // font:{ family: 'Raleway, sans-serif' },
     showlegend: false,
     // xaxis: { tickangle: -45 },
     // yaxis: { zeroline: true, gridwidth: 2 },
-    yaxis: {title: 'Voltage [kV]', range: cvPlotVoltageRange},
+    yaxis: {title: 'Voltage [kV]',automargin: true, range: cvPlotVoltageRange},
     yaxis2: {
       title: 'Current [mA]',
       titlefont: {color: 'rgb(148, 103, 189)'},
       tickfont: {color: 'rgb(148, 103, 189)'},
       overlaying: 'y',
       side: 'right',
+      automargin: true,
       range: cvPlotCurrentRange
     },
     // bargap :0.1,
@@ -211,7 +215,7 @@ function initLongTermCVPlot() {
     plot_bgcolor: 'rgba(0, 0, 0, 0)'
   };
 
-  initCVPlot(window.cvLongTermData, "lcCVTrendLongterm", layout);
+  initPlotlyPlot(window.cvLongTermData, "lcCVTrendLongterm", layout);
 }
 
 function drawShortTermCVTrendAtLoad() {
@@ -279,7 +283,7 @@ function redrawCVPlot(values, series, plotId) {
   Plotly.redraw(document.getElementById(plotId));
 };
 
-function initCVPlot(series, plotId, layout) {
+function initPlotlyPlot(series, plotId, layout) {
   var vTrace0 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[0]}, name: "PVOS", line: {dash: "solid"}};
   var vTrace1 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[1]}, name: "NVOS", line: {dash: "solid"}};
   var vTrace2 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[2]}, name: "PVSS", line: {dash: "solid"}};
