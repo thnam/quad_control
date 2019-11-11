@@ -99,6 +99,8 @@ function initCVCharts() {
   drawLongTermCVTrendAtLoad();
 };
 
+cvPlotVoltageRange = [0, 23];
+cvPlotCurrentRange = [0, 10];
 function initLastCVBarChart() {
   var layout = {
     title: 'Last voltage readout',
@@ -141,14 +143,14 @@ function initCVTrendLineChart() {
     showlegend: false,
     // xaxis: { tickangle: -45 },
     // yaxis: { zeroline: true, gridwidth: 2 },
-    yaxis: {title: 'Voltage [kV]', range: [0, 30]},
+    yaxis: {title: 'Voltage [kV]', range: cvPlotVoltageRange},
     yaxis2: {
       title: 'Current [mA]',
       titlefont: {color: 'rgb(148, 103, 189)'},
       tickfont: {color: 'rgb(148, 103, 189)'},
       overlaying: 'y',
       side: 'right',
-      range: [0, 10]
+      range: cvPlotCurrentRange
     },
     // bargap :0.1,
     paper_bgcolor: 'rgba(0, 0, 0, 0)',
@@ -185,14 +187,14 @@ function initShortTermCVPlot() {
     showlegend: false,
     // xaxis: { tickangle: -45 },
     // yaxis: { zeroline: true, gridwidth: 2 },
-    yaxis: {title: 'Voltage [kV]', range: [0, 30]},
+    yaxis: {title: 'Voltage [kV]', range: cvPlotVoltageRange},
     yaxis2: {
       title: 'Current [mA]',
       titlefont: {color: 'rgb(148, 103, 189)'},
       tickfont: {color: 'rgb(148, 103, 189)'},
       overlaying: 'y',
       side: 'right',
-      range: [0, 10]
+      range: cvPlotCurrentRange
     },
     // bargap :0.1,
     paper_bgcolor: 'rgba(0, 0, 0, 0)',
@@ -229,14 +231,14 @@ function initLongTermCVPlot() {
     showlegend: false,
     // xaxis: { tickangle: -45 },
     // yaxis: { zeroline: true, gridwidth: 2 },
-    yaxis: {title: 'Voltage [kV]', range: [0, 30]},
+    yaxis: {title: 'Voltage [kV]', range: cvPlotVoltageRange},
     yaxis2: {
       title: 'Current [mA]',
       titlefont: {color: 'rgb(148, 103, 189)'},
       tickfont: {color: 'rgb(148, 103, 189)'},
       overlaying: 'y',
       side: 'right',
-      range: [0, 10]
+      range: cvPlotCurrentRange
     },
     // bargap :0.1,
     paper_bgcolor: 'rgba(0, 0, 0, 0)',
