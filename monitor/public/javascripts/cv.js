@@ -105,39 +105,6 @@ function initCVCharts() {
 
 cvPlotVoltageRange = [0, 23];
 cvPlotCurrentRange = [0, 10];
-function initLastCVBarChart() {
-  var layout = {
-    title: 'Last voltage readout',
-    margin: { l: 40, r: 10, b: 40, t: 40, pad: 4 },
-    // font:{ family: 'Raleway, sans-serif' },
-    showlegend: false,
-    // xaxis: { tickangle: -45 },
-    xaxis: {title: 'Voltage [kV]', range: [0, 25]},
-    // yaxis: { zeroline: true, gridwidth: 2 },
-    // bargap :0.1,
-    paper_bgcolor: 'rgba(0, 0, 0, 0)',
-    plot_bgcolor: 'rgba(0, 0, 0, 0)'
-  };
-
-  var lastCvValue = [0, 0, 0, 0, 0, 0];
-  window.lastCvBarChartData = [{
-    x: lastCvValue,
-    y: ["PVOS", "NVOS", "PVSS", "NVSS", "PVFS", "NVFS"],
-    marker: { color: plotColor },
-    type: 'bar',
-    textposition: 'auto',
-    hoverinfo: 'none',
-    text: lastCvValue,
-    orientation: 'h',
-    // text: [
-    // "One Step Positive Voltage", "One Step Negative Voltage",
-    // "Second Step Positive Voltage", "Second Step Negative Voltage",
-    // "First Step Positive Voltage", "First Step Negative Voltage",]
-  }];
-
-  Plotly.newPlot(document.getElementById('bcLastCV'),
-    window.lastCvBarChartData, layout, {responsive: true});
-}
 
 function initCVTrendLineChart() {
   var layout = {
@@ -161,7 +128,7 @@ function initCVTrendLineChart() {
     plot_bgcolor: 'rgba(0, 0, 0, 0)'
   };
 
-  initPlotlyPlot(window.cvTrendData, "lcCVTrend", layout);
+  initPlotlyPlot(window.cvTrendData, "lcCVTrend", layout, false);
 }
 
 function initShortTermCVPlot() {
@@ -188,7 +155,7 @@ function initShortTermCVPlot() {
     plot_bgcolor: 'rgba(0, 0, 0, 0)'
   };
 
-  initPlotlyPlot(window.cvShortTermData, "lcCVTrendShortterm", layout);
+  initPlotlyPlot(window.cvShortTermData, "lcCVTrendShortterm", layout, true);
 }
 
 function initLongTermCVPlot() {
@@ -215,7 +182,7 @@ function initLongTermCVPlot() {
     plot_bgcolor: 'rgba(0, 0, 0, 0)'
   };
 
-  initPlotlyPlot(window.cvLongTermData, "lcCVTrendLongterm", layout);
+  initPlotlyPlot(window.cvLongTermData, "lcCVTrendLongterm", layout, true);
 }
 
 function drawShortTermCVTrendAtLoad() {
@@ -283,7 +250,7 @@ function redrawCVPlot(values, series, plotId) {
   Plotly.redraw(document.getElementById(plotId));
 };
 
-function initPlotlyPlot(series, plotId, layout) {
+function initPlotlyPlot(series, plotId, layout, static) {
   var vTrace0 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[0]}, name: "PVOS", line: {dash: "solid"}};
   var vTrace1 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[1]}, name: "NVOS", line: {dash: "solid"}};
   var vTrace2 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[2]}, name: "PVSS", line: {dash: "solid"}};
@@ -302,6 +269,45 @@ function initPlotlyPlot(series, plotId, layout) {
     cTrace0, cTrace1, cTrace2, cTrace3, cTrace4, cTrace5
   );
 
-  Plotly.newPlot(document.getElementById(plotId), series,
-    layout, {responsive: true});
+  if (static) {
+    Plotly.newPlot(document.getElementById(plotId), series,
+      layout, {staticPlot: true});
+  }
+  else
+    Plotly.newPlot(document.getElementById(plotId), series,
+      layout, {interactive: true});
+}
+
+function initLastCVBarChart() {
+  var layout = {
+    title: 'Last voltage readout',
+    margin: { l: 40, r: 10, b: 40, t: 40, pad: 4 },
+    // font:{ family: 'Raleway, sans-serif' },
+    showlegend: false,
+    // xaxis: { tickangle: -45 },
+    xaxis: {title: 'Voltage [kV]', range: [0, 25]},
+    // yaxis: { zeroline: true, gridwidth: 2 },
+    // bargap :0.1,
+    paper_bgcolor: 'rgba(0, 0, 0, 0)',
+    plot_bgcolor: 'rgba(0, 0, 0, 0)'
+  };
+
+  var lastCvValue = [0, 0, 0, 0, 0, 0];
+  window.lastCvBarChartData = [{
+    x: lastCvValue,
+    y: ["PVOS", "NVOS", "PVSS", "NVSS", "PVFS", "NVFS"],
+    marker: { color: plotColor },
+    type: 'bar',
+    textposition: 'auto',
+    hoverinfo: 'none',
+    text: lastCvValue,
+    orientation: 'h',
+    // text: [
+    // "One Step Positive Voltage", "One Step Negative Voltage",
+    // "Second Step Positive Voltage", "Second Step Negative Voltage",
+    // "First Step Positive Voltage", "First Step Negative Voltage",]
+  }];
+
+  Plotly.newPlot(document.getElementById('bcLastCV'),
+    window.lastCvBarChartData, layout, {responsive: true});
 }
