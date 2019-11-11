@@ -86,11 +86,13 @@ socket.on("cv", (data) => {
 
 socket.on("shortAvgCV", (data) => {
   const values = data.cv;
+  refreshTimestamp("#lcCVTrendShorttermTimestamp");
   redrawCVPlot(values, window.cvShortTermData, "lcCVTrendShortterm");
 });
 
 socket.on("longAvgCV", (data) => {
   const values = data.cv;
+  refreshTimestamp("#lcCVTrendLongtermTimestamp");
   redrawCVPlot(values, window.cvLongTermData, "lcCVTrendLongterm");
 });
 
@@ -185,12 +187,18 @@ function initLongTermCVPlot() {
   initPlotlyPlot(window.cvLongTermData, "lcCVTrendLongterm", layout, true);
 }
 
+function refreshTimestamp(id) {
+  var date = new Date();
+  $(id).html('Last updated at: ' + date.toString());
+}
 function drawShortTermCVTrendAtLoad() {
   $.ajax({
     type: 'GET',
     url: baseUrl + "/avgCV",
     data: {period: 20, npoints: 3 * 60 * 2},
     success : (data) => {
+      var date = new Date();
+      refreshTimestamp("#lcCVTrendShorttermTimestamp");
       redrawCVPlot(data, window.cvShortTermData, "lcCVTrendShortterm");
     },
     error: (err, stat) =>{
@@ -205,6 +213,7 @@ function drawLongTermCVTrendAtLoad() {
     url: baseUrl + "/avgCV",
     data: {period: 60, npoints: 1 * 60 * 24 * 2},
     success : (data) => {
+      refreshTimestamp("#lcCVTrendLongtermTimestamp");
       redrawCVPlot(data, window.cvLongTermData, "lcCVTrendLongterm");
     },
     error: (err, stat) =>{
