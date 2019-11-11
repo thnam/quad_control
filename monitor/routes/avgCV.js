@@ -3,10 +3,11 @@ const router = express.Router();
 const dbTool = require(global.appRoot + "/utils/dbTools.js");
 
 router.get('/', async (req, res, next) => {
-    period = 30;
-    npoints = 20;
-    const th = await dbTool.getAvgCV(period, npoints);
-    res.send(th);
+  console.log(req.query);
+  period = Number(req.query.period);
+  npoints = Number(req.query.npoints);
+  const th = await dbTool.getAvgCV(period, npoints);
+  res.send(th);
 });
 
 module.exports = router;

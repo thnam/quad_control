@@ -65,6 +65,28 @@ io.on('connection', function (socket) {
       console.error(e);
     }
   }, config.get("logger.sparkPollingPeriod"));
+
+  // emit average values every 1 minutes
+  setInterval(async ()=>{
+    try {
+      // avg over 20 sec, 2 hours worth
+      const shortAvgCV = await dbTool.getAvgCV(20, 3 * 60 * 2);
+      socket.emit("shortAvgCV", {cv: shortAvgCV});
+    } catch (e) {
+      console.error(e);
+    }
+  }, 1000 * 61);
+
+  // emit long term average values every 3 minutes
+  setInterval(async ()=>{
+    try {
+      // avg over 60 sec, 2 day worth
+      const longAvgCV = await dbTool.getAvgCV(60, 1 * 60 * 24 * 2);
+      socket.emit("longAvgCV", {cv: longAvgCV});
+    } catch (e) {
+      console.error(e);
+    }
+  }, 1000 * 191);
 });
 
 module.exports = io;

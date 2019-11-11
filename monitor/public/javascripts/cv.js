@@ -80,9 +80,23 @@ socket.on("cv", (data) => {
   Plotly.redraw(document.getElementById("lcCVTrend"));
 })
 
+socket.on("shortAvgCV", (data) => {
+  const values = data.cv;
+  redrawCVPlot(values, window.cvShortTermData, "lcCVTrendShortterm");
+});
+
+socket.on("longAvgCV", (data) => {
+  const values = data.cv;
+  redrawCVPlot(values, window.cvLongTermData, "lcCVTrendLongterm");
+});
+
 function initCVCharts() {
   // initLastCVBarChart();
   initCVTrendLineChart();
+  initShortTermCVPlot();
+  initLongTermCVPlot();
+  drawShortTermCVTrendAtLoad();
+  drawLongTermCVTrendAtLoad();
 };
 
 function initLastCVBarChart() {
@@ -163,3 +177,155 @@ function initCVTrendLineChart() {
     window.cvTrendData, layout, {responsive: true});
 }
 
+function initShortTermCVPlot() {
+  var layout = {
+    title: 'Short term CV plot',
+    margin: { l: 40, r: 40, b: 40, t: 40, pad: 4 },
+    // font:{ family: 'Raleway, sans-serif' },
+    showlegend: false,
+    // xaxis: { tickangle: -45 },
+    // yaxis: { zeroline: true, gridwidth: 2 },
+    yaxis: {title: 'Voltage [kV]', range: [0, 30]},
+    yaxis2: {
+      title: 'Current [mA]',
+      titlefont: {color: 'rgb(148, 103, 189)'},
+      tickfont: {color: 'rgb(148, 103, 189)'},
+      overlaying: 'y',
+      side: 'right',
+      range: [0, 10]
+    },
+    // bargap :0.1,
+    paper_bgcolor: 'rgba(0, 0, 0, 0)',
+    plot_bgcolor: 'rgba(0, 0, 0, 0)'
+  };
+
+  var vTrace0 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[0]}, name: "PVOS", line: {dash: "solid"}};
+  var vTrace1 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[1]}, name: "NVOS", line: {dash: "solid"}};
+  var vTrace2 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[2]}, name: "PVSS", line: {dash: "solid"}};
+  var vTrace3 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[3]}, name: "NVSS", line: {dash: "solid"}};
+  var vTrace4 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[4]}, name: "PVFS", line: {dash: "solid"}};
+  var vTrace5 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[5]}, name: "NVFS", line: {dash: "solid"}};
+
+  var cTrace0 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[0]}, name: "PCOS", line: {dash: "dot"}, yaxis: 'y2'};
+  var cTrace1 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[1]}, name: "NCOS", line: {dash: "dot"}, yaxis: 'y2'};
+  var cTrace2 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[2]}, name: "PCSS", line: {dash: "dot"}, yaxis: 'y2'};
+  var cTrace3 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[3]}, name: "NCSS", line: {dash: "dot"}, yaxis: 'y2'};
+  var cTrace4 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[4]}, name: "PCFS", line: {dash: "dot"}, yaxis: 'y2'};
+  var cTrace5 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[5]}, name: "NCFS", line: {dash: "dot"}, yaxis: 'y2'};
+  window.cvShortTermData = [
+    vTrace0, vTrace1, vTrace2, vTrace3, vTrace4, vTrace5,
+    cTrace0, cTrace1, cTrace2, cTrace3, cTrace4, cTrace5
+  ];
+
+  Plotly.newPlot(document.getElementById('lcCVTrendShortterm'),
+    window.cvShortTermData, layout, {responsive: true});
+}
+
+function initLongTermCVPlot() {
+  var layout = {
+    title: 'Long term CV plot',
+    margin: { l: 40, r: 40, b: 40, t: 40, pad: 4 },
+    // font:{ family: 'Raleway, sans-serif' },
+    showlegend: false,
+    // xaxis: { tickangle: -45 },
+    // yaxis: { zeroline: true, gridwidth: 2 },
+    yaxis: {title: 'Voltage [kV]', range: [0, 30]},
+    yaxis2: {
+      title: 'Current [mA]',
+      titlefont: {color: 'rgb(148, 103, 189)'},
+      tickfont: {color: 'rgb(148, 103, 189)'},
+      overlaying: 'y',
+      side: 'right',
+      range: [0, 10]
+    },
+    // bargap :0.1,
+    paper_bgcolor: 'rgba(0, 0, 0, 0)',
+    plot_bgcolor: 'rgba(0, 0, 0, 0)'
+  };
+
+  var vTrace0 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[0]}, name: "PVOS", line: {dash: "solid"}};
+  var vTrace1 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[1]}, name: "NVOS", line: {dash: "solid"}};
+  var vTrace2 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[2]}, name: "PVSS", line: {dash: "solid"}};
+  var vTrace3 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[3]}, name: "NVSS", line: {dash: "solid"}};
+  var vTrace4 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[4]}, name: "PVFS", line: {dash: "solid"}};
+  var vTrace5 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[5]}, name: "NVFS", line: {dash: "solid"}};
+
+  var cTrace0 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[0]}, name: "PCOS", line: {dash: "dot"}, yaxis: 'y2'};
+  var cTrace1 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[1]}, name: "NCOS", line: {dash: "dot"}, yaxis: 'y2'};
+  var cTrace2 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[2]}, name: "PCSS", line: {dash: "dot"}, yaxis: 'y2'};
+  var cTrace3 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[3]}, name: "NCSS", line: {dash: "dot"}, yaxis: 'y2'};
+  var cTrace4 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[4]}, name: "PCFS", line: {dash: "dot"}, yaxis: 'y2'};
+  var cTrace5 = {x: [], y: [], mode: 'lines', marker: {color: plotColor[5]}, name: "NCFS", line: {dash: "dot"}, yaxis: 'y2'};
+  window.cvLongTermData = [
+    vTrace0, vTrace1, vTrace2, vTrace3, vTrace4, vTrace5,
+    cTrace0, cTrace1, cTrace2, cTrace3, cTrace4, cTrace5
+  ];
+
+  Plotly.newPlot(document.getElementById('lcCVTrendLongterm'),
+    window.cvLongTermData, layout, {responsive: true});
+}
+
+function drawShortTermCVTrendAtLoad() {
+  $.ajax({
+    type: 'GET',
+    url: baseUrl + "/avgCV",
+    data: {period: 20, npoints: 3 * 60 * 2},
+    success : (data) => {
+      redrawCVPlot(data, window.cvShortTermData, "lcCVTrendShortterm");
+    },
+    error: (err, stat) =>{
+      console.error("Could not get avg CV data");
+    }
+  });
+};
+
+function drawLongTermCVTrendAtLoad() {
+  $.ajax({
+    type: 'GET',
+    url: baseUrl + "/avgCV",
+    data: {period: 60, npoints: 1 * 60 * 24 * 2},
+    success : (data) => {
+      redrawCVPlot(data, window.cvLongTermData, "lcCVTrendLongterm");
+    },
+    error: (err, stat) =>{
+      console.error("Could not get avg CV data");
+    }
+  });
+};
+
+function redrawCVPlot(values, series, plotId) {
+  let len = values.length;
+  var time = [];
+  var cTrace = [[], [], [], [], [], []];
+  var vTrace = [[], [], [], [], [], []];
+
+  for (var i = len - 1; i >= 0; i--) {
+    var cv = values[i];
+
+    time.push(new Date(values[i]._id));
+    vTrace[0].push(cv.ospv);
+    vTrace[1].push(cv.osnv);
+    vTrace[2].push(cv.sspv);
+    vTrace[3].push(cv.ssnv);
+    vTrace[4].push(cv.fspv);
+    vTrace[5].push(cv.fsnv);
+
+    cTrace[0].push(cv.ospc);
+    cTrace[1].push(cv.osnc);
+    cTrace[2].push(cv.sspc);
+    cTrace[3].push(cv.ssnc);
+    cTrace[4].push(cv.fspc);
+    cTrace[5].push(cv.fsnc);
+  };
+
+  for (var i = 0; i < 6; i++) {
+    series[i].x = time;
+    series[i].y = vTrace[i];
+  };
+  for (var i = 0; i < 6; i++) {
+    series[i + 6].x = time;
+    series[i + 6].y = cTrace[i];
+  };
+
+  Plotly.redraw(document.getElementById(plotId));
+};
