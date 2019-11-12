@@ -52,13 +52,23 @@ async function getPulseMode() {
 
 function displayPulseMode(newMode) {
   $("#labelPulseMode").text(newMode);
-  if (newMode == "External") 
+  $("#labelPulseMode0").text("Pulse mode: " + newMode);
+  if (newMode == "External"){
     $("#labelPulseMode").css({ 'color': $(".btn-success").css("background-color"),
       'font-size': '120%' });
-  else if (newMode == "Stop") 
+    $("#labelPulseMode0").css({ 'color': $(".btn-success").css("background-color"),
+      'font-size': '120%' });
+  }
+  else if (newMode == "Stop"){
     $("#labelPulseMode").css({ 'color': $(".btn-danger").css("background-color"),
       'font-size': '120%' });
-  else if (["1 Hz", "5 Hz", "10 Hz", "Burst", "Single"].includes(newMode))
+    $("#labelPulseMode0").css({ 'color': $(".btn-danger").css("background-color"),
+      'font-size': '120%' });
+  }
+  else if (["1 Hz", "5 Hz", "10 Hz", "Burst", "Single"].includes(newMode)){
     $("#labelPulseMode").css({ 'color': $(".btn-info").css("background-color"),
       'font-size': '120%' });
+    $("#labelPulseMode0").css({ 'color': $(".btn-info").css("background-color"),
+      'font-size': '120%' });
+  }
 };

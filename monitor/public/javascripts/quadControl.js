@@ -4,6 +4,13 @@ $(() =>{
     displayPulseMode(currentMode);
   });
 
+  // periodically get pulse mode
+  setInterval(()=>{
+    getPulseMode().then((currentMode)=>{
+      displayPulseMode(currentMode);
+    });
+  }, 10 * 1000);
+
   readSparkThreshold();
   showLastSpark();
 
