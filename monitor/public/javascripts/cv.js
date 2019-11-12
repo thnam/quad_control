@@ -108,6 +108,8 @@ cvPlotCurrentRange = [0, 10];
 
 function initCVTrendLineChart() {
   var layout = {
+    width: 1100,
+    height: 550,
     title: 'Voltage and current trend plot',
     margin: { l: 40, r: 40, b: 40, t: 40, pad: 4 },
     // font:{ family: 'Raleway, sans-serif' },
