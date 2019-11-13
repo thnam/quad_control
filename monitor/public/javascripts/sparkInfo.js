@@ -7,18 +7,18 @@ socket.on("sparkPattern", (data) => {
 socket.on("sparked", (data) =>{
   if (window.handlingSparkEvent == false) {
     console.log("Sparked message received!");
-    if (window.ramping) {
-      window.ramping = false;
-      handleSparkEvent("Spark! Ramping is aborted.");
-    } else {
-      handleSparkEvent("Spark!");
-    }
+    // if (window.ramping) {
+      // window.ramping = false;
+      // handleSparkEvent("Spark! Ramping is aborted.");
+    // } else {
+      // handleSparkEvent("Spark!");
+    // }
 
     // not handle this again for next 60 sec
-    window.handlingSparkEvent = true;
-    setTimeout(function(){
-      window.handlingSparkEvent = false;
-    }, 60*1000);
+    // window.handlingSparkEvent = true;
+    // setTimeout(function(){
+      // window.handlingSparkEvent = false;
+    // }, 60*1000);
   }
 });
 

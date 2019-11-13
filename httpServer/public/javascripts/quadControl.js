@@ -27,6 +27,8 @@ $(() =>{
   $("#btnSparkAlarmReset").click(() => {
     window.sparkAlarmAudio.pause();
     window.sparkAlarmAudio.currentTime = 0.0;
+    window.faultAlarmAudio.pause();
+    window.faultAlarmAudio.currentTime = 0.0;
     clearSparkDisplay();
   });
 
@@ -35,6 +37,8 @@ $(() =>{
   $("#btnFaultAlarmReset").click(() => {
     window.faultAlarmAudio.pause();
     window.faultAlarmAudio.currentTime = 0.0;
+    window.sparkAlarmAudio.pause();
+    window.sparkAlarmAudio.currentTime = 0.0;
   });
   // 
   $("#setVoltages").click(()=>{ changeVoltage() });
@@ -52,6 +56,12 @@ $(() =>{
   $("#btnResetNOSFault").click(() => {resetFault("NOS")});
   $("#btnResetPTSFault").click(() => {resetFault("PTS")});
   $("#btnResetNTSFault").click(() => {resetFault("NTS")});
+  $("#btnFaultReset").click(() => {
+    resetFault("NTS");
+    resetFault("PTS");
+    resetFault("NOS");
+    resetFault("POS");
+  });
 })
 
 plotColor = [

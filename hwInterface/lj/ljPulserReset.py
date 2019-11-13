@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-ResetLabjackIP = "131.225.169.201"
-ResetLabjackIPDevType = 0
-ResetLabjackIPConnType = 2
-
 # ports
 psResetPort = {"NTS": "FIO1",
-               "POS": "FIO3",
-               "PTS": "FIO5",
+               "POS": "FIO5",
+               "PTS": "FIO3",
                "NOS": "FIO7"}
 
 from labjack import ljm
+import time
 import sys
+
+ResetLabjackIP = "192.168.30.83"
+
 def main(devAddress, port, vals,
-         devType=ljm.constants.dtT7, connType=ljm.constants.ctETHERNET):
+         devType=ljm.constants.dtANY, connType=2):
 
     ret = None
     try:
@@ -21,8 +21,9 @@ def main(devAddress, port, vals,
         info = ljm.getHandleInfo(hndl)
         if info[0] == 7:
             if port is not None:
-                for val in vals:
-                    ret = ljm.eWriteName(hndl, port, val)
+                  for val in vals:
+                      ret = ljm.eWriteName(hndl, port, val)
+                      time.sleep(0.1)
             ljm.close(hndl)
             ret = 0
     except Exception as e:
@@ -36,5 +37,4 @@ if __name__ == "__main__":
         exit(-1)
     else:
         print("Resetting", sys.argv[1])
-        main(ResetLabjackIP, psResetPort[sys.argv[1]], [0., 1., 0.],
-             ResetLabjackIPDevType, ResetLabjackIPConnType)
+        main(ResetLabjackIP, psResetPort[sys.argv[1]], [0., 1., 0.])

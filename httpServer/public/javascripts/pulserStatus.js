@@ -147,6 +147,8 @@ function resetFault(ps) {
       url: baseUrl + '/resetFault',
       data: {ps: ps},
       success: (res) =>{
+        window.faultAlarmAudio.pause();
+        window.faultAlarmAudio.currentTime = 0.0;
         console.info(res + ", " + ps + " has been reset");
         resolve(true);
       },

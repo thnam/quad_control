@@ -18,6 +18,7 @@ router
 
     httpLog.info(cmd);
     exec(cmd).then((data)=>{
+      httpLog.info(data.stdout);
       httpLog.info(ps + " has been reset");
       res.sendStatus(200);
     }).catch((err)=>{
