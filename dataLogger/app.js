@@ -9,7 +9,6 @@ const cvLogger = require(global.appRoot + '/loggers/cvLogger.js');
 const statusLogger = require(global.appRoot + '/loggers/statusLogger.js');
 const sparkPatternLogger = require(global.appRoot + '/loggers/sparkPatternLogger.js');
 const thrLogger = require(global.appRoot + '/loggers/sparkThresholdLogger.js');
-const sparkHistLogger = require(global.appRoot + '/loggers/sparkHistoryLogger.js');
 const flagLogger = require(global.appRoot + '/loggers/flagLogger.js');
 
 const mongoClient = require('mongodb').MongoClient;
