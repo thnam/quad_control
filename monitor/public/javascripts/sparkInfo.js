@@ -107,8 +107,8 @@ function setSparkThreshold() {
 };
 
 function handleSparkEvent(msg) {
-  changePulseMode("Stop");
-  playAlarmSound(window.sparkAlarmAudio);
+  // changePulseMode("Stop");
+  // playAlarmSound(window.sparkAlarmAudio);
   alert(msg);
 }
 
