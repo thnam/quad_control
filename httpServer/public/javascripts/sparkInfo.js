@@ -108,8 +108,9 @@ function setSparkThreshold() {
 function handleSparkEvent(msg) {
   changePulseMode("Stop");
   playAlarmSound(window.sparkAlarmAudio);
-  alert(msg);
   showSparkHistory();
+  showLastSpark();
+  alert(msg);
 }
 
 function showLastSpark() {
