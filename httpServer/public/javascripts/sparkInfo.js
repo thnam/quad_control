@@ -70,6 +70,12 @@ function readSparkThreshold() {
       $(entry).text(thr.low.toString());
       $(entry).css({"color": $(".btn-success").css("background-color")});
 
+      if (!(window.initialSparkThresholdsRead)){
+        document.getElementById("upperThreshold").value = thr.high;
+        document.getElementById("lowerThreshold").value = thr.low;
+        window.initialSparkThresholdsRead = true;
+      }
+
     } catch (e) {
       console.error(e);
       entry = "#upperThresholdReadback";
