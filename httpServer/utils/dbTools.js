@@ -35,6 +35,24 @@ function getLastSpark(nSparks=1){
   return result;
 }
 
+function getSparkHistory(nSparks = 100){
+  const collection = db.get().db("quad").collection('sparkHistory');
+  const result = collection.aggregate([
+    { "$match" : {}},
+    { "$project" : { "_id": 0, "level": 0, "message": 0 }},
+    { "$group": {
+      "_id": { "$toDate": {
+        "$subtract": [ { "$toLong": "$timestamp" },
+          { "$mod": [{ "$toLong": "$timestamp" }, 1000 * 60 ]}
+        ]
+      }},
+      "meta": {"$first": "$meta"}
+    }},
+    {"$sort": {"_id": -1}}
+  ]).limit(nSparks);
+  return result.toArray();
+}
+
 function getSparkThreshold(){
   const collection = db.get().db("quad").collection('sparkThreshold');
   const result = collection.find().sort({$natural: -1}).limit(1).toArray();
@@ -49,4 +67,5 @@ module.exports = {
   getSparkInfo: getSparkInfo,
   getSparkThreshold: getSparkThreshold,
   getLastSpark: getLastSpark,
+  getSparkHistory: getSparkHistory,
 }

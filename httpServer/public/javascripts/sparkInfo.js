@@ -169,8 +169,8 @@ function showSparkHistory() {
     .done((data)=>{
       var sparkData = [];
       for (var i = 0; i < 10; i++) {
-        timestamp = new Date(data[i].timestamp);
-        timestamp = moment(timestamp).format('YYYY-MM-DD HH:mm:ss');
+        timestamp = new Date(data[i]._id);
+        timestamp = moment(timestamp).format('YYYY-MM-DD HH:mm');
 
         patternStr = "";
         sparkedQuads = [];
@@ -190,10 +190,7 @@ function showSparkHistory() {
           }
         }
 
-        sparkBit = data[i].meta.sparkBit;
-
-        sparkData.push({"timestamp": timestamp,
-          "sparkPattern": patternStr, "sparkBit": sparkBit});
+        sparkData.push({"timestamp": timestamp, "sparkPattern": patternStr});
       }
       var $histSparkTable = $('#sparkHistoryTable');
       $histSparkTable.bootstrapTable({data: sparkData});
