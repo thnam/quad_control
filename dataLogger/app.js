@@ -9,7 +9,6 @@ const cvLogger = require(global.appRoot + '/loggers/cvLogger.js');
 const statusLogger = require(global.appRoot + '/loggers/statusLogger.js');
 const sparkPatternLogger = require(global.appRoot + '/loggers/sparkPatternLogger.js');
 const thrLogger = require(global.appRoot + '/loggers/sparkThresholdLogger.js');
-const flagLogger = require(global.appRoot + '/loggers/flagLogger.js');
 
 const mongoClient = require('mongodb').MongoClient;
 
@@ -21,14 +20,6 @@ if (env == "production")
   dbUrl += config.get("mongo.user") + ":" + config.get("mongo.password") + "@";
 dbUrl += config.get("mongo.host") + ":" + config.get("mongo.port").toString() +
   "/" + config.get("mongo.db");
-
-setFlag(false, false);
-
-var flag;
-(async function aaa(){
-  flag = await readFlag();
-  console.log(flag);
-})();
 
 var cvDataCmd, sparkDataCmd, statusDataCmd;
 
@@ -127,19 +118,3 @@ setInterval( () => {
     });
   }, config.get("logger.sparkThresholdPollingPeriod")
 );
-
-// useful flags for not spamming the db 
-function readFlag() {
-  return mongoClient.connect(dbUrl, {useNewUrlParser: true})
-    .then(function(db) {
-      var collection = db.db("quad").collection("flag");
-      return collection.findOne();})
-    .then(function(item) {
-      return JSON.parse(item.message);
-  });
-}
-
-function setFlag(spark, fault) {
-  flagLogger.info(JSON.stringify({"spark": spark, "fault": fault}));
-}
-
