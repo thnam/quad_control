@@ -60,7 +60,7 @@ module.exports = function (options){
       name: options.db.name + "_db",
       handleExceptions: false,
       level: "info",
-      options:{ useNewUrlParser: true }
+      options:{ useNewUrlParser: true, useUnifiedTopology: true}
     },
 
     console : {
@@ -78,7 +78,7 @@ module.exports = function (options){
       capped: "true",
       handleExceptions: false,
       cappedMax: options.dbOnline.nPoints,
-      options:{ useNewUrlParser: true }
+      options:{ useNewUrlParser: true, useUnifiedTopology: true }
     }
   };
 
