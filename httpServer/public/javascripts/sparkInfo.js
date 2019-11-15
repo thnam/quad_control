@@ -112,7 +112,6 @@ function setSparkThreshold() {
 };
 
 function handleSparkEvent(msg) {
-  console.log("handleSparkEvent");
   changePulseMode("Stop");
   playAlarmSound(window.sparkAlarmAudio);
   showSparkHistory();
@@ -126,6 +125,7 @@ function showLastSpark() {
       timestamp = new Date(data.timestamp);
       timestamp = moment(timestamp).format('YYYY-MM-DD HH:mm:ss');
 
+      patternStr = "";
       sparkedQuads = [];
       quadType = ["l", "s"];
 
@@ -138,26 +138,26 @@ function showLastSpark() {
           nSparks = sumSpark(pattern[quadStr][quadType[j]]);
           if (nSparks > 0) {
             sparkedQuads.push((quadStr + quadType[j]).toUpperCase());
+            patternStr += (quadStr + quadType[j]).toUpperCase() + ": ";
+            patternStr += JSON.stringify(pattern[quadStr][quadType[j]]) + "\n";
           }
         }
       }
 
       $("#lastSpark").text("Last: " + timestamp);
       $("#sparkedQuads").text("on: " + sparkedQuads);
+
+      var table = document.getElementById("sparkHistoryTable");
+      var row = table.insertRow(1);
+      var cell0 = row.insertCell(0);
+      var cell1 = row.insertCell(1);
+      cell0.innerHTML = timestamp;
+      cell1.innerHTML = patternStr;
+
     })
     .fail(()=>{
       $("#lastSpark").text("Last: None");
     })
-}
-
-function sumSpark(obj){
-  var sum = 0;
-  for( var el in obj ){
-    if( obj.hasOwnProperty(el)){
-      sum += obj[el]; 
-    }
-  }
-  return sum;
 }
 
 function playAlarmSound(audio, period=20) {
@@ -174,11 +174,10 @@ function clearSparkDisplay() {
 };
 
 function showSparkHistory() {
-  console.log("showSparkHistory");
   $.get(baseUrl + "/sparkHistory")
     .done((data)=>{
       var sparkData = [];
-      for (var i = 0; i < 10; i++) {
+      for (var i = 0; i < data.length; i++) {
         timestamp = new Date(data[i].timestamp);
         timestamp = moment(timestamp).format('YYYY-MM-DD HH:mm:ss');
 
@@ -191,7 +190,7 @@ function showSparkHistory() {
         for (var k = 0; k < 4; k++) {
           quadStr = "q" + (k + 1).toString();
 
-          for (var j = 0; j < 2; j++) {
+          for (var j = 0; j < 2; j++) { //s, l
             nSparks = sumSpark(pattern[quadStr][quadType[j]]);
             if (nSparks > 0) {
               patternStr += (quadStr + quadType[j]).toUpperCase() + ": ";
@@ -202,8 +201,18 @@ function showSparkHistory() {
 
         sparkData.push({"timestamp": timestamp, "sparkPattern": patternStr});
       }
-      var $histSparkTable = $('#sparkHistoryTable');
-      $histSparkTable.bootstrapTable({data: sparkData});
+
+
+      $("#sparkHistoryTable:not(:first)").remove();
+      var table = document.getElementById("sparkHistoryTable");
+      nRows = table.rows.length;
+      for (var iR = 0, len = sparkData.length; iR < len; iR++) {
+        var row = table.insertRow();
+        var cell0 = row.insertCell(0);
+        var cell1 = row.insertCell(1);
+        cell0.innerHTML = sparkData[iR].timestamp;
+        cell1.innerHTML = sparkData[iR].sparkPattern;
+      }
 
     })
     .fail(()=>{
@@ -211,3 +220,14 @@ function showSparkHistory() {
     })
   
 }
+
+function sumSpark(obj){
+  var sum = 0;
+  for( var el in obj ){
+    if( obj.hasOwnProperty(el)){
+      sum += obj[el]; 
+    }
+  }
+  return sum;
+}
+
