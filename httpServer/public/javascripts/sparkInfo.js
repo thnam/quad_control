@@ -106,6 +106,7 @@ function setSparkThreshold() {
 };
 
 function handleSparkEvent(msg) {
+  console.log("handleSparkEvent");
   changePulseMode("Stop");
   playAlarmSound(window.sparkAlarmAudio);
   showSparkHistory();
@@ -162,15 +163,18 @@ function playAlarmSound(audio, period=20) {
 function clearSparkDisplay() {
   console.log("Re-arm spark detection");
   setSparkThreshold();
+  configPulser(1);
+  configPulser(2);
 };
 
 function showSparkHistory() {
+  console.log("showSparkHistory");
   $.get(baseUrl + "/sparkHistory")
     .done((data)=>{
       var sparkData = [];
       for (var i = 0; i < 10; i++) {
-        timestamp = new Date(data[i]._id);
-        timestamp = moment(timestamp).format('YYYY-MM-DD HH:mm');
+        timestamp = new Date(data[i].timestamp);
+        timestamp = moment(timestamp).format('YYYY-MM-DD HH:mm:ss');
 
         patternStr = "";
         sparkedQuads = [];

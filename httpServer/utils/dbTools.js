@@ -46,6 +46,7 @@ function getSparkHistory(nSparks = 100){
           { "$mod": [{ "$toLong": "$timestamp" }, 1000 * 60 ]}
         ]
       }},
+      "timestamp": {"$first": "$timestamp"},
       "meta": {"$first": "$meta"}
     }},
     {"$sort": {"_id": -1}}
