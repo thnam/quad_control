@@ -43,7 +43,7 @@ function getSparkHistory(nSparks = 100){
     { "$group": {
       "_id": { "$toDate": {
         "$subtract": [ { "$toLong": "$timestamp" },
-          { "$mod": [{ "$toLong": "$timestamp" }, 1000 * 60 ]}
+          { "$mod": [{ "$toLong": "$timestamp" }, 1000 * 60 * 2]}
         ]
       }},
       "timestamp": {"$first": "$timestamp"},
