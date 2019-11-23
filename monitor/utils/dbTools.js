@@ -77,6 +77,24 @@ function getAvgCV(period, npoints){
   return result.toArray();
 }
 
+function getSparkHistory(nSparks = 100){
+  const collection = db.get().db("quad").collection('sparkHistory');
+  const result = collection.aggregate([
+    { "$match" : {}},
+    { "$project" : { "_id": 0, "level": 0, "message": 0 }},
+    { "$group": {
+      "_id": { "$toDate": {
+        "$subtract": [ { "$toLong": "$timestamp" },
+          { "$mod": [{ "$toLong": "$timestamp" }, 1000 * 60 * 2]}
+        ]
+      }},
+      "timestamp": {"$first": "$timestamp"},
+      "meta": {"$first": "$meta"}
+    }},
+    {"$sort": {"_id": -1}}
+  ]).limit(nSparks);
+  return result.toArray();
+}
 module.exports = {
   getPulseMode: getPulseMode,
   getCV: getCV,
@@ -86,4 +104,5 @@ module.exports = {
   getSparkThreshold: getSparkThreshold,
   getLastSpark: getLastSpark,
   getAvgCV: getAvgCV,
+  getSparkHistory: getSparkHistory,
 }
