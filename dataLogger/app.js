@@ -13,7 +13,7 @@ const thrLogger = require(global.appRoot + '/loggers/sparkThresholdLogger.js');
 const mongoClient = require('mongodb').MongoClient;
 
 let env = process.env.NODE_ENV;
-console.log("Running mode: " + env);
+console.log("Running mode: " + env + ", controller is " + config.controller);
 
 var dbUrl = "mongodb://";
 if (env == "production") 
@@ -115,8 +115,9 @@ setInterval( () => {
 setInterval( () => {
   exec2(sparkThresholdCmd, {env: BUEnv})
     .then((data)=>{
-      // console.log(data.stdout);
-      thrLogger.info(" ", {meta:JSON.parse(data.stdout)});
+      info = JSON.parse(data.stdout);
+      info["source"] = config.controller;
+      thrLogger.info(" ", {meta:info});
     })
     .catch((err)=>{
       console.error(err.stderr);

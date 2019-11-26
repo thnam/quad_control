@@ -3,7 +3,7 @@ const router = express.Router();
 const dbTool = require(global.appRoot + "/utils/dbTools.js");
 const httpLog = require(global.appRoot + '/loggers/httpLogger.js');
 const exec = require('util').promisify(require('child_process').exec);
-const BUEnv = require('config').BUEnv;
+const config = require('config');
 
 // use the same route for both set and get pulse mode
 router
@@ -23,7 +23,7 @@ router
       cmd += global.appRoot + "/../hwInterface/dummy/success 2";
 
     httpLog.info("Command:" + cmd);
-    exec(cmd, {env: BUEnv}).then(()=>{
+    exec(cmd, {env: config.BUEnv}).then(()=>{
       httpLog.info("Threshold set to " + JSON.stringify(thresholds));
       res.sendStatus(200);
     }).catch((err)=>{

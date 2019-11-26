@@ -63,17 +63,34 @@ function readSparkThreshold() {
   $.get(baseUrl + "/sparkThreshold").done((data) =>{
     try {
       let thr = data[0].meta;
-      entry = "#upperThresholdReadback";
-      $(entry).text(thr.high.toString());
-      $(entry).css({"color": $(".btn-success").css("background-color")});
-      entry = "#lowerThresholdReadback";
-      $(entry).text(thr.low.toString());
-      $(entry).css({"color": $(".btn-success").css("background-color")});
+      if (thr.source == "BU") {
+        entry = "#upperThresholdReadback";
+        $(entry).text(thr.high.toString());
+        $(entry).css({"color": $(".btn-success").css("background-color")});
+        entry = "#lowerThresholdReadback";
+        $(entry).text(thr.low.toString());
+        $(entry).css({"color": $(".btn-success").css("background-color")});
 
-      if (!(window.initialSparkThresholdsRead)){
-        document.getElementById("upperThreshold").value = thr.high;
-        document.getElementById("lowerThreshold").value = thr.low;
-        window.initialSparkThresholdsRead = true;
+        if (!(window.initialSparkThresholdsRead)){
+          document.getElementById("upperThreshold").value = thr.high;
+          document.getElementById("lowerThreshold").value = thr.low;
+          window.initialSparkThresholdsRead = true;
+        }
+      }
+
+      else if (thr.source == "Sten") {
+        entry = "#slot3Readback";
+        $(entry).text(thr["3"].toString());
+        $(entry).css({"color": $(".btn-success").css("background-color")});
+        entry = "#slot6Readback";
+        $(entry).text(thr["6"].toString());
+        $(entry).css({"color": $(".btn-success").css("background-color")});
+
+        if (!(window.initialSparkThresholdsRead)){
+          document.getElementById("slot3").value = thr["3"];
+          document.getElementById("slot6").value = thr["6"];
+          window.initialSparkThresholdsRead = true;
+        }
       }
 
     } catch (e) {
