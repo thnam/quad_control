@@ -32,12 +32,16 @@ if (env == "development") { // Fake data
   // Labjack data
   cvDataCmd = appRoot + '/../hwInterface/lj/ljCVData.py';
   statusDataCmd = appRoot + '/../hwInterface/lj/ljPulserStatus.py';
-  // sparkDataCmd = appRoot + "/../hwInterface/lj/ljSparkData.py";
-  // sparkThresholdCmd = appRoot + "/../hwInterface/lj/ljSparkThreshold.py";
   // BU electronics data
   // const statusDataCmd = appRoot + '/../hwInterface/fakePulserStatus.py';
-  sparkDataCmd = appRoot + "/../hwInterface/bu/getSparkStatus";
-  sparkThresholdCmd = appRoot + "/../hwInterface/bu/readSparkThreshold";
+  if (config.controller == "BU") {
+    sparkDataCmd = appRoot + "/../hwInterface/bu/getSparkStatus";
+    sparkThresholdCmd = appRoot + "/../hwInterface/bu/readSparkThreshold";
+  }
+  else if (config.controller == "Sten") {
+    sparkDataCmd = appRoot + "/../hwInterface/lj/ljSparkData.py";
+    sparkThresholdCmd = appRoot + "/../hwInterface/lj/ljSparkThreshold.py";
+  }
 }
 
 
@@ -51,8 +55,10 @@ setInterval( () => {
 
       // if sparks, record the pattern in the sparkHistory collection, and
       // reset the spark pin,
-      if (cv.spark >= 2.) {
-        // this is NIM/camac way to handle spark, lets skip this for BU box
+      if (config.controller == "Sten") {
+          // this is NIM/camac way to handle spark, lets skip this for BU box
+        if (cv.spark >= 2.) {
+        }
       }
 
     });
@@ -109,7 +115,7 @@ setInterval( () => {
 setInterval( () => {
   exec2(sparkThresholdCmd, {env: BUEnv})
     .then((data)=>{
-      console.log(data.stdout);
+      // console.log(data.stdout);
       thrLogger.info(" ", {meta:JSON.parse(data.stdout)});
     })
     .catch((err)=>{
