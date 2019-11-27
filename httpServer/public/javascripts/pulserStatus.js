@@ -11,19 +11,21 @@ socket.on("pulserStatus", (data) => {
   let ps0 = values[0].meta;
   let nFaults = ps0.pos.fault + ps0.nos.fault + ps0.pts.fault + ps0.nts.fault;
   if (nFaults > 0) {
-    if (window.handlingFaultEvent == false) {
-      console.log("Faulted!");
-      if (window.ramping) {
-        window.ramping = false;
-        handleFaultEvent("Fault detected, ramping is aborted");
-      }
-      else
-        handleFaultEvent("Fault detected");
+    if (!window.trolleyRun) { // not handling when trolley run is going
+      if (window.handlingFaultEvent == false) {
+        console.log("Faulted!");
+        if (window.ramping) {
+          window.ramping = false;
+          handleFaultEvent("Fault detected, ramping is aborted");
+        }
+        else
+          handleFaultEvent("Fault detected");
 
-      window.handlingFaultEvent = true;
-      setTimeout(function(){
-        window.handlingFaultEvent = false;
-      }, 60*1000);
+        window.handlingFaultEvent = true;
+        setTimeout(function(){
+          window.handlingFaultEvent = false;
+        }, 60*1000);
+      }
     }
   }
 
