@@ -8,7 +8,12 @@ $(() =>{
   $("#btnInternal5Hz").click(()=>{ changePulseMode("5 Hz");});
   $("#btnInternal10Hz").click(()=>{ changePulseMode("10 Hz");});
   $("#btnInternalBurst").click(()=>{ changePulseMode("Burst");});
-  $("#btnInternalSingle").click(()=>{ changePulseMode("Single");});
+  $("#btnInternalSingle").click(()=>{
+    changePulseMode("1 Hz");
+    setTimeout(function(){
+      changePulseMode("Stop");
+    }, 2*1000);
+  });
 
   $("#btnSetP1Timing").click(()=>{ configPulser(1);});
   $("#btnSetP2Timing").click(()=>{ configPulser(2);});
