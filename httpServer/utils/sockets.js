@@ -22,9 +22,9 @@ io.on('connection', function (socket) {
   }, 1000);
 
   // socket.on('join', function (data) {
-    // httpLog.info("Join");
+  // httpLog.info("Join");
   // });
-  
+
   setInterval(async ()=>{
     try {
       const cv = await dbTool.getCV();
