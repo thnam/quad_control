@@ -101,6 +101,13 @@ function readSparkThreshold() {
       entry = "#lowerThresholdReadback";
       $(entry).text(`ERROR!`);
       $(entry).css({"color": $(".btn-danger").css("background-color")});
+
+      entry = "#slot3Readback";
+      $(entry).text(`ERROR!`);
+      $(entry).css({"color": $(".btn-danger").css("background-color")});
+      entry = "#slot6Readback";
+      $(entry).text(`ERROR!`);
+      $(entry).css({"color": $(".btn-danger").css("background-color")});
     }
   })
 };
