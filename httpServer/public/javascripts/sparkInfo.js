@@ -199,10 +199,29 @@ function playAlarmSound(audio, period=20) {
 }
 
 function clearSparkDisplay() {
-  console.log("Re-arm spark detection");
-  setSparkThreshold();
-  configPulser(1);
-  configPulser(2);
+  if (window.controller === "BU") {
+    console.log("Re-arm spark detection");
+    setSparkThreshold();
+    configPulser(1);
+    configPulser(2);
+  }
+  else if (window.controller == "Sten") {
+    console.log("Clear CAMAC scaler");
+    return new Promise(function (resolve, reject) {
+      $.ajax({
+        type: 'POST',
+        url: baseUrl + '/clearSparkDisplay',
+        success: (res) =>{
+          resolve(true);
+          console.log("Spark display cleared");
+        },
+        error: (err, stat) =>{
+          resolve(false);
+          alert("Could not clear spark display" + err.responseText);
+        } });
+    });
+
+  }
 };
 
 function showSparkHistory() {
