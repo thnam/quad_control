@@ -63,14 +63,15 @@ io.on('connection', function (socket) {
 
       // push the message if needed
       if (nSparks > 0) {
-        socket.emit("sparked", sparkEntry);
-
-        sparkLog.info({message: " ", meta: sparkInfo});
-        // not putting extra entries into the sparkHistory in next 60 secs
-        handlingSparkEvent = true;
-        setTimeout(()=>{
-          handlingSparkEvent = false;
-        }, 60 * 1000);
+        if (!handlingSparkEvent) {
+          // not putting extra entries into the sparkHistory in next 60 secs
+          socket.emit("sparked", sparkEntry);
+          sparkLog.info({message: " ", meta: sparkInfo});
+          handlingSparkEvent = true;
+          setTimeout(()=>{
+            handlingSparkEvent = false;
+          }, 60 * 1000);
+        }
       }
     } catch (e) {
       console.error(e);
