@@ -3,7 +3,8 @@ const router = express.Router();
 const httpLog = require(global.appRoot + '/loggers/httpLogger.js');
 const modeLog = require(global.appRoot + '/loggers/pulseModeLogger.js');
 const exec = require('util').promisify(require('child_process').exec);
-const BUEnv = require('config').BUEnv;
+const config = require('config');
+const BUEnv = config.BUEnv;
 
 // use the same route for both set and get pulse mode
 router
@@ -23,12 +24,27 @@ router
     let cmd = "";
     if (env === "production") {
       // BU electronics interface
-      cmd += global.appRoot + "/../hwInterface/bu/setPulseMode";
-      cmd += ' -m "' + newMode + '"';
-
-      // Sten module interface
-      // cmd += '/home/daq/gm2daq/frontends/ESQ_slow/quadcontrol/ljUtils/pulseControl.py --mode ';
-      // cmd += ' "' + newMode + '" --ntry 3';
+      if (config.controller === "BU") {
+        cmd += global.appRoot + "/../hwInterface/bu/setPulseMode";
+        cmd += ' -m "' + newMode + '"';
+      }
+      else if (config.controller === "Sten") {
+        cmd += global.appRoot + '/../hwInterface/lj/ljPulseMode.py';
+        switch (newMode) {
+          case 'Stop':
+            cmd += ' ' + newMode;
+            break;
+          case 'Burst':
+            cmd += ' ' + newMode;
+            break;
+          case 'External':
+            cmd += ' ' + newMode;
+            break;
+          default:
+            cmd += ' periodic ' + newMode.replace(/\D/g, "");
+            break;
+        }
+      }
     } else 
       cmd += global.appRoot + "/../hwInterface/success 2";
 
