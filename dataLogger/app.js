@@ -100,10 +100,12 @@ setInterval( () => {
     .then((data)=>{
       pattern = JSON.parse(data.stdout);
       pattern["error"] = false;
+      pattern["source"] = config.controller;
       sparkPatternLogger.info({message: " ", meta: pattern});
     })
     .catch((err)=>{
       pattern["error"] = true;
+      pattern["source"] = config.controller;
       pattern["message"] = JSON.stringify(err.stderr);
       sparkPatternLogger.error({message: " ", meta: pattern});
     })
@@ -117,11 +119,13 @@ setInterval( () => {
     .then((data)=>{
       info = JSON.parse(data.stdout);
       info["source"] = config.controller;
+      info["error"] = false;
       thrLogger.info(" ", {meta:info});
     })
     .catch((err)=>{
       console.error(err.stderr);
-      thrLogger.error(" ",{meta: JSON.stringify(err.stderr)});
+      thrLogger.error(JSON.stringify(err.stderr),
+        {meta: {"error": true, "source": config.controller}});
     });
   }, config.get("logger.sparkThresholdPollingPeriod")
 );

@@ -89,7 +89,8 @@ const baseUrl = "http://" + document.location.hostname + ":" + document.location
 var socket = io.connect(baseUrl);
 socket.on('greeting', function(data) {
   window.controller = data.controller;
-  console.info(data.message, ', using:', window.controller, 'controller');
+  console.info(data.message);
+  console.info('Controller in use is', window.controller);
   // socket.emit('join', 'Hello World from client');
 });
 
