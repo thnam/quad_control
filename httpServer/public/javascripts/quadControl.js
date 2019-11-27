@@ -8,12 +8,7 @@ $(() =>{
   $("#btnInternal5Hz").click(()=>{ changePulseMode("5 Hz");});
   $("#btnInternal10Hz").click(()=>{ changePulseMode("10 Hz");});
   $("#btnInternalBurst").click(()=>{ changePulseMode("Burst");});
-  $("#btnInternalSingle").click(()=>{
-    changePulseMode("1 Hz");
-    setTimeout(function(){
-      changePulseMode("Stop");
-    }, 2*1000);
-  });
+  $("#btnInternalSingle").click(()=>{singlePulse()});
 
   $("#btnSetP1Timing").click(()=>{ configPulser(1);});
   $("#btnSetP2Timing").click(()=>{ configPulser(2);});
@@ -58,11 +53,12 @@ $(() =>{
   $("#m10kV").click(()=>{ increaseVoltages(-10);});
 
   $("#btnRefreshSparkHistory").click(() => {showSparkHistory();});
-  $("#btnResetPOSFault").click(() => {resetFault("POS")});
-  $("#btnResetNOSFault").click(() => {resetFault("NOS")});
-  $("#btnResetPTSFault").click(() => {resetFault("PTS")});
-  $("#btnResetNTSFault").click(() => {resetFault("NTS")});
+  $("#btnResetPOSFault").click(() => {singlePulse(); resetFault("POS")});
+  $("#btnResetNOSFault").click(() => {singlePulse(); resetFault("NOS")});
+  $("#btnResetPTSFault").click(() => {singlePulse(); resetFault("PTS")});
+  $("#btnResetNTSFault").click(() => {singlePulse(); resetFault("NTS")});
   $("#btnFaultReset").click(() => {
+    singlePulse();
     resetFault("NTS");
     resetFault("PTS");
     resetFault("NOS");

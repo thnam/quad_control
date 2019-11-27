@@ -62,3 +62,10 @@ function displayPulseMode(newMode) {
     $("#labelPulseMode").css({ 'color': $(".btn-info").css("background-color"),
       'font-size': '120%' });
 };
+
+function singlePulse() {
+  changePulseMode("1 Hz");
+  setTimeout(function(){
+    changePulseMode("Stop");
+  }, 1500);
+}
