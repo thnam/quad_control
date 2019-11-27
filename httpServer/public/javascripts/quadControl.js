@@ -88,7 +88,8 @@ window.initialSparkThresholdsRead = false;
 const baseUrl = "http://" + document.location.hostname + ":" + document.location.port
 var socket = io.connect(baseUrl);
 socket.on('greeting', function(data) {
-  console.info(data.message);
+  window.controller = data.controller;
+  console.info(data.message, ', using: ', window.controller, ' controller');
   // socket.emit('join', 'Hello World from client');
 });
 

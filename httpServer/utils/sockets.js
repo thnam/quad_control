@@ -10,7 +10,10 @@ var handlingSparkEvent = false;
 io.on('connection', function (socket) {
   httpLog.info("Client connected from: "  + socket.handshake.address);
 
-  socket.emit('greeting', { message: "Greeting from quad controller." });
+  socket.emit('greeting', {
+    message: "Greeting from quad controller.",
+    controller: config.controller
+  });
 
   setInterval(()=>{
     const date = new Date();
