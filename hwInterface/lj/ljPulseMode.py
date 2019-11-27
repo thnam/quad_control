@@ -4,7 +4,7 @@ import sys
 import time
 import argparse
 import traceback
-from pprint import pprint
+import json
 
 TCP_IP = '192.168.30.87'
 TCP_PORT = 5000
@@ -45,7 +45,7 @@ def main():
             if setting["mode"] not in modeMap.values():
                 setting["pulseMode"] = "Invalid"
 
-            pprint(setting)
+            print(json.dumps(setting))
 
         elif len(sys.argv) in [2, 3]:
             mode = (sys.argv[1]).lower()

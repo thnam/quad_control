@@ -2,11 +2,9 @@
 import socket
 import sys
 import time
-import serial
-import struct
-import binascii
 import os
-import pprint
+import json
+import traceback
 
 TCP_IP = '192.168.30.87'
 TCP_PORT = 5000
@@ -39,10 +37,11 @@ if len(sys.argv) == 1:
             val = int(round(int(data.splitlines()[0], 16) * conversionFactor[k] / 1000))
             setpoint[k] = val
             #  print(k, ":", val)
-        pprint.pprint(setpoint)
+        print(json.dumps(setpoint))
         s.close()
     except Exception as e:
-        print(e)
+        traceback.print_exc()
+        sys.exit(-1)
 
 # oneStep firstStep delay2SecondStep secondStep second2Discharge Discharge
 elif len(sys.argv) == len(regMap) + 1:
