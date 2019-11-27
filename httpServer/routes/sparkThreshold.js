@@ -17,8 +17,14 @@ router
     httpLog.info("Received threshold requests: " + JSON.stringify(thresholds));
     let cmd = "";
     if (env === "production") {
-      cmd = global.appRoot + "/../hwInterface/bu/armSparkDetection";
-      cmd += " " + thresholds.low + " " + thresholds.high;
+      if (config.controller === "BU") {
+        cmd = global.appRoot + "/../hwInterface/bu/armSparkDetection";
+        cmd += " " + thresholds.low + " " + thresholds.high;
+      }
+      if (config.controller === "Sten") {
+        cmd = global.appRoot + "/../hwInterface/lj/ljSparkThreshold.py"
+        cmd += " " + thresholds.slot3;
+      }
     } else 
       cmd += global.appRoot + "/../hwInterface/dummy/success 2";
 

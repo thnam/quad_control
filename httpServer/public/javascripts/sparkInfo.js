@@ -113,8 +113,14 @@ function readSparkThreshold() {
 };
 
 function setSparkThreshold() {
-  thresholds = {"high": Number(document.getElementById("upperThreshold").value)
-    , "low": Number(document.getElementById("lowerThreshold").value)};
+  if (window.controller === "BU") {
+    thresholds = {"high": Number(document.getElementById("upperThreshold").value)
+      , "low": Number(document.getElementById("lowerThreshold").value)};
+  }
+  else if (window.controller === "Sten"){
+    thresholds = {"slot3": Number(document.getElementById("slot3").value)
+      , "slot6": Number(document.getElementById("slot6").value)};
+  }
 
   return new Promise(function (resolve, reject) {
     $.ajax({
