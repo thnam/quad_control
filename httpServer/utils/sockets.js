@@ -5,8 +5,6 @@ const sparkLog = require(global.appRoot + '/loggers/sparkLogger.js');
 const dbTool = require(global.appRoot + "/utils/dbTools.js");
 const config = require('config');
 
-var handlingSparkEvent = false;
-
 io.on('connection', function (socket) {
   httpLog.info("Client connected from: "  + socket.handshake.address);
 
@@ -63,15 +61,8 @@ io.on('connection', function (socket) {
 
       // push the message if needed
       if (nSparks > 0) {
-        if (!handlingSparkEvent) {
-          // not putting extra entries into the sparkHistory in next 60 secs
           socket.emit("sparked", sparkEntry);
           sparkLog.info({message: " ", meta: sparkInfo});
-          handlingSparkEvent = true;
-          setTimeout(()=>{
-            handlingSparkEvent = false;
-          }, 60 * 1000);
-        }
       }
     } catch (e) {
       console.error(e);
