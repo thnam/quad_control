@@ -54,7 +54,8 @@ socket.on("pulserStatus", (data) => {
 function handleFaultEvent(msg) {
   changePulseMode("Stop");
   playAlarmSound(window.faultAlarmAudio);
-  alert(msg);
+  showAlert("fault");
+  // alert(msg);
 }
 
 function initPSCharts() {

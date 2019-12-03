@@ -148,7 +148,8 @@ function handleSparkEvent(msg) {
   playAlarmSound(window.sparkAlarmAudio);
   showSparkHistory();
   showLastSpark();
-  alert(msg);
+  showAlert("spark");
+  // alert(msg);
 }
 
 function showLastSpark() {
@@ -284,4 +285,11 @@ function sumSpark(obj){
 
 function trolleyRunToggle() {
   window.trolleyRun = document.getElementById("cbTrolleyRun").checked;
+}
+
+function showAlert(alertType) {
+  if (alertType === "spark") 
+    $('#sparkAlertDialog').modal();
+  else if (alertType === "fault") 
+    $('#faultAlertDialog').modal();
 }

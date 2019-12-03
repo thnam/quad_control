@@ -1,0 +1,93 @@
+#sparkAlertDialog.modal.fade(role='dialog')
+  .modal-dialog
+    .modal-content
+      .modal-header
+        h4.modal-title.text-danger Spark detected!
+      .modal-body
+        | Recovery procedure:
+        ol
+          li Write an elog documenting: time, plates affected
+          li
+            | Click
+            font(color='green')
+              b  Reset Alarm
+            |  to silent the alarm sound
+          li Watch SRV plot, make sure pressure goes down to nominal value
+          li
+            | Click
+            font(color='cyan')
+              b  1 Hz
+            | , let it pulse for 30 sec
+          li
+            | Click
+            font(color='cyan')
+              b  5 Hz
+            | , let it pulse for 30 sec
+          li
+            | Click
+            font(color='green')
+              b  External
+          li If sparks again in steps 4-6:
+          ul
+            li
+              | Click
+              font(color='cyan')
+                b  -4 kV
+            li Repeat steps 4 through 6
+            li Ramp back to nominal setpoint
+
+        | More details at this 
+        a(href='https://cdcvs.fnal.gov/redmine/projects/g-2/wiki/Quad_GUI_manual_for_shifters#13-Spark', target='_blank') 
+          | Wiki page
+
+      .modal-footer
+        button.btn.btn-default(type='button', data-dismiss='modal') OK
+
+#faultAlertDialog.modal.fade(role='dialog')
+  .modal-dialog
+    .modal-content
+      .modal-header
+        h4.modal-title.text-danger Fault(s) detected!
+      .modal-body
+        | Recovery procedure:
+        ol
+          li 
+            | Click
+            font(color='blue')
+              b  Pulser Status
+            |  tab, write an elog documenting: time, plates affected
+          li
+            | Click
+            font(color='green')
+              b  Reset Alarm
+            |  to silent the alarm sound
+          li 
+            | Click
+            font(color='orange')
+              b  Reset fault
+            |  under affected pulser(s), observe that the fault status goes to 
+            font(color='green')
+              b  No fault
+          li
+            | Click
+            font(color='blue')
+              b  Main Control, 
+            | observe voltage readouts, make sure they are consistent with
+            | values in setpoint
+          li
+            | Click
+            font(color='cyan')
+              b  1 Hz
+            | , make sure 4 traces show up on the Bitscope monitor
+          li
+            | Click
+            font(color='green')
+              b  External 
+            | to go back to production
+
+        | More details at this 
+        a(href='https://cdcvs.fnal.gov/redmine/projects/g-2/wiki/Quad_GUI_manual_for_shifters#14-Fault', target='_blank') 
+          | Wiki page
+
+      .modal-footer
+        button.btn.btn-default(type='button', data-dismiss='modal') OK
