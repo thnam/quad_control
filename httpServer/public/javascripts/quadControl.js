@@ -122,3 +122,7 @@ window.onload = () => {
   showSparkHistory();
 };
 
+socket.on("pulseMode", (data) => {
+  displayPulseMode(data.message);
+});
+

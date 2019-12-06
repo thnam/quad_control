@@ -44,6 +44,15 @@ io.on('connection', function (socket) {
 
   setInterval(async ()=>{
     try {
+      const pulseMode = await dbTool.getPulseMode();
+      socket.emit("pulseMode", pulseMode);
+    } catch (e) {
+      console.error(e);
+    }
+  }, config.get("logger.pulseModePollingPeriod"));
+
+  setInterval(async ()=>{
+    try {
       const sparkEntry = await dbTool.getSparkInfo();
       const sparkInfo = sparkEntry[0].meta;
       // simply add all channels to give a global spark indicator
