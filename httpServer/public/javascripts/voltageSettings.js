@@ -158,61 +158,61 @@ function changeVoltage() {
   toggleControlInRamping();
   getPulseMode()
     .then((currentMode) =>{
-          if (currentMode === "Stop"){
-            setVoltage(steps[i]);
-            (async () =>{
-              await delay(Math.floor(window.vInterval) * 1000);
-              console.info("Done step", i);
-            })();
-                window.ramping = false;
-                alert("Ramping completed!");
-                toggleControlInRamping();
-          } 
+      if (currentMode === "Stop"){
+        setVoltage(steps[i]);
+        (async () =>{
+          await delay(Math.floor(window.vInterval) * 1000);
+          console.info("Done step", i);
+        })();
+        window.ramping = false;
+        alert("Ramping completed!");
+        toggleControlInRamping();
+      } 
 
-          else {
-            if (window.vStep > 0.2) { // stop -> start
-              (async function loop() {
-                for (let i = 0; i < steps.length; i++) {
-                  console.info("Step", i, ":", steps[i]);
-                  if (!window.ramping) {
-                    console.warn("Abort ramping");
-                    break;
-                  } 
-                  await setPulseMode("Stop").then(async ()=>{
-                    await setVoltage(steps[i]).then(async ()=>{
-                      await setPulseMode(currentMode).then(async() =>{
-                        await delay(Math.floor(window.vInterval) * 1000);
-                        console.info("Done step", i);
-                      });
-                    })
-                  })
-                }
-                // all done
-                window.ramping = false;
-                toggleControlInRamping();
-                $.jGrowl("Ramping completed", { life: 10000 });
-              })();
-            }
-            else { // dont stop if the step is lower than 0.2
-              (async function loop() {
-                for (let i = 0; i < steps.length; i++) {
-                  console.info("Step", i, ":", steps[i]);
-                  if (!window.ramping) {
-                    console.warn("Abort ramping");
-                    break;
-                  } 
-                  await setVoltage(steps[i]).then(async ()=>{
+      else {
+        if (window.vStep > 0.2) { // stop -> start
+          (async function loop() {
+            for (let i = 0; i < steps.length; i++) {
+              console.info("Step", i, ":", steps[i]);
+              if (!window.ramping) {
+                console.warn("Abort ramping");
+                break;
+              } 
+              await setPulseMode("Stop").then(async ()=>{
+                await setVoltage(steps[i]).then(async ()=>{
+                  await setPulseMode(currentMode).then(async() =>{
                     await delay(Math.floor(window.vInterval) * 1000);
                     console.info("Done step", i);
-                  })
-                }
-                // all done
-                window.ramping = false;
-                $.jGrowl("Ramping completed", { life: 10000 });
-                toggleControlInRamping();
-              })();
+                  });
+                })
+              })
             }
-          }
+            // all done
+            window.ramping = false;
+            toggleControlInRamping();
+            $.jGrowl("Ramping completed", { life: 10000 });
+          })();
+        }
+        else { // dont stop if the step is lower than 0.2
+          (async function loop() {
+            for (let i = 0; i < steps.length; i++) {
+              console.info("Step", i, ":", steps[i]);
+              if (!window.ramping) {
+                console.warn("Abort ramping");
+                break;
+              } 
+              await setVoltage(steps[i]).then(async ()=>{
+                await delay(Math.floor(window.vInterval) * 1000);
+                console.info("Done step", i);
+              })
+            }
+            // all done
+            window.ramping = false;
+            $.jGrowl("Ramping completed", { life: 10000 });
+            toggleControlInRamping();
+          })();
+        }
+      }
     })
 };
 
@@ -220,7 +220,7 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 function abortRamping() {
   window.ramping = false;
-                toggleControlInRamping();
+  toggleControlInRamping();
   alert("Ramping aborted!");
 }
 
@@ -283,13 +283,13 @@ function normVRead() {
     })
   }
   else{
-      let vFS = (window.vRead.fs.pv + Math.abs(window.vRead.fs.nv)) / 2;
-      let vSS = (window.vRead.ss.pv + Math.abs(window.vRead.ss.nv)) / 2;
-      let vOS = (window.vRead.os.pv + Math.abs(window.vRead.os.nv)) / 2;
-      let normFS = parseFloat(vFS.toFixed(1));
-      let normSS = parseFloat(vSS.toFixed(1));
-      let normOS = parseFloat(vOS.toFixed(1));
-      return [normFS, normSS, normOS];
+    let vFS = (window.vRead.fs.pv + Math.abs(window.vRead.fs.nv)) / 2;
+    let vSS = (window.vRead.ss.pv + Math.abs(window.vRead.ss.nv)) / 2;
+    let vOS = (window.vRead.os.pv + Math.abs(window.vRead.os.nv)) / 2;
+    let normFS = parseFloat(vFS.toFixed(1));
+    let normSS = parseFloat(vSS.toFixed(1));
+    let normOS = parseFloat(vOS.toFixed(1));
+    return [normFS, normSS, normOS];
   }
 }
 
