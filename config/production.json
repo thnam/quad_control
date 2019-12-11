@@ -27,9 +27,9 @@
   "logger": {
     "clockPeriod": 1000,
     "voltagePollingPeriod": 2000,
-    "pulseModePollingPeriod": 5000,
+    "pulseModePollingPeriod": 30000,
     "pulserStatePollingPeriod": 5000,
-    "sparkPollingPeriod": 2000,
+    "sparkPollingPeriod": 3000,
     "sparkThresholdPollingPeriod": 30000,
     "periodUnit": "ms -- just a comment, changing this would have no effect",
     "onlineDataPoints": 500,
