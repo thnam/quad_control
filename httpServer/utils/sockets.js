@@ -8,6 +8,11 @@ const config = require('config');
 io.on('connection', function (socket) {
   httpLog.info("Client connected from: "  + socket.handshake.address);
 
+  socket.on("reloadReq", ()=>{
+    httpLog.info("reloadReq received, will broadcast reload to all clients");
+    socket.emit("reload");
+  });
+
   socket.emit('greeting', {
     message: "Greeting from quad controller.",
     controller: config.controller
@@ -78,5 +83,6 @@ io.on('connection', function (socket) {
     }
   }, config.get("logger.sparkPollingPeriod"));
 });
+
 
 module.exports = io;

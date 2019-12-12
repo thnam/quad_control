@@ -96,6 +96,15 @@ socket.on('greeting', function(data) {
   // socket.emit('join', 'Hello World from client');
 });
 
+socket.on("reload", ()=>{
+  console.log("Forced reload message received");
+  window.location.reload(true);
+})
+
+function forceReload() {
+  socket.emit("reloadReq");
+}
+
 socket.on("timeStamp", (data) =>{
   $("#clock").html('<h4> Server time: ' + data.timeStamp + '</h4>');
 });
