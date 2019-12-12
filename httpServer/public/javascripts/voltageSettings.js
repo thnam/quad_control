@@ -119,7 +119,7 @@ function changeVoltage() {
     for (var i = 0, len = nStepMax; i < len; i++) {
       let targetFS = normVoltage[0] + (i + 1) * window.vStep;
       let targetSS = normVoltage[1] + (i + 1) * window.vStep;
-      let targetOS = normVoltage[2] + (i + 1) * window.vStep;
+      let targetOS = normVoltage[1] + (i + 1) * window.vStep;
       if (targetSS - targetFS >= 7.) { targetFS = targetSS - 7.; }
       if (targetFS > window.vSet.fs) targetFS = window.vSet.fs;
       if (targetSS > window.vSet.ss) targetSS = window.vSet.ss;
@@ -131,7 +131,7 @@ function changeVoltage() {
     for (var i = 0, len = nStepMax - nStepMin; i < len; i++) {
       let targetFS = normVoltage[0];
       let targetSS = normVoltage[1] + (i + 1) * window.vStep;
-      let targetOS = normVoltage[2] + (i + 1) * window.vStep;
+      let targetOS = normVoltage[1] + (i + 1) * window.vStep;
       if (targetSS - targetFS >= 7.) { targetFS = targetSS - 7.; }
       if (targetFS > window.vSet.fs) targetFS = window.vSet.fs;
       if (targetSS > window.vSet.ss) targetSS = window.vSet.ss;
