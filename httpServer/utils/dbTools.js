@@ -38,6 +38,8 @@ function getLastSpark(nSparks=1){
 function getSparkHistory(nSparks = 100){
   const collection = db.get().db("quad").collection('sparkHistory');
   const result = collection.aggregate([
+    {"$sort": {"_id": -1}},
+    {"$limit": nSparks * 30},
     { "$match" : {}},
     { "$project" : { "_id": 0, "level": 0, "message": 0 }},
     { "$group": {
@@ -49,8 +51,7 @@ function getSparkHistory(nSparks = 100){
       "timestamp": {"$first": "$timestamp"},
       "meta": {"$first": "$meta"}
     }},
-    {"$sort": {"_id": -1}}
-  ]).limit(nSparks);
+  ])
   return result.toArray();
 }
 
