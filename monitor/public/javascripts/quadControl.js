@@ -4,19 +4,19 @@ $(() =>{
     displayPulseMode(currentMode);
   });
 
-  // periodically get pulse mode
-  setInterval(()=>{
-    getPulseMode().then((currentMode)=>{
-      displayPulseMode(currentMode);
-    });
-  }, 10 * 1000);
-
   readSparkThreshold();
   showLastSpark();
 
   $(':button').prop('disabled', true);
   $(':input').prop('disabled', true);
 })
+
+// periodically get pulse mode
+setInterval(()=>{
+  getPulseMode().then((currentMode)=>{
+    displayPulseMode(currentMode);
+  });
+}, 20 * 1000);
 
 plotColor = [
   '#ff7f0e',  // safety orange
