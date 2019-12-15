@@ -64,12 +64,35 @@ function readSparkThreshold() {
   $.get(baseUrl + "/sparkThreshold").done((data) =>{
     try {
       let thr = data[0].meta;
-      entry = "#upperThresholdReadback";
-      $(entry).text(thr.high.toString());
-      $(entry).css({"color": $(".btn-success").css("background-color")});
-      entry = "#lowerThresholdReadback";
-      $(entry).text(thr.low.toString());
-      $(entry).css({"color": $(".btn-success").css("background-color")});
+      if (thr.source == "BU") {
+        entry = "#upperThresholdReadback";
+        $(entry).text(thr.high.toString());
+        $(entry).css({"color": $(".btn-success").css("background-color")});
+        entry = "#lowerThresholdReadback";
+        $(entry).text(thr.low.toString());
+        $(entry).css({"color": $(".btn-success").css("background-color")});
+
+        if (!(window.initialSparkThresholdsRead)){
+          document.getElementById("upperThreshold").value = thr.high;
+          document.getElementById("lowerThreshold").value = thr.low;
+          window.initialSparkThresholdsRead = true;
+        }
+      }
+
+      else if (thr.source == "Sten") {
+        entry = "#slot3Readback";
+        $(entry).text(thr["3"].toString());
+        $(entry).css({"color": $(".btn-success").css("background-color")});
+        entry = "#slot6Readback";
+        $(entry).text(thr["6"].toString());
+        $(entry).css({"color": $(".btn-success").css("background-color")});
+
+        if (!(window.initialSparkThresholdsRead)){
+          document.getElementById("slot3").value = thr["3"];
+          document.getElementById("slot6").value = thr["6"];
+          window.initialSparkThresholdsRead = true;
+        }
+      }
 
     } catch (e) {
       console.error(e);
@@ -79,13 +102,26 @@ function readSparkThreshold() {
       entry = "#lowerThresholdReadback";
       $(entry).text(`ERROR!`);
       $(entry).css({"color": $(".btn-danger").css("background-color")});
+
+      entry = "#slot3Readback";
+      $(entry).text(`ERROR!`);
+      $(entry).css({"color": $(".btn-danger").css("background-color")});
+      entry = "#slot6Readback";
+      $(entry).text(`ERROR!`);
+      $(entry).css({"color": $(".btn-danger").css("background-color")});
     }
   })
 };
 
 function setSparkThreshold() {
-  thresholds = {"high": Number(document.getElementById("upperThreshold").value)
-    , "low": Number(document.getElementById("lowerThreshold").value)};
+  if (window.controller === "BU") {
+    thresholds = {"high": Number(document.getElementById("upperThreshold").value)
+      , "low": Number(document.getElementById("lowerThreshold").value)};
+  }
+  else if (window.controller === "Sten"){
+    thresholds = {"slot3": Number(document.getElementById("slot3").value)
+      , "slot6": Number(document.getElementById("slot6").value)};
+  }
 
   return new Promise(function (resolve, reject) {
     $.ajax({

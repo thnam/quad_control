@@ -1,0 +1,229 @@
+.table-responsive
+table.table.table-hover.table-bordered#timingInfoTable(style='width:80%,float:center')
+  colgroup
+    col(style='width: 20%')
+    col(style='width: 10%')
+    col(style='width: 10%')
+    col(style='width: 10%')
+    col(style='width: 10%')
+    col(style='width: 10%')
+    col(style='width: 10%')
+    col(style='width: 10%')
+    col(style='width: 10%')
+  tbody
+    tr
+      th(rowspan='2')
+        br
+        | Timing unit is nanosecond,
+        br
+        | minimum increment is 10 ns.
+      th(colspan='2',style='text-align:center')
+        br
+        | Pulser 1
+        br
+        | (Two step)
+        br
+      th(colspan='2',style='text-align:center')
+        br
+        | Pulser 2
+        br
+        | (One step)
+        br
+      th(colspan='2',style='text-align:center')
+        br
+        | Pulser 3
+        br
+        | (Not in use)
+        br
+      th(colspan='2',style='text-align:center')
+        br
+        | Pulser 4
+        br
+        | (Not in use)
+        br
+    tr
+      td(style='text-align:center') Active
+      td(style='text-align:center') 
+        button#btnSetP1Timing.btn.btn-block.btn-warning Set
+      td(style='text-align:center') Active               
+      td(style='text-align:center') 
+        button#btnSetP2Timing.btn.btn-block.btn-warning Set
+      td(style='text-align:center') Active               
+      td(style='text-align:center') 
+        button#btnSetP3Timing.btn.btn-block.btn-warning Set
+      td(style='text-align:center') Active               
+      td(style='text-align:center') 
+        button#btnSetP4Timing.btn.btn-block.btn-warning Set
+    tr
+      td 2-step Pulser?
+      td(style='text-align:right') False
+      td(style='text-align:right')
+        input(type='number')
+      td(style='text-align:right') False
+      td(style='text-align:right')
+        input(type='number')
+      td(style='text-align:right') True
+      td(style='text-align:right')
+        input(type='number')
+      td(style='text-align:right') True
+      td(style='text-align:right')
+        input(type='number')
+    tr
+      td Charge start
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')
+    tr
+      td Step 1 end
+      td(style='text-align:right') N/A
+      td(style='text-align:right')
+        input(type='number')
+      td(style='text-align:right') N/A
+      td(style='text-align:right')
+        input(type='number')
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')
+    tr
+      td Step 2 start
+      td(style='text-align:right') N/A
+      td(style='text-align:right')
+        input(type='number')
+      td(style='text-align:right') N/A
+      td(style='text-align:right')
+        input(type='number')
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')
+    tr
+      td Charge stop
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')
+    tr
+      td Discharge start
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')
+    tr
+      td Discharge end
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')
+
+    tr
+      td RF width
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')
+
+    tr
+      td RF delay 1
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')
+
+    tr
+      td RF delay 2
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')
+
+    tr
+      td RF delay 3
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')
+
+    tr
+      td RF delay 4
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')

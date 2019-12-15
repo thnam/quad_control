@@ -1,0 +1,48 @@
+.table-responsive
+table.table.table-hover.table-bordered#timingInfoTable(style='width:50%,float:center')
+  colgroup
+    col(style='width: 20%')
+    col(style='width: 10%')
+    col(style='width: 10%')
+  tbody
+    tr
+      th(rowspan='2')
+        br
+        | Timing unit is microsecond
+      th(colspan='2',style='text-align:center')
+        br
+        | Settings
+    tr
+      td(style='text-align:center') Active
+      td(style='text-align:center') 
+        button#btnSetP1Timing.btn.btn-block.btn-warning Set
+    tr
+      td One-step width (non-scraping)
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')
+    tr
+      td Step 1 width (scraping)
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')
+    tr
+      td Delay to step 2 start
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')
+    tr
+      td Step 2 width (flattop)
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')
+    tr
+      td Delay to discharge start
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')
+    tr
+      td Discharge width
+      td(style='text-align:right')
+      td(style='text-align:right')
+        input(type='number')
