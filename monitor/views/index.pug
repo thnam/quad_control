@@ -17,6 +17,11 @@ html(lang='en')
   body
     .container
       br
+      .p-3.mb-2.bg-danger.text-white This page is for monitoring (read-only),
+        | if you are at the Quad Terminal and want to control the quads, please go to 
+        a(href='http://gm2-01.dhcp.fnal.gov:4444', target='_blank')
+          | this page
+      br
       header
         h3.float-left ESQ Monitor
       #clock.float-right(style='color: red;')
