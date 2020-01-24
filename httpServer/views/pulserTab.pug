@@ -2,7 +2,7 @@
 #pulserTab.tab-pane.container.fade(role='tabpanel')
   #container(style='width:100%;')
     .row.mt-4
-      .col-8
+      .col-6
         .table-responsive
         table.table.table-hover.table-bordered#pulserStatusTable
           tbody
@@ -39,6 +39,8 @@
         button#btnFaultAlarmReset.btn.btn-block.btn-success Reset Alarm
         button#btnFaultReset.btn.btn-block.btn-warning Reset Faults
         button#btnFaultPattern.btn.btn-block.btn-success Fault Pattern
+      .col-4
+        include components/faultRecoveryInstruction
 
     .row.mt-4
       #lcPSTrend

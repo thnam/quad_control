@@ -1,0 +1,39 @@
+h5 Fault recovery procedure:
+ol
+  li 
+    | Click
+    font(color='blue')
+      b  Pulser Status
+    |  tab, write an elog documenting: time, plates affected
+  li
+    | Click
+    font(color='green')
+      b  Reset Alarm
+    |  to silent the alarm sound
+  li 
+    | Click
+    font(color='orange')
+      b  Reset fault
+    |  under affected pulser(s), observe that the fault status goes to 
+    font(color='green')
+      b  No fault
+  li
+    | Click
+    font(color='blue')
+      b  Main Control, 
+    | observe voltage readouts, make sure they are consistent with
+    | values in setpoint
+  li
+    | Click
+    font(color='cyan')
+      b  1 Hz
+    | , make sure 4 traces show up on the Bitscope monitor
+  li
+    | Click
+    font(color='green')
+      b  External 
+    | to go back to production
+
+p More details at this 
+  a(href='https://cdcvs.fnal.gov/redmine/projects/g-2/wiki/Quad_GUI_manual_for_shifters#14-Fault', target='_blank') 
+    | Wiki page
