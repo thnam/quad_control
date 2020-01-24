@@ -21,7 +21,7 @@ router
         cmd = appRoot + '/../hwInterface/lj/ljSetVoltage.py';
         cmd += " " + vSet.fs + " " + vSet.ss + " " + vSet.os;
       } else {
-        cmd = appRoot + '/../hwInterface/lj/fakeCVData.py';
+        cmd = appRoot + '/../hwInterface/dummy/fakeCVData.py';
         cmd += " " + vSet.fs + " " + vSet.ss + " " + vSet.os;
       }
       httpLog.info("Voltage command: " + cmd);
