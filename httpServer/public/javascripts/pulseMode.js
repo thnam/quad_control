@@ -58,7 +58,7 @@ function displayPulseMode(newMode) {
   else if (newMode == "Stop") 
     $("#labelPulseMode").css({ 'color': $(".btn-danger").css("background-color"),
       'font-size': '120%' });
-  else if (["1 Hz", "5 Hz", "10 Hz", "Burst", "Single"].includes(newMode))
+  else if (["1 Hz", "2 Hz", "5 Hz", "10 Hz", "Burst", "Single"].includes(newMode))
     $("#labelPulseMode").css({ 'color': $(".btn-info").css("background-color"),
       'font-size': '120%' });
 };
