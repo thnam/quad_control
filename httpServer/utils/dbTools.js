@@ -61,6 +61,11 @@ function getSparkThreshold(){
   return result;
 }
 
+function getGlobalInhibit() {
+  const col = db.get().db("quad").collection("globalInhibit");
+  return col.findOne();
+}
+
 module.exports = {
   getPulseMode: getPulseMode,
   getCV: getCV,
@@ -70,4 +75,5 @@ module.exports = {
   getSparkThreshold: getSparkThreshold,
   getLastSpark: getLastSpark,
   getSparkHistory: getSparkHistory,
+  getGlobalInhibit: getGlobalInhibit,
 }
