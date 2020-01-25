@@ -2,20 +2,28 @@ function changePulseMode(newMode, msg) {
   if (newMode === "Stop")  // stop always works
     setPulseMode("Stop");
   else{
-    // obtain the current pulsemode first
-    getPulseMode().then((currentMode) => {
-      if (currentMode === newMode) 
-        alert("Already in " + newMode + "!");
-      else {
-        console.info("Start changing pulsemode from " + currentMode + " to " + newMode);
+    getInhibitFlag().then((status) =>{
+      if (status.inhibit === 1) {
+        alert("Cannot change to " + newMode + " as the inhibit flag is active. Is a trolley run going on?");
+      }
+      else{
+        // obtain the current pulsemode first
+        getPulseMode().then((currentMode) => {
+          if (currentMode === newMode) 
+            alert("Already in " + newMode + "!");
+          else {
+            console.info("Start changing pulsemode from " + currentMode + " to " + newMode);
 
-        if (currentMode !== "Stop")  // stop pulsing if necessary before changing
-          setPulseMode("Stop").then(()=>{
-            setPulseMode(newMode);
-          });
-        else 
-          setPulseMode(newMode);
-      }})
+            if (currentMode !== "Stop")  // stop pulsing if necessary before changing
+              setPulseMode("Stop").then(()=>{
+                setPulseMode(newMode);
+              });
+            else 
+              setPulseMode(newMode);
+          }}
+        )
+      }
+    })
   }
 }
 
@@ -68,4 +76,17 @@ function singlePulse() {
   setTimeout(function(){
     changePulseMode("Stop");
   }, 1500);
+}
+
+async function getInhibitFlag() {
+  const ret = await $.ajax({
+    type: 'GET',
+    url: baseUrl + '/globalInhibit',
+    success: function(data) {
+      console.log("Inhibit flag", data);
+    },
+    error: (xhr)=>{
+      alert("Error", xhr);
+    },
+  })
 }

@@ -23,19 +23,19 @@ router
     httpLog.info("Pulse mode set request: " + newMode); 
 
     // check for the global inhibit flag first
-    dbTools.getGlobalInhibit().then((ret)=>{
-      inhibit = ret.inhibit;
-      httpLog.info("Global inhibit: " + inhibit);
+    //   dbTools.getGlobalInhibit().then((ret)=>{
+    //     inhibit = ret.inhibit;
+    //     httpLog.info("Global inhibit: " + inhibit);
 
-      // if inhibit flag is active, do not allow change from stop to pulsing
-      if (inhibit === 1 && newMode !== "Stop") {
-        errMsg = "Could not change pulse mode to " + newMode;
-        errMsg += " as the inhibit flag is active. Is a trolley run going on?";
-        httpLog.error(errMsg);
-        res.status(500).send(errMsg);
-      }
-      // otherwise: inhibit not active, OR, change from pulsing to Stop
-      else {
+    //     // if inhibit flag is active, do not allow change from stop to pulsing
+    //     if (inhibit === 1 && newMode !== "Stop") {
+    //       errMsg = "Could not change pulse mode to " + newMode;
+    //       errMsg += " as the inhibit flag is active. Is a trolley run going on?";
+    //       httpLog.error(errMsg);
+    //       res.status(500).send(errMsg);
+    //     }
+    //     // otherwise: inhibit not active, OR, change from pulsing to Stop
+    //     else {
         let cmd = "";
         if (env === "production") {
           // BU electronics interface
@@ -73,8 +73,8 @@ router
           httpLog.error(err.stderr);
           res.status(500).send(err.stderr);
         });
-      }
-    })
+      // }
+    // })
   });
 
 module.exports = router;
