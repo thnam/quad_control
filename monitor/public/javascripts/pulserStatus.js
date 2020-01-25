@@ -38,11 +38,11 @@ socket.on("pulserStatus", (data) => {
   Plotly.redraw(document.getElementById("lcPSTrend"));
 });
 
-function handleFaultEvent(msg) {
-  changePulseMode("Stop");
-  playAlarmSound(window.faultAlarmAudio);
-  alert(msg);
-}
+// function handleFaultEvent(msg) {
+  // changePulseMode("Stop");
+  // playAlarmSound(window.faultAlarmAudio);
+  // alert(msg);
+// }
 
 function initPSCharts() {
   initPSTrendLineChart();

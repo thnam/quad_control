@@ -142,11 +142,11 @@ function setSparkThreshold() {
   });
 };
 
-function handleSparkEvent(msg) {
+// function handleSparkEvent(msg) {
   // changePulseMode("Stop");
   // playAlarmSound(window.sparkAlarmAudio);
-  alert(msg);
-}
+  // alert(msg);
+// }
 
 function showLastSpark() {
   $.get(baseUrl + "/lastSpark")

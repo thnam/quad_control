@@ -59,11 +59,6 @@ io.on('connection', function (socket) {
       }
       socket.emit("sparkPattern", sparkEntry);
 
-      // push the message if needed
-      if (nSparks > 0) {
-        socket.emit("sparked", sparkEntry);
-        sparkLog.info({message: " ", meta: sparkInfo});
-      }
     } catch (e) {
       console.error(e);
     }
