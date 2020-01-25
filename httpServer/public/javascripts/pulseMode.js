@@ -89,4 +89,5 @@ async function getInhibitFlag() {
       alert("Error", xhr);
     },
   })
+  return ret;
 }
