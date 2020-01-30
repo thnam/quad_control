@@ -284,7 +284,16 @@ function sumSpark(obj){
 }
 
 function trolleyRunToggle() {
-  window.trolleyRun = document.getElementById("cbTrolleyRun").checked;
+    window.trolleyRun = document.getElementById("cbTrolleyRun").checked;
+    var element = document.getElementById("silentAlarmWarning");
+    if (window.trolleyRun === true) {
+        element.classList.remove("invisible");
+        element.classList.add("visible");
+    }
+    else{
+        element.classList.remove("visible");
+        element.classList.add("invisible");
+    }
 }
 
 function showAlert(alertType) {

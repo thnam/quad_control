@@ -1,8 +1,10 @@
 .h6.blockTitle Spark information
 - var stenController = true
+.row
+  #silentAlarmWarning.h6.blink_me.invisible.alert-danger All alarms are silent! Is a trolley run going on? Check/uncheck button below as appropriate.
 .row.mb-3
   input#cbTrolleyRun(type='checkbox', onclick='trolleyRunToggle()')
-  |  Trolley run in progress
+  |  Silent alarm during a trolley run
 .row.mb-3
   .col-3
     .row.mt-1.mb-1

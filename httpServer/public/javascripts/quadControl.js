@@ -1,5 +1,6 @@
 $(() =>{
-  window.trolleyRun = document.getElementById("cbTrolleyRun").checked;
+    trolleyRunToggle();
+  // window.trolleyRun = document.getElementById("cbTrolleyRun").checked;
   // pulse mode buttons
   $("#btnExternal").click(()=>{ changePulseMode("External");});
   $("#btnStop").click(()=>{ changePulseMode("Stop");});
