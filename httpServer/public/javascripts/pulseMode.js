@@ -83,11 +83,24 @@ async function getInhibitFlag() {
     type: 'GET',
     url: baseUrl + '/globalInhibit',
     success: function(data) {
-      console.log("Inhibit flag", data);
+      // console.log("Inhibit flag", data);
     },
     error: (xhr)=>{
       alert("Error", xhr);
     },
   })
   return ret;
+}
+
+function checkInhibitStatus() {
+  setInterval(()=>{
+    getInhibitFlag().then((status)=>{
+      if (status.inhibit === 1) {
+        changePulseMode("Stop");
+        $('#inhibitAlertDialog').modal("show");
+      }
+      else if (status.inhibit === 0)
+        $("#inhibitAlertDialog").modal("hide");
+    })
+  }, 10 * 1000);
 }

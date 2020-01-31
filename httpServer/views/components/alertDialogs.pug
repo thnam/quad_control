@@ -91,3 +91,18 @@
 
       .modal-footer
         button.btn.btn-default(type='button', data-dismiss='modal') OK
+
+#inhibitAlertDialog.modal.fade(role='dialog')
+  .modal-dialog
+    .modal-content
+      .modal-header
+        h4.modal-title.text-danger Pulsing inhibited!
+      .modal-body
+        | An inhibit flag is active, you will not be able to change pulse mode 
+        | from 
+        font(color="red")
+          b Stop 
+        | to a pulsing one. This usually means a trolley run is in progress.
+
+      .modal-footer
+        button.btn.btn-default(type='button', data-dismiss='modal') OK

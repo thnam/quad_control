@@ -1,6 +1,5 @@
 $(() =>{
-    trolleyRunToggle();
-  // window.trolleyRun = document.getElementById("cbTrolleyRun").checked;
+  trolleyRunToggle();
   // pulse mode buttons
   $("#btnExternal").click(()=>{ changePulseMode("External");});
   $("#btnStop").click(()=>{ changePulseMode("Stop");});
@@ -65,6 +64,7 @@ $(() =>{
     resetFault("NOS");
     resetFault("POS");
   });
+
 })
 
 plotColor = [
@@ -130,6 +130,7 @@ window.onload = () => {
 
   showTimingInfo();
   showSparkHistory();
+  checkInhibitStatus();
 };
 
 socket.on("pulseMode", (data) => {
