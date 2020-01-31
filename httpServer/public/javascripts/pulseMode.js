@@ -83,7 +83,7 @@ async function getInhibitFlag() {
     type: 'GET',
     url: baseUrl + '/globalInhibit',
     success: function(data) {
-      console.log("Inhibit flag", data);
+      // console.log("Inhibit flag", data);
     },
     error: (xhr)=>{
       alert("Error", xhr);
