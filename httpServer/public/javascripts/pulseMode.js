@@ -83,7 +83,7 @@ async function getInhibitFlag() {
     type: 'GET',
     url: baseUrl + '/globalInhibit',
     success: function(data) {
-      // console.log("Inhibit flag", data);
+      console.log("Inhibit flag", data);
     },
     error: (xhr)=>{
       alert("Error", xhr);
@@ -96,11 +96,24 @@ function checkInhibitStatus() {
   setInterval(()=>{
     getInhibitFlag().then((status)=>{
       if (status.inhibit === 1) {
-        changePulseMode("Stop");
+        // stop pulsing just in case it is not stopped yet
+        getPulseMode().then((currentMode) => {
+          if (currentMode!== "Stop") 
+            changePulseMode("Stop");
+        })
+
+        // check the silent box, if it is not there yet
+        if (document.getElementById("cbTrolleyRun").checked === false) 
+          document.getElementById("cbTrolleyRun").click(true);
+
         $('#inhibitAlertDialog').modal("show");
       }
-      else if (status.inhibit === 0)
+      else if (status.inhibit === 0) {
+        if (document.getElementById("cbTrolleyRun").checked === true) 
+          document.getElementById("cbTrolleyRun").click(false);
+
         $("#inhibitAlertDialog").modal("hide");
+      }
     })
   }, 10 * 1000);
 }
