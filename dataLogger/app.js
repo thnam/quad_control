@@ -32,8 +32,6 @@ if (env == "development") { // Fake data
   // Labjack data
   cvDataCmd = appRoot + '/../hwInterface/lj/ljCVData.py';
   statusDataCmd = appRoot + '/../hwInterface/lj/ljPulserStatus.py';
-  // BU electronics data
-  // const statusDataCmd = appRoot + '/../hwInterface/fakePulserStatus.py';
   if (config.controller == "BU") {
     sparkDataCmd = appRoot + "/../hwInterface/bu/getSparkStatus";
     sparkThresholdCmd = appRoot + "/../hwInterface/bu/readSparkThreshold";
@@ -52,15 +50,6 @@ setInterval( () => {
       cv = JSON.parse(data);
       cv["error"] = false;
       cvLogger.info({message: " ", meta: cv});
-
-      // if sparks, record the pattern in the sparkHistory collection, and
-      // reset the spark pin,
-      if (config.controller == "Sten") {
-          // this is NIM/camac way to handle spark, lets skip this for BU box
-        if (cv.spark >= 2.) {
-        }
-      }
-
     });
 
     command.stderr.on('error', function(err){
