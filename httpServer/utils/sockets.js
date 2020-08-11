@@ -1,5 +1,5 @@
 // socket io for pushing periodic events
-const io = require('socket.io')(require(global.appRoot + "/bin/www"));
+const io = require('socket.io')(require(global.appRoot + "/bin/www"), {cookie: false});
 const httpLog = require(global.appRoot + '/loggers/httpLogger.js');
 const sparkLog = require(global.appRoot + '/loggers/sparkLogger.js');
 const dbTool = require(global.appRoot + "/utils/dbTools.js");

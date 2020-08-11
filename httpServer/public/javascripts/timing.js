@@ -2,16 +2,16 @@
 let timingTab = document.getElementById("timingInfoTable");
 
 var pulser, attr, rfAttr, state;
-if (window.controller === "BU") {
+// if (window.controller === "BU") {
   pulser = ["1", "2", "3", "4"];
   attr = ["enable_2step", "charge_start", "step1_end",
     "step2_start", "charge_end", "discharge_start", "discharge_end"];
   rfAttr = ["width", "delay1", "delay2", "delay3", "delay4"];
   state = ["active", "proposed"];
-}
-else {
-  attr = ["os", "fs", "fs2ss", "ss", "ss2dis", "dis"];
-}
+// }
+// else {
+  // attr = ["os", "fs", "fs2ss", "ss", "ss2dis", "dis"];
+// }
 
 function showTimingInfo() {
   $.get(baseUrl + "/timing")

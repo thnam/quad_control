@@ -15,6 +15,11 @@ $(() =>{
   $("#btnSetP3Timing").click(()=>{ configPulser(3);});
   $("#btnSetP4Timing").click(()=>{ configPulser(4);});
 
+  document.getElementById("btnInternal5Hz").disabled = true; 
+  document.getElementById("btnInternal2Hz").disabled = true; 
+  document.getElementById("btnInternal10Hz").disabled = true; 
+  document.getElementById("btnInternalBurst").disabled = true; 
+
   getPulseMode().then((currentMode)=>{
     displayPulseMode(currentMode);
   });

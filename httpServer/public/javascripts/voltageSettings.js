@@ -92,11 +92,13 @@ function changeVoltage() {
   let normVoltage = normVRead();
   // handle the start from 0 -> 0.8/1.6
   if (normVoltage[0] < 0.1 && normVoltage[1] < 0.1 && normVoltage[2] < 0.1){
-    alert("Starting from zero, will only go to 0.8/1.6 kV, then the pulsers will be put in Burst mode.");
+    // alert("Starting from zero, will only go to 0.8/1.6 kV, then the pulsers will be put in Burst mode.");
+    alert("Starting from zero, will only go to 0.8/1.6 kV, then the pulsers will be put in 1 Hz mode.");
     window.vSet = {fs: 0.8, ss: 1.6, os: 1.6};
     (async function startFromZero() {
       await setVoltage(window.vSet).then(async() => {
-        await setPulseMode("Burst");
+        // await setPulseMode("Burst");
+        await setPulseMode("1 Hz");
       });
     })();
     return;

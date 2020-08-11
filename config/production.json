@@ -7,7 +7,7 @@
     "port": 4488
   },
 
-  "controller": "Sten",
+  "controller": "BU",
 
   "sqlConnection": {
     "host" : "127.0.0.1",
