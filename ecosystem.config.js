@@ -15,12 +15,6 @@ module.exports = {
       "./httpServer/routes", "./httpServer/utils", "./httpServer/views"
     ],
     env: { NODE_ENV: "production" }
-  }, {
-    name: "monitor",
-    script: "monitor/bin/www",
-    watch: ["./monitor/bin", "./monitor/app.js",
-      "./monitor/routes", "./monitor/views", "./monitor/utils"
-    ],
-    env: {NODE_ENV: "production"}
-  }]
+  },
+  ]
 };
