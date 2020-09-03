@@ -62,57 +62,10 @@ int main(int argc, char *argv[])
     return 0;
   }
   else if (extTrig == 0 && intTrig == 1){
-
+    int freq = 1000 / quad->Read("TRIGGER.FREE_RUN.PERIOD");
+    std::cout << freq << " Hz" << std::endl;
+    return 0;
   }
-
-    else if (mode_s == "Single"){ // single pulse on all channels
-      pulser->Write("TRIGGER.FREE_RUN.ENABLE", 0x0);
-      pulser->Write("TRIGGER.STATUS.ENABLE_PULSERS", 0x1);
-      pulser->Write("ADCBOARD.1.FP_PULSER.USER_PULSE", 0x1);
-      pulser->Write("ADCBOARD.2.FP_PULSER.USER_PULSE", 0x1);
-      pulser->Write("ADCBOARD.3.FP_PULSER.USER_PULSE", 0x1);
-      pulser->Write("ADCBOARD.4.FP_PULSER.USER_PULSE", 0x1);
-      pulser->Write("TRIGGER.STATUS.ENABLE_PULSERS", 0x0);
-    }
-    else if (mode_s == "Burst"){
-      pulser->Write("TRIGGER.FREE_RUN.ENABLE", 0x0);
-
-      pulser->Write("TRIGGER.FREE_RUN.BURST_MASK", 0xFF0000FF);
-      pulser->Write("TRIGGER.FREE_RUN.BURST_MODE", 0x1);
-      pulser->Write("TRIGGER.FREE_RUN.BURST_SPACING", 10000); // 10k ticks = 0.1ms
-      pulser->Write("TRIGGER.FREE_RUN.PERIOD", 1400); // msec
-      pulser->Write("TRIGGER.FREE_RUN.EN_FR_TRIG", 0x1);
-      pulser->Write("TRIGGER.FREE_RUN.EN_EXT_TRIG", 0x0);
-      std::this_thread::sleep_for(std::chrono::milliseconds(tsleep));
-      pulser->Write("TRIGGER.STATUS.ENABLE_PULSERS", 0x1);
-      pulser->Write("TRIGGER.FREE_RUN.ENABLE", 0x1);
-    }
-    else if (found != std::string::npos){ // periodic internal modes
-      std::stringstream ss(mode);
-      unsigned int freq;
-      ss >> freq;
-
-      if (freq > maxFreq || freq < 0) {
-        std::cerr << "Error: Internal trigger frequency should be positive," <<
-          " and not exceeding " << maxFreq << " Hz." << std::endl;
-        return -1;
-      }
-
-      pulser->Write("TRIGGER.FREE_RUN.ENABLE", 0x0);
-
-      pulser->Write("TRIGGER.FREE_RUN.EN_FR_TRIG", 0x1);
-      pulser->Write("TRIGGER.FREE_RUN.EN_EXT_TRIG", 0x0);
-      pulser->Write("TRIGGER.FREE_RUN.PERIOD", int(1000/freq));
-      std::this_thread::sleep_for(std::chrono::milliseconds(tsleep));
-      pulser->Write("TRIGGER.STATUS.ENABLE_PULSERS", 0x1);
-      pulser->Write("TRIGGER.FREE_RUN.ENABLE", 0x1);
-    }
-    else {
-      std::cerr << "Invalid pulse mode" << std::endl;
-      showUsage(argv[0]);
-      return -1;
-    }
-
 
   return 0;
 }
