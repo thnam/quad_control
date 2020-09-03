@@ -161,14 +161,20 @@ function changeVoltage() {
   getPulseMode()
     .then((currentMode) =>{
       if (currentMode === "Stop"){
-        setVoltage(steps[i]);
-        (async () =>{
-          await delay(Math.floor(window.vInterval) * 1000);
-          console.info("Done step", i);
+        (async function rampWhileStopping() {
+          for (let i = 0; i < steps.length; i++) {
+            console.info("Step", i, ":", steps[i]);
+            await setVoltage(steps[i]).then(async ()=>{
+              await delay(Math.floor(window.vInterval) * 1000);
+              console.info("Done step", i);
+            });
+          }
+
+          window.ramping = false;
+          toggleControlInRamping();
+          $.jGrowl("Ramping completed", { life: 10000 });
+          console.log("Ramping completed.");
         })();
-        window.ramping = false;
-        alert("Ramping completed!");
-        toggleControlInRamping();
       } 
 
       else {
