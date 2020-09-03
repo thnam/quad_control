@@ -12,7 +12,7 @@ router
   .get('/', async(req, res, next) => {
     try {
       const currentMode = await dbTools.getPulseMode();
-      res.json(currentMode);
+      res.json(currentMode[0]);
     } catch (e) {
       next (e);
     }

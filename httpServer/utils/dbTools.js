@@ -1,8 +1,11 @@
 const db = require(global.appRoot + "/utils/db");
 
 function getPulseMode() {
-  const col = db.get().db("quad").collection("pulseMode");
-  return col.findOne();
+  const collection = db.get().db("quad").collection('pulseMode');
+  const result = collection.find().sort({$natural: -1}).toArray();
+  return result;
+  // const col = db.get().db("quad").collection("pulseMode");
+  // return col.findOne();
 }
 
 function getLastCV() {
