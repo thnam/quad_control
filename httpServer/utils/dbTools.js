@@ -4,8 +4,6 @@ function getPulseMode() {
   const collection = db.get().db("quad").collection('pulseMode');
   const result = collection.find().sort({$natural: -1}).toArray();
   return result;
-  // const col = db.get().db("quad").collection("pulseMode");
-  // return col.findOne();
 }
 
 function getLastCV() {
@@ -65,8 +63,9 @@ function getSparkThreshold(){
 }
 
 function getGlobalInhibit() {
-  const col = db.get().db("quad").collection("globalInhibit");
-  return col.findOne();
+  const collection = db.get().db("quad").collection('globalInhibit');
+  const result = collection.find().sort({$natural: -1}).toArray();
+  return result;
 }
 
 module.exports = {

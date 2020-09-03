@@ -10,7 +10,7 @@ router
       const info = await require(global.appRoot + "/utils/dbTools").getGlobalInhibit();
       // httpLog.info(JSON.stringify(info));
       // httpLog.info(info.inhibit);
-      res.json(info);
+      res.json(info[0]);
     } catch (e) {
       next (e);
     }
