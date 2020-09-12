@@ -42,21 +42,23 @@ function setupVoltageGroup() {
 }
 
 function reflectVPreset() { // manual entries follow setpoint
-  let vSet = {};
-  let str = $("#vSetpoint").val().split(",");
-  vSet["pfs"] =  Number.parseFloat(str[0]);
-  vSet["pss"] =  Number.parseFloat(str[1]);
+  if($('input[name=vMode]:checked').val() === "vPreset"){
+    let vSet = {};
+    let str = $("#vSetpoint").val().split(",");
+    vSet["pfs"] =  Number.parseFloat(str[0]);
+    vSet["pss"] =  Number.parseFloat(str[1]);
 
-  vSet["step"] = Number.parseFloat($("#vStep").val());
-  vSet["interval"] = Number.parseFloat($("#vInterval").val());
-  // console.log(vSet);
+    vSet["step"] = Number.parseFloat($("#vStep").val());
+    vSet["interval"] = Number.parseFloat($("#vInterval").val());
+    // console.log(vSet);
 
-  $("#manualPFS").val(vSet["pfs"]);
-  $("#manualNFS").val(vSet["pfs"]);
-  $("#manualPSS").val(vSet["pss"]);
-  $("#manualNSS").val(vSet["pss"]);
-  $("#manualPOS").val(vSet["pss"]);
-  $("#manualNOS").val(vSet["pss"]);
+    $("#manualPFS").val(vSet["pfs"]);
+    $("#manualNFS").val(vSet["pfs"]);
+    $("#manualPSS").val(vSet["pss"]);
+    $("#manualNSS").val(vSet["pss"]);
+    $("#manualPOS").val(vSet["pss"]);
+    $("#manualNOS").val(vSet["pss"]);
+  }
 }
 
 function reflectVManual() { // setpoint will follows manual entries
