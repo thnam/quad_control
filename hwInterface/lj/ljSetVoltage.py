@@ -22,7 +22,7 @@ class AllChannels(object):
     def __init__(self):
         super(AllChannels, self).__init__()
         self.pos = Channel("pos", "TDAC7", 4.)
-        self.nos = Channel("nos", "TDAC6", 4.)
+        self.nos = Channel("nos", "TDAC5", 4.)
         self.pss = Channel("pss", "TDAC1", 4.)
         self.nss = Channel("nss", "TDAC3", 4.)
         self.pfs = Channel("pfs", "TDAC0", 3.)
@@ -59,14 +59,17 @@ def main(args):
         info = ljm.getHandleInfo(ljHandle)
         
         if info[0] == VoltageLabjackDevType: # verified to be correct device
-            for chn, val in hv.items():
+            # manual list of channels here because the order is important
+            # the second steps must be raised before first steps
+            for chn in ["pss", "nss", "pos", "nos", "pfs", "nfs"]:
+                val = hv[chn];
                 if val is not None: # only touch channel specified in arguments
                     chn = getattr(chnDB, chn) # get info from the chnDB
                     print("Setting", chn.name.upper(), "to", val, "using",
                           chn.dac, "(scale factor " + chn.scale.__str__() + ")")
                     # now it is possible to set voltage
                     ljm.eWriteName(ljHandle, chn.dac, float(val) / chn.scale)
-                    sleep(0.05)
+                    sleep(0.5)
 
             ljm.close(ljHandle)
         else: # handle wrong device

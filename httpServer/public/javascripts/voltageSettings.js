@@ -98,7 +98,7 @@ function changeVoltage() {
 
   // if in manual mode, do it at once then return
   if (window.vMode == "vManual") {
-    let proceed = confirm("This will set voltage directly, are you sure?");
+    let proceed = confirm("This will set voltage directly, without ramping. Are you sure?");
     if (proceed === true) {
       getPulseMode(
       ).then((currentMode) =>{
@@ -150,7 +150,7 @@ function changeVoltage() {
       let tmpVSet = Object.assign({}, readbackV);
 
       Object.keys(tmpVSet).forEach((k) => {
-        if (k !== "pfs" || k !== "nfs") 
+        if ((k !== "pfs") || (k !== "nfs")) 
           tmpVSet[k] = tmpVSet[k] + (i + 1) * window.vStep;
 
         if (tmpVSet[k] < 0.0) tmpVSet[k] = 0.;
