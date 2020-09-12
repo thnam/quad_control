@@ -98,19 +98,25 @@ function changeVoltage() {
 
   // if in manual mode, do it at once then return
   if (window.vMode == "vManual") {
-    alert("This will set voltage directly, are you sure?");
-    getPulseMode(
-    ).then((currentMode) =>{
-      (async () => {
-        await setPulseMode("Stop").then(async ()=>{
-          await setVoltage(window.vSet).then(async() => {
-            await delay(2 * 1000);
-            await setPulseMode(currentMode);
+    let proceed = confirm("This will set voltage directly, are you sure?");
+    if (proceed === true) {
+      getPulseMode(
+      ).then((currentMode) =>{
+        (async () => {
+          await setPulseMode("Stop").then(async ()=>{
+            await setVoltage(window.vSet).then(async() => {
+              await delay(3 * 1000);
+              await setPulseMode(currentMode);
+            });
           });
-        });
-      })();
-    })
-    return;
+        })();
+      })
+      return;
+    }
+    else{
+      console.log("User aborted");
+      return;
+    }
   }
 
   // if using preset, let's ramp
