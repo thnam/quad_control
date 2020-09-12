@@ -34,8 +34,9 @@ function setVoltage(vSet) { // send voltage request to server
   });
 }
 
-function zeroVoltage() {
+function zeroVoltage() { // should always work
   changePulseMode("Stop");
+  window.ramping = false;
   window.vSet = {"pfs": 0., "pss": 0., "pos": 0., "nfs": 0., "nss": 0., "nos": 0.};
   $("#vSetpoint").val('0.0, 0.0').trigger("change");
   setVoltage(window.vSet);
@@ -261,12 +262,12 @@ function getSetpoint() {
 
 function confirmVoltage(tolerance) {
   try {
-    let goodPOS = Math.abs(window.vSet["os"] - window.vRead.os.pv) <= tolerance;
-    let goodNOS = Math.abs(window.vSet["os"] + window.vRead.os.nv) <= tolerance;
-    let goodPSS = Math.abs(window.vSet["ss"] - window.vRead.ss.pv) <= tolerance;
-    let goodNSS = Math.abs(window.vSet["ss"] + window.vRead.ss.nv) <= tolerance;
-    let goodPFS = Math.abs(window.vSet["fs"] - window.vRead.fs.pv) <= tolerance;
-    let goodNFS = Math.abs(window.vSet["fs"] + window.vRead.fs.nv) <= tolerance;
+    let goodPOS = Math.abs(window.vSet["pos"] - window.vRead.os.pv) <= tolerance;
+    let goodNOS = Math.abs(window.vSet["nos"] - window.vRead.os.nv) <= tolerance;
+    let goodPSS = Math.abs(window.vSet["pss"] - window.vRead.ss.pv) <= tolerance;
+    let goodNSS = Math.abs(window.vSet["nss"] - window.vRead.ss.nv) <= tolerance;
+    let goodPFS = Math.abs(window.vSet["pfs"] - window.vRead.fs.pv) <= tolerance;
+    let goodNFS = Math.abs(window.vSet["nfs"] - window.vRead.fs.nv) <= tolerance;
 
     return goodPOS && goodNOS && goodPSS && goodNSS && goodPFS && goodNFS;
   } catch (e) {

@@ -65,7 +65,7 @@ def main(args):
                     print("Setting", chn.name.upper(), "to", val, "using",
                           chn.dac, "(scale factor " + chn.scale.__str__() + ")")
                     # now it is possible to set voltage
-                    #  ljm.eWriteName(ljHandle, chn.dac, float(val) / chn.scale)
+                    ljm.eWriteName(ljHandle, chn.dac, float(val) / chn.scale)
                     sleep(0.05)
 
             ljm.close(ljHandle)
