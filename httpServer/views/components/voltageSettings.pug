@@ -5,16 +5,21 @@
         input#vModeManual(value='vManual', name='vMode', type='radio')
         label(for='vModeManual') Manual
     .row
-        input#cbForceAsym(onclick='checkFlattopLock()', value='', name='', type='checkbox')
-        label(for='cbForceAsym') Force Asym. Voltages
-    .row
       .form-row
-        label.col-7(for='manualVFS')  First Step
-        input#manualVFS.col-4(onchange='reflectVManual()', value='', name='', step='0.1', min='0.0', max='24.0', type='number')
-        label.col-7(for='manualVSS')  Second Step
-        input#manualVSS.col-4(value='', name='', step='0.1', onchange='lockFlattop()', min='0.0', max='27.0', type='number')
-        label.col-7(for='manualVOS')  One Step
-        input#manualVOS.col-4(value='', name='', step='0.1', onchange='lockFlattop()', min='0.0', max='27.0', type='number')
+        label.col-7(for='manualPSS')  Pos. First Step
+        input#manualPFS.col-4(value='', name='', step='0.1', onchange='reflectVManual()', min='0.0', max='24.0', type='number')
+        label.col-7(for='manualNSS')  Neg. First Step
+        input#manualNFS.col-4(value='', name='', step='0.1', onchange='reflectVManual()', min='0.0', max='24.0', type='number')
+
+        label.col-7(for='manualPSS')  Pos. Second Step
+        input#manualPSS.col-4(value='', name='', step='0.1', onchange='reflectVManual()', min='0.0', max='27.0', type='number')
+        label.col-7(for='manualNSS')  Neg. Second Step
+        input#manualNSS.col-4(value='', name='', step='0.1', onchange='reflectVManual()', min='0.0', max='27.0', type='number')
+
+        label.col-7(for='manualPOS')  Pos. One Step
+        input#manualPOS.col-4(value='', name='', step='0.1', onchange='reflectVManual()', min='0.0', max='27.0', type='number')
+        label.col-7(for='manualNOS')  Neg. One Step
+        input#manualNOS.col-4(value='', name='', step='0.1', onchange='reflectVManual()', min='0.0', max='27.0', type='number')
   
   .col-6
     .row

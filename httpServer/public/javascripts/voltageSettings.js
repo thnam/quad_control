@@ -1,4 +1,4 @@
-async function getVoltage() {
+async function getVoltage() { // get last entry from voltage db
   const ret = await $.ajax({
     type: 'GET',
     url: baseUrl + '/lastcv',
@@ -10,7 +10,7 @@ async function getVoltage() {
   return ret.meta;
 };
 
-function setVoltage(vSet) {
+function setVoltage(vSet) { // send voltage request to server
   return new Promise(function (resolve, reject) {
     $.ajax({
       type: "POST",
@@ -36,33 +36,25 @@ function setVoltage(vSet) {
 
 function zeroVoltage() {
   changePulseMode("Stop");
-  window.vSet = {"fs": 0., "ss": 0., "os": 0.};
+  window.vSet = {"pfs": 0., "pss": 0., "pos": 0., "nfs": 0., "nss": 0., "nos": 0.};
   $("#vSetpoint").val('0.0, 0.0').trigger("change");
   setVoltage(window.vSet);
 };
 
 function increaseVoltages(deltaV){
-  console.info("Increase all voltages by ", deltaV, "kV");
+  console.info("Increase all voltages by", deltaV, "kV");
 
   normVoltage = normVRead();
 
   if (window.vSet === undefined) window.vSet = {};
 
-  window.vSet.fs = normVoltage[0] + deltaV;
-  window.vSet.ss = normVoltage[1] + deltaV;
-  window.vSet.os = normVoltage[2] + deltaV;
+  window.vSet = Object.assign({}, normReadbackVoltage());
+  Object.keys(window.vSet).forEach((k) => {
+    window.vSet[k] = window.vSet[k] + deltaV;
+    if (window.vSet[k] < 0.0) window.vSet[k] = 0.;
+  })
 
-  if (window.vSet.fs < 0.0) window.vSet.fs = 0.0;
-  if (window.vSet.ss < 0.0) window.vSet.ss = 0.0;
-  if (window.vSet.os < 0.0) window.vSet.os = 0.0;
-
-  str = window.vSet.fs.toFixed(1) + ", " + window.vSet.ss.toFixed(1);
-  console.info("Target voltages:", str);
-
-  // add this setpoint into the preset list
-  $('#vSetpointList').append("<option value='" + str + "'>");
-  document.getElementById('vSetpoint').value = str;
-
+  console.log(window.vSet);
   // do the work
   getPulseMode()
     .then((currentMode) =>{
@@ -90,11 +82,13 @@ function changeVoltage() {
   }
 
   let normVoltage = normVRead();
+  readbackV = normReadbackVoltage();
   // handle the start from 0 -> 0.8/1.6
-  if (normVoltage[0] <= 0.1 && normVoltage[1] <= 0.1 && normVoltage[2] <= 0.1){
+  if (atZero()){
     // alert("Starting from zero, will only go to 0.8/1.6 kV, then the pulsers will be put in Burst mode.");
     alert("Starting from zero, will only go to 0.8/1.6 kV, then the pulsers will be put in 1 Hz mode.");
-    window.vSet = {fs: 0.8, ss: 1.6, os: 1.6};
+    window.vSet = {"pfs": 0.8, "pss": 1.6, "pos": 1.6,
+      "nfs": 0.8, "nss": 1.6, "nos": 1.6};
     (async function startFromZero() {
       await setVoltage(window.vSet).then(async() => {
         // await setPulseMode("Burst");
@@ -248,12 +242,12 @@ function getSetpoint() {
     window.vSet["fs"] = Number.parseFloat($("#manualVFS").val());
     window.vSet["ss"] = Number.parseFloat($("#manualVSS").val());
 
-    let checkbox = document.getElementById('cbForceAsym');
+    // let checkbox = document.getElementById('cbForceAsym');
 
-    if (checkbox.checked)
-      window.vSet["os"] = Number.parseFloat($("#manualVOS").val());
-    else
-      window.vSet["os"] = vSet["ss"];
+    // if (checkbox.checked)
+      // window.vSet["os"] = Number.parseFloat($("#manualVOS").val());
+    // else
+      // window.vSet["os"] = vSet["ss"];
   }
 
   window.vStep = Number.parseFloat($("#vStep").val());
@@ -277,7 +271,32 @@ function confirmVoltage(tolerance) {
   }
 }
 
-function normVRead() {
+function normReadbackVoltage() {
+  if (window.vRead === undefined) {
+    getVoltage().then((val) =>{
+      window.vRead = val; 
+      return {
+        "pos": window.vRead.os.pv,
+        "nos": window.vRead.os.nv,
+        "pfs": window.vRead.fs.pv,
+        "nfs": window.vRead.fs.nv,
+        "pss": window.vRead.ss.pv,
+        "nss": window.vRead.ss.nv,
+      };
+    })
+  }
+  else
+    return {
+      "pos": window.vRead.os.pv,
+      "nos": window.vRead.os.nv,
+      "pfs": window.vRead.fs.pv,
+      "nfs": window.vRead.fs.nv,
+      "pss": window.vRead.ss.pv,
+      "nss": window.vRead.ss.nv,
+    };
+}
+
+function normVRead() { // normalize read back values
   if (window.vRead === undefined) {
     getVoltage().then((val) =>{
       window.vRead = val; 
@@ -303,42 +322,46 @@ function normVRead() {
 
 function validateSetpoint() {
   getSetpoint();
-  let zero = window.vSet["os"] == 0.0 && window.vSet["fs"] == 0.0 && window.vSet["ss"] == 0.0;
-  let goodOS = window.vSet["os"] >= 0.0 && window.vSet["os"] <= 27.0;
-  let goodSS = window.vSet["ss"] >= 0.0 && window.vSet["ss"] <= 27.0;
-  let goodFS = window.vSet["fs"] >= 0.0 && window.vSet["fs"] <= 21.0;
+  let zero = atZero();
+  let goodPOS = window.vSet["pos"] >= 0.0 && window.vSet["pos"] <= 27.0;
+  let goodNOS = window.vSet["nos"] >= 0.0 && window.vSet["nos"] <= 27.0;
+  let goodPSS = window.vSet["pss"] >= 0.0 && window.vSet["pss"] <= 27.0;
+  let goodNSS = window.vSet["nss"] >= 0.0 && window.vSet["nss"] <= 27.0;
+  let goodPFS = window.vSet["pfs"] >= 0.0 && window.vSet["pfs"] <= 21.0;
+  let goodNFS = window.vSet["nfs"] >= 0.0 && window.vSet["nfs"] <= 21.0;
 
-  let gap = window.vSet["ss"] - window.vSet["fs"];
+  let gap = window.vSet["pss"] - window.vSet["pfs"];
   let goodGap = gap >= 0.3 && gap <= 7.0;
 
-  if (window.vSet["fs"] >= 10.0) 
+  if (window.vSet["pfs"] >= 10.0) 
     goodGap = goodGap && gap >= 3.0
 
-  let allGood = zero || (goodOS && goodSS && goodFS && goodGap);
+  let allGood = zero || (
+    goodNOS && goodPSS && goodPFS && goodNOS && goodNSS && goodNFS && goodGap);
 
-  window.vGap = {};
-  let normVoltage = normVRead();
-  window.vGap.fs = window.vSet["fs"] - normVoltage[0];
-  window.vGap.os = window.vSet["os"] - normVoltage[1];
-  window.vGap.ss = window.vSet["ss"] - normVoltage[1];
-  console.info("Voltage gap:", window.vGap);
+  let readbackV = normReadbackVoltage();
+  window.vGap = {
+    "fs": window.vSet["pfs"] - readbackV.pfs,
+    "os": window.vSet["pos"] - readbackV.pos,
+    "ss": window.vSet["pss"] - readbackV.pss,
+  }
 
   if (window.vGap.fs >= 0.2 || window.vGap.ss >= 0.2 || window.vGap.os >= 0.2)
     window.ramping = true;
   else
     window.ramping = false;
 
-  if (!goodOS) {
+  if (!(goodPOS && goodNOS)) {
     let msg = "Bad setting: one step voltage should be \n"
     msg += "in range from 0 to 27 kV"
     alert(msg);
     return false;
-  } else if (!goodSS) {
+  } else if (!(goodPSS && goodNSS)) {
     let msg = "Bad setting: second step voltage should be \n"
     msg += "in range from 0 to 27 kV"
     alert(msg);
     return false;
-  } else if (!goodFS) {
+  } else if (!(goodPFS && goodNFS)) {
     let msg = "Bad setting: first step voltage should be \n"
     msg += "in range from 0 to 21 kV"
     alert(msg);
@@ -354,3 +377,9 @@ function validateSetpoint() {
     return allGood;
 }
 
+function atZero() {
+  let readbackV = normReadbackVoltage();
+  return (
+    readbackV.pos <= 0.1 && readbackV.pss <= 0.1 && readbackV.pfs <= 0.1 &&
+    readbackV.nos <= 0.1 && readbackV.nss <= 0.1 && readbackV.nfs <= 0.1)
+}
