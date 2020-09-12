@@ -43,6 +43,15 @@ def main(args):
         pass
 
     hv = vars(args) # convert arguments into a dictionary hence iterable
+    for chn, val in hv.items():
+        if val is not None: # validate presented arguments
+            try:
+                float(val)
+            except Exception as e:
+                print("Argument for " + chn.upper() +
+                      " could not be interpreted as a float", file=stderr)
+                return -1
+
     # open a connection, verify it then loop through arguments and set voltages
     try:
         ljHandle = ljm.open(VoltageLabjackDevType, VoltageLabjackConnType, 

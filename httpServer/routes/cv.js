@@ -19,7 +19,12 @@ router
       let cmd = "";
       if (env == "production") {
         cmd = appRoot + '/../hwInterface/lj/ljSetVoltage.py';
-        cmd += " " + vSet.fs + " " + vSet.ss + " " + vSet.os;
+        cmd += " --pfs " + vSet.pfs;
+        cmd += " --pss " + vSet.pss;
+        cmd += " --pos " + vSet.pos;
+        cmd += " --nfs " + vSet.nfs;
+        cmd += " --nss " + vSet.nss;
+        cmd += " --nos " + vSet.nos;
       } else {
         cmd = appRoot + '/../hwInterface/dummy/fakeCVData.py';
         cmd += " " + vSet.fs + " " + vSet.ss + " " + vSet.os;
@@ -28,9 +33,9 @@ router
       
       exec(cmd, (err, stdout, stderr) => {
         if (err) {
-          httpLog.error(err);
           httpLog.error("Error while setting voltage to " + JSON.stringify(vSet));
-          res.sendStatus(500);
+          httpLog.error(err);
+          res.status(500).send(stderr);
           throw(err);
         }
 
