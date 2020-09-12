@@ -48,8 +48,8 @@ def main(args):
             try:
                 float(val)
             except Exception as e:
-                print("Argument for " + chn.upper() +
-                      " could not be interpreted as a float", file=stderr)
+                print(val, "(argument for " + chn.upper() +
+                      ") could not be interpreted as a float", file=stderr)
                 return -1
 
     # open a connection, verify it then loop through arguments and set voltages
