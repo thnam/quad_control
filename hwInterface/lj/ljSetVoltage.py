@@ -1,50 +1,90 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
+from __future__ import print_function
+from labjack import ljm
+from argparse import ArgumentParser
+from sys import stdout, stderr, argv, exit
+from time import sleep
+
 VoltageLabjackIP = '192.168.30.85'
 VoltageLabjackDevType = 7
 VoltageLabjackConnType = 3
 
-vScaleFactor = {"fs": 3., "ss": 4., "os": 4.}
-cScaleFactor = {"fs": 6.6, "ss": 5.0, "os": 7.5}
-psSetVoltagePort = {"fs": "TDAC0", "ss": "TDAC1", "os": "TDAC7"}
+class Channel(object):
+    """A HV channel with name, labjack DAC port, and scaling factor"""
+    def __init__(self, name, dac, scale):
+        super(Channel, self).__init__()
+        self.name, self.dac, self.scale = name, dac, scale
+        
+class AllChannels(object):
+    """All high voltage channels"""
+    def __init__(self):
+        super(AllChannels, self).__init__()
+        self.pos = Channel("pos", "TDAC7", 4.)
+        self.nos = Channel("nos", "TDAC6", 4.)
+        self.pss = Channel("pss", "TDAC1", 4.)
+        self.nss = Channel("nss", "TDAC3", 4.)
+        self.pfs = Channel("pfs", "TDAC0", 3.)
+        self.nfs = Channel("nfs", "TDAC2", 3.)
+        
+chnDB = AllChannels()
 
-from labjack import ljm
-import sys
+def main(args):
+    def SetVoltage(channel, setpoint):
+        """Set voltage function, write correct value to an appropriate DAC
+    
+        :channel: name of channel, must be in [pos, nos, pss, nss, pfs, nfs]
+        :setpoint: voltage
+        :returns: status
+    
+        """
+        ljm.eWriteName(ljHandle, channel.dac, setpoint / channel.scale)
+        pass
 
-def main():
-    if len(sys.argv) not in [3, 4]:
-        print("Correct syntax is %s vFS vSS, or %s vFS vSS vOS" % (sys.argv[0],
-                                                                   sys.argv[0]))
-        exit(-1)
-
-    else:
-        ret = int(-1)
-        try:
-            setpoint = {}
-            if len(sys.argv) == 4:
-                setpoint["fs"] = float(sys.argv[1])
-                setpoint["ss"] = float(sys.argv[2])
-                setpoint["os"] = float(sys.argv[3])
-            elif len(sys.argv) == 3:
-                setpoint["fs"] = float(sys.argv[1])
-                setpoint["ss"] = float(sys.argv[2])
-                setpoint["os"] = float(sys.argv[2])
-
-            hndl = ljm.open(VoltageLabjackDevType, VoltageLabjackConnType, 
+    hv = vars(args) # convert arguments into a dictionary hence iterable
+    # open a connection, verify it then loop through arguments and set voltages
+    try:
+        ljHandle = ljm.open(VoltageLabjackDevType, VoltageLabjackConnType, 
                             VoltageLabjackIP)
-            info = ljm.getHandleInfo(hndl)
-            if info[0] == 7:
-                for ps in ["fs", "ss", "os"]:
-                    ljm.eWriteName(hndl, psSetVoltagePort[ps], setpoint[ps] / vScaleFactor[ps])
-                ljm.close(hndl)
-                ret = 0
-        except Exception as e:
-            print(e)
-            ret = -1
-        return ret
+        info = ljm.getHandleInfo(ljHandle)
+        
+        if info[0] == VoltageLabjackDevType: # verified to be correct device
+            for chn, val in hv.items():
+                if val is not None: # only touch channel specified in arguments
+                    chn = getattr(chnDB, chn) # get info from the chnDB
+                    print("Setting", chn.name.upper(), "to", val, "using",
+                          chn.dac, "(scale factor " + chn.scale.__str__() + ")")
+                    # now it is possible to set voltage
+                    #  ljm.eWriteName(ljHandle, chn.dac, float(val) / chn.scale)
+                    sleep(0.05)
+
+            ljm.close(ljHandle)
+        else: # handle wrong device
+            print("Something wrong with Labjack connection, " +
+                  "expecting device type " 
+                  + VoltageLabjackDevType.__str__()
+                  + " but getting type " + info[0].__str__(),
+                  file=stderr)
+            ljm.close(ljHandle)
+            return -1
+    except Exception as e: # catch all exception
+        print(e, file=stderr)
+        return -1
+
 
 if __name__ == "__main__":
-    vals = main()
-    exit(vals)
+    parser = ArgumentParser( description = "Set voltages on specified channels.")
+    parser.add_argument("--pos", help="Positive One Step voltage in kV")
+    parser.add_argument("--nos", help="Negative One Step voltage in kV")
+    parser.add_argument("--pss", help="Positive Second Step voltage in kV")
+    parser.add_argument("--nss", help="Negative Second Step voltage in kV")
+    parser.add_argument("--pfs", help="Positive First Step voltage in kV")
+    parser.add_argument("--nfs", help="Negative First Step voltage in kV")
 
+    args = parser.parse_args()
+    if len(argv) < 2:
+        parser.print_help()
+        parser.exit(-1)
+    else:
+        exit(main(args))
