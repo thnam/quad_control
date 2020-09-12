@@ -78,17 +78,7 @@ function changeVoltage() {
   if (window.vMode == "vManual") {
     let proceed = confirm("This will set voltage directly, without ramping. Are you sure?");
     if (proceed === true) {
-      getPulseMode(
-      ).then((currentMode) =>{
-        (async () => {
-          await setPulseMode("Stop").then(async ()=>{
-            await setVoltage(window.vSet).then(async() => {
-              await delay(3 * 1000);
-              await setPulseMode(currentMode);
-            });
-          });
-        })();
-      })
+      setVoltage(window.vSet);
       return;
     }
     else{
