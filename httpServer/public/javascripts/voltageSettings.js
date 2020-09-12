@@ -96,6 +96,24 @@ function changeVoltage() {
     return;
   }
 
+  // if in manual mode, do it at once then return
+  if (window.vMode == "vManual") {
+    alert("This will set voltage directly, are you sure?");
+    getPulseMode(
+    ).then((currentMode) =>{
+      (async () => {
+        await setPulseMode("Stop").then(async ()=>{
+          await setVoltage(window.vSet).then(async() => {
+            await delay(2 * 1000);
+            await setPulseMode(currentMode);
+          });
+        });
+      })();
+    })
+    return;
+  }
+
+  // if using preset, let's ramp
   console.info("Ramping in progress ...");
   // precompute the steps needed
   let nStep = {"fs": Math.ceil(window.vGap.fs / window.vStep),
