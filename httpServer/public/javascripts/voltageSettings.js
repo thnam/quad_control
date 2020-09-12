@@ -68,6 +68,79 @@ function increaseVoltages(deltaV){
     })
 };
 
+function rampFromZero(nextPulseMode) {
+  if (nextPulseMode === undefined) {
+    nextPulseMode = "1 Hz";
+  }
+
+  alert("Starting from zero, will only go to 0.8/1.6 kV, then the pulsers will be put in "
+    + nextPulseMode + " pulsing mode.");
+    window.vSet = {"pfs": 0.8, "pss": 1.6, "pos": 1.6,
+      "nfs": 0.8, "nss": 1.6, "nos": 1.6};
+    (async function startFromZero() {
+      await setVoltage(window.vSet).then(async() => {
+        await setPulseMode(nextPulseMode);
+      });
+    })();
+}
+
+function ramp() {
+  if (!validateSetpoint()){ // return upon bad request 
+    console.error("Bad setpoint, abort ramping function");
+    return;
+  }
+  
+  if (atZero()){
+    rampFromZero("1 Hz");
+    return;
+  }
+}
+
+function max(obj) { return Math.max(...(Object.values(obj))); }
+function min(obj) { return Math.min(...(Object.values(obj))); }
+
+function doVoltageStep(targetV) {
+  if (!validateSetpoint2(targetV)){ // return upon bad request 
+    console.error("Bad setpoint, abort " + arguments.callee.name + " function");
+    return;
+  }
+
+  // read current voltages
+  let readbackV = normReadbackVoltage();
+  // calculate the gaps = targetV - readbackV, and max gap
+  let gap = {};
+  Object.keys(readbackV).forEach((k) => {gap[k] = targetV[k] - readbackV[k]; });
+  let maxGap = max(gap);
+
+  console.log(gap, maxGap);
+
+  if (normalizeVoltage(maxGap) <= 0.15) {
+    (async () => {
+      await setVoltage(targetV);
+    })();
+    return;
+  }
+  else {
+    getPulseMode().then((currentMode) =>{
+      console.log("read pulse mode in " + arguments.callee.name + ": " + currentMode);
+      if (currentMode === "Stop") {
+        (async ()=>{ await setVoltage(targetV); })
+        return;
+      }
+      else {
+        setPulseMode("Stop").then(async ()=>{
+          await delay(1 * 1000).then(async ()=>{
+            await setVoltage(targetV).then(async ()=>{
+              await delay(1 * 1000).then( ()=>{ setPulseMode(currentMode); })
+            });
+          })
+        })
+        return;
+      }
+    });
+  }
+}
+
 function changeVoltage() {
   if (!validateSetpoint()){ // return upon bad request 
     console.error("Bad setpoint, abort changeVoltage function");
@@ -408,4 +481,52 @@ function normalizeSetpoint(setpoint) {
     setpoint[k] = Math.round(setpoint[k] * 10) / 10;
   })
   return setpoint;
+}
+
+function normalizeVoltage(v) {
+  return Math.round(v * 10) / 10;
+}
+
+function validateSetpoint2(setpoint) {
+  let zero = atZero();
+  let goodPOS = setpoint["pos"] >= 0.0 && setpoint["pos"] <= 27.0;
+  let goodNOS = setpoint["nos"] >= 0.0 && setpoint["nos"] <= 27.0;
+  let goodPSS = setpoint["pss"] >= 0.0 && setpoint["pss"] <= 27.0;
+  let goodNSS = setpoint["nss"] >= 0.0 && setpoint["nss"] <= 27.0;
+  let goodPFS = setpoint["pfs"] >= 0.0 && setpoint["pfs"] <= 21.0;
+  let goodNFS = setpoint["nfs"] >= 0.0 && setpoint["nfs"] <= 21.0;
+
+  let gap = setpoint["pss"] - setpoint["pfs"];
+  let goodGap = gap >= 0.3 && gap <= 7.0;
+
+  if (setpoint["pfs"] >= 10.0) 
+    goodGap = goodGap && gap >= 3.0
+
+  let allGood = zero || (
+    goodNOS && goodPSS && goodPFS && goodNOS && goodNSS && goodNFS && goodGap);
+
+  if (!(goodPOS && goodNOS)) {
+    let msg = "Bad setting: one step voltage should be \n"
+    msg += "in range from 0 to 27 kV"
+    alert(msg);
+    return false;
+  } else if (!(goodPSS && goodNSS)) {
+    let msg = "Bad setting: second step voltage should be \n"
+    msg += "in range from 0 to 27 kV"
+    alert(msg);
+    return false;
+  } else if (!(goodPFS && goodNFS)) {
+    let msg = "Bad setting: first step voltage should be \n"
+    msg += "in range from 0 to 21 kV"
+    alert(msg);
+    return false;
+  } else if (!goodGap){
+    let msg = "Bad setting: the gap between first and second steps\n"
+    msg += "should be in range from 0.3 to 7.0 kV; and larger\n"
+    msg += "than 3 kV when first step is above 10 kV."
+    alert(msg);
+    return false;
+  } 
+  else
+    return allGood;
 }
