@@ -74,28 +74,6 @@ function changeVoltage() {
     return;
   }
 
-  if (!window.ramping) { // window.ramping should be determined correctly in setpoint validation
-    console.warn("window.ramping =", window.ramping, ", voltage is set directly");
-    setVoltage(window.vSet);
-    return;
-  }
-
-  readbackV = normReadbackVoltage();
-  // handle the start from 0 -> 0.8/1.6
-  if (atZero()){
-    // alert("Starting from zero, will only go to 0.8/1.6 kV, then the pulsers will be put in Burst mode.");
-    alert("Starting from zero, will only go to 0.8/1.6 kV, then the pulsers will be put in 1 Hz mode.");
-    window.vSet = {"pfs": 0.8, "pss": 1.6, "pos": 1.6,
-      "nfs": 0.8, "nss": 1.6, "nos": 1.6};
-    (async function startFromZero() {
-      await setVoltage(window.vSet).then(async() => {
-        // await setPulseMode("Burst");
-        await setPulseMode("1 Hz");
-      });
-    })();
-    return;
-  }
-
   // if in manual mode, do it at once then return
   if (window.vMode == "vManual") {
     let proceed = confirm("This will set voltage directly, without ramping. Are you sure?");
@@ -118,6 +96,29 @@ function changeVoltage() {
       return;
     }
   }
+
+  if (!window.ramping) { // window.ramping should be determined correctly in setpoint validation
+    console.warn("window.ramping =", window.ramping, ", voltage is set directly");
+    setVoltage(window.vSet);
+    return;
+  }
+
+  readbackV = normReadbackVoltage();
+  // handle the start from 0 -> 0.8/1.6
+  if (atZero()){
+    // alert("Starting from zero, will only go to 0.8/1.6 kV, then the pulsers will be put in Burst mode.");
+    alert("Starting from zero, will only go to 0.8/1.6 kV, then the pulsers will be put in 1 Hz mode.");
+    window.vSet = {"pfs": 0.8, "pss": 1.6, "pos": 1.6,
+      "nfs": 0.8, "nss": 1.6, "nos": 1.6};
+    (async function startFromZero() {
+      await setVoltage(window.vSet).then(async() => {
+        // await setPulseMode("Burst");
+        await setPulseMode("1 Hz");
+      });
+    })();
+    return;
+  }
+
 
   // if using preset, let's ramp
   console.info("Ramping in progress ...");
