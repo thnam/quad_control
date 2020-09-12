@@ -44,8 +44,6 @@ function zeroVoltage() {
 function increaseVoltages(deltaV){
   console.info("Increase all voltages by", deltaV, "kV");
 
-  normVoltage = normVRead();
-
   if (window.vSet === undefined) window.vSet = {};
 
   window.vSet = Object.assign({}, normReadbackVoltage());
@@ -81,7 +79,6 @@ function changeVoltage() {
     return;
   }
 
-  let normVoltage = normVRead();
   readbackV = normReadbackVoltage();
   // handle the start from 0 -> 0.8/1.6
   if (atZero()){
@@ -104,47 +101,53 @@ function changeVoltage() {
     "ss": Math.ceil(window.vGap.ss / window.vStep),
     "os": Math.ceil(window.vGap.os / window.vStep)};
 
-  let nStepMin = nStep.fs;
-  let nStepMax = nStep.fs;
-  if (nStepMin > nStep.ss) nStepMin = nStep.ss;
-  if (nStepMax < nStep.ss) nStepMax = nStep.ss;
+  let nStepMin = Math.min(nStep.fs, nStep.os, nStep.ss);
+  let nStepMax = Math.max(nStep.fs, nStep.os, nStep.ss);
   console.info("Steps needed: ", nStep, ", min:", nStepMin, ", max:", nStepMax);
 
   let steps = [];
   if (nStepMin === 0 || nStepMax === nStepMin) { // easy, raise all every time
     for (var i = 0, len = nStepMax; i < len; i++) {
-      let targetFS = normVoltage[0] + (i + 1) * window.vStep;
-      let targetSS = normVoltage[1] + (i + 1) * window.vStep;
-      let targetOS = normVoltage[1] + (i + 1) * window.vStep;
-      if (targetSS - targetFS >= 7.) { targetFS = targetSS - 7.; }
-      if (targetFS > window.vSet.fs) targetFS = window.vSet.fs;
-      if (targetSS > window.vSet.ss) targetSS = window.vSet.ss;
-      if (targetOS > window.vSet.os) targetOS = window.vSet.os;
-      steps.push({ "fs": targetFS, "ss": targetSS, "os": targetOS});
+      let tmpVSet = Object.assign({}, readbackV);
+
+      Object.keys(tmpVSet).forEach((k) => {
+        tmpVSet[k] = tmpVSet[k] + (i + 1) * window.vStep;
+        if (tmpVSet[k] < 0.0) tmpVSet[k] = 0.;
+        if (tmpVSet[k] > window.vSet[k]) tmpVSet[k] = window.vSet[k];
+      })
+      if (tmpVSet.pss - tmpVSet.pfs >= 7.0) tmpVSet.pfs = tmpVSet.pss - 7.;
+      if (tmpVSet.nss - tmpVSet.nfs >= 7.0) tmpVSet.nfs = tmpVSet.nss - 7.;
+      steps.push(normalizeSetpoint(tmpVSet));
     }
   }
   else{ // raise second step before working on first step
     for (var i = 0, len = nStepMax - nStepMin; i < len; i++) {
-      let targetFS = normVoltage[0];
-      let targetSS = normVoltage[1] + (i + 1) * window.vStep;
-      let targetOS = normVoltage[1] + (i + 1) * window.vStep;
-      if (targetSS - targetFS >= 7.) { targetFS = targetSS - 7.; }
-      if (targetFS > window.vSet.fs) targetFS = window.vSet.fs;
-      if (targetSS > window.vSet.ss) targetSS = window.vSet.ss;
-      if (targetOS > window.vSet.os) targetOS = window.vSet.os;
-      steps.push({ "fs": targetFS, "ss": targetSS, "os": targetOS});
+      let tmpVSet = Object.assign({}, readbackV);
+
+      Object.keys(tmpVSet).forEach((k) => {
+        if (k !== "pfs" || k !== "nfs") 
+          tmpVSet[k] = tmpVSet[k] + (i + 1) * window.vStep;
+
+        if (tmpVSet[k] < 0.0) tmpVSet[k] = 0.;
+        if (tmpVSet[k] > window.vSet[k]) tmpVSet[k] = window.vSet[k];
+      })
+      if (tmpVSet.pss - tmpVSet.pfs >= 7.0) tmpVSet.pfs = tmpVSet.pss - 7.;
+      if (tmpVSet.nss - tmpVSet.nfs >= 7.0) tmpVSet.nfs = tmpVSet.nss - 7.;
+      steps.push(normalizeSetpoint(tmpVSet));
     }
 
     lastStep = steps[steps.length - 1];
     for (var i = 0; i < nStepMin; i++) {
-      let targetFS = lastStep.fs + (i + 1) * window.vStep;
-      let targetSS = lastStep.ss + (i + 1) * window.vStep;
-      let targetOS = lastStep.os + (i + 1) * window.vStep;
-      if (targetSS - targetFS >= 7.) { targetFS = targetSS - 7.; }
-      if (targetFS > window.vSet.fs) targetFS = window.vSet.fs;
-      if (targetSS > window.vSet.ss) targetSS = window.vSet.ss;
-      if (targetOS > window.vSet.os) targetOS = window.vSet.os;
-      steps.push({ "fs": targetFS, "ss": targetSS, "os": targetOS});
+      let tmpVSet = Object.assign({}, readbackV);
+
+      Object.keys(tmpVSet).forEach((k) => {
+        tmpVSet[k] = lastStep[k] + (i + 1) * window.vStep;
+        if (tmpVSet[k] < 0.0) tmpVSet[k] = 0.;
+        if (tmpVSet[k] > window.vSet[k]) tmpVSet[k] = window.vSet[k];
+      })
+      if (tmpVSet.pss - tmpVSet.pfs >= 7.0) tmpVSet.pfs = tmpVSet.pss - 7.;
+      if (tmpVSet.nss - tmpVSet.nfs >= 7.0) tmpVSet.nfs = tmpVSet.nss - 7.;
+      steps.push(normalizeSetpoint(tmpVSet));
     }
   }
 
@@ -234,20 +237,20 @@ function getSetpoint() {
 
   if (window.vMode == "vPreset") {
     let str = $("#vSetpoint").val().split(",");
-    window.vSet["fs"] =  Number.parseFloat(str[0]);
-    window.vSet["ss"] =  Number.parseFloat(str[1]);
-    window.vSet["os"] =  Number.parseFloat(str[1]);
+    window.vSet["pfs"] =  Number.parseFloat(str[0]);
+    window.vSet["pss"] =  Number.parseFloat(str[1]);
+    window.vSet["pos"] =  Number.parseFloat(str[1]);
+    window.vSet["nfs"] =  Number.parseFloat(str[0]);
+    window.vSet["nss"] =  Number.parseFloat(str[1]);
+    window.vSet["nos"] =  Number.parseFloat(str[1]);
   }
   else if (window.vMode == "vManual") {
-    window.vSet["fs"] = Number.parseFloat($("#manualVFS").val());
-    window.vSet["ss"] = Number.parseFloat($("#manualVSS").val());
-
-    // let checkbox = document.getElementById('cbForceAsym');
-
-    // if (checkbox.checked)
-      // window.vSet["os"] = Number.parseFloat($("#manualVOS").val());
-    // else
-      // window.vSet["os"] = vSet["ss"];
+    window.vSet["pfs"] = Number.parseFloat($("#manualPFS").val());
+    window.vSet["pss"] = Number.parseFloat($("#manualPSS").val());
+    window.vSet["pos"] = Number.parseFloat($("#manualPOS").val());
+    window.vSet["nfs"] = Number.parseFloat($("#manualNFS").val());
+    window.vSet["nss"] = Number.parseFloat($("#manualNSS").val());
+    window.vSet["nos"] = Number.parseFloat($("#manualNOS").val());
   }
 
   window.vStep = Number.parseFloat($("#vStep").val());
@@ -382,4 +385,11 @@ function atZero() {
   return (
     readbackV.pos <= 0.1 && readbackV.pss <= 0.1 && readbackV.pfs <= 0.1 &&
     readbackV.nos <= 0.1 && readbackV.nss <= 0.1 && readbackV.nfs <= 0.1)
+}
+
+function normalizeSetpoint(setpoint) {
+  Object.keys(setpoint).forEach((k) => {
+    setpoint[k] = Math.round(setpoint[k] * 10) / 10;
+  })
+  return setpoint;
 }
