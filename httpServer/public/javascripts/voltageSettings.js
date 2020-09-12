@@ -85,7 +85,8 @@ function rampFromZero(nextPulseMode) {
 }
 
 function ramp() {
-  if (!validateSetpoint()){ // return upon bad request 
+  getSetpoint();
+  if (!validateSetpoint2(window.vSet)){ // return upon bad request 
     console.error("Bad setpoint, abort ramping function");
     return;
   }
@@ -94,6 +95,31 @@ function ramp() {
     rampFromZero("1 Hz");
     return;
   }
+
+  readbackV = normReadbackVoltage();
+  let gap = {};
+  Object.keys(readbackV).forEach((k)=>{gap[k] = window.vSet[k] - readbackV[k];});
+  let nStep = {};
+  Object.keys(gap).forEach((k)=>{nStep[k] = Math.ceil(gap[k] / window.vStep);});
+  
+  console.log("Gaps: ", gap);
+  console.log("nStep: ", nStep);
+  let steps = [];
+
+  for (var i = 0, len = max(nStep); i < len; i++) {
+    let tmpStep = {};
+    Object.keys(readbackV).forEach((chn)=>{
+      // make sure the step does not overshoot final voltage
+      if (i < nStep[chn])
+        tmpStep[chn] = normalizeVoltage(readbackV[chn] + (i + 1) * window.vStep);
+      else
+        tmpStep[chn] = normalizeVoltage(window.vSet[chn]);
+    });
+    steps.push(tmpStep);
+  }
+
+  console.log(steps);
+  
 }
 
 function max(obj) { return Math.max(...(Object.values(obj))); }
@@ -102,6 +128,7 @@ function min(obj) { return Math.min(...(Object.values(obj))); }
 function doVoltageStep(targetV) {
   if (!validateSetpoint2(targetV)){ // return upon bad request 
     console.error("Bad setpoint, abort " + arguments.callee.name + " function");
+    console.error(targetV);
     return;
   }
 
@@ -114,7 +141,7 @@ function doVoltageStep(targetV) {
 
   console.log(gap, maxGap);
 
-  if (normalizeVoltage(maxGap) <= 0.15) {
+  if (normalizeVoltage(maxGap) <= 0.25) {
     (async () => {
       await setVoltage(targetV);
     })();
@@ -122,7 +149,6 @@ function doVoltageStep(targetV) {
   }
   else {
     getPulseMode().then((currentMode) =>{
-      console.log("read pulse mode in " + arguments.callee.name + ": " + currentMode);
       if (currentMode === "Stop") {
         (async ()=>{ await setVoltage(targetV); })
         return;
@@ -181,7 +207,6 @@ function changeVoltage() {
     })();
     return;
   }
-
 
   // if using preset, let's ramp
   console.info("Ramping in progress ...");
@@ -368,48 +393,24 @@ function normReadbackVoltage() {
     getVoltage().then((val) =>{
       window.vRead = val; 
       return {
-        "pos": window.vRead.os.pv,
-        "nos": window.vRead.os.nv,
-        "pfs": window.vRead.fs.pv,
-        "nfs": window.vRead.fs.nv,
-        "pss": window.vRead.ss.pv,
-        "nss": window.vRead.ss.nv,
+        "pos": normalizeVoltage(window.vRead.os.pv),
+        "nos": normalizeVoltage(window.vRead.os.nv),
+        "pfs": normalizeVoltage(window.vRead.fs.pv),
+        "nfs": normalizeVoltage(window.vRead.fs.nv),
+        "pss": normalizeVoltage(window.vRead.ss.pv),
+        "nss": normalizeVoltage(window.vRead.ss.nv),
       };
     })
   }
   else
     return {
-      "pos": window.vRead.os.pv,
-      "nos": window.vRead.os.nv,
-      "pfs": window.vRead.fs.pv,
-      "nfs": window.vRead.fs.nv,
-      "pss": window.vRead.ss.pv,
-      "nss": window.vRead.ss.nv,
+      "pos": normalizeVoltage(window.vRead.os.pv),
+      "nos": normalizeVoltage(window.vRead.os.nv),
+      "pfs": normalizeVoltage(window.vRead.fs.pv),
+      "nfs": normalizeVoltage(window.vRead.fs.nv),
+      "pss": normalizeVoltage(window.vRead.ss.pv),
+      "nss": normalizeVoltage(window.vRead.ss.nv),
     };
-}
-
-function normVRead() { // normalize read back values
-  if (window.vRead === undefined) {
-    getVoltage().then((val) =>{
-      window.vRead = val; 
-      let vFS = (window.vRead.fs.pv + Math.abs(window.vRead.fs.nv)) / 2;
-      let vSS = (window.vRead.ss.pv + Math.abs(window.vRead.ss.nv)) / 2;
-      let vOS = (window.vRead.os.pv + Math.abs(window.vRead.os.nv)) / 2;
-      let normFS = parseFloat(vFS.toFixed(1));
-      let normSS = parseFloat(vSS.toFixed(1));
-      let normOS = parseFloat(vOS.toFixed(1));
-      return [normFS, normSS, normOS];
-    })
-  }
-  else{
-    let vFS = (window.vRead.fs.pv + Math.abs(window.vRead.fs.nv)) / 2;
-    let vSS = (window.vRead.ss.pv + Math.abs(window.vRead.ss.nv)) / 2;
-    let vOS = (window.vRead.os.pv + Math.abs(window.vRead.os.nv)) / 2;
-    let normFS = parseFloat(vFS.toFixed(1));
-    let normSS = parseFloat(vSS.toFixed(1));
-    let normOS = parseFloat(vOS.toFixed(1));
-    return [normFS, normSS, normOS];
-  }
 }
 
 function validateSetpoint() {
