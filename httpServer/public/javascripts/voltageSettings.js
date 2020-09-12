@@ -110,26 +110,47 @@ function ramp() {
     let tmpStep = {};
     Object.keys(readbackV).forEach((chn)=>{
       // make sure the step does not overshoot final voltage
-      if (i < nStep[chn])
+      if (i < nStep[chn] - 1)
         tmpStep[chn] = normalizeVoltage(readbackV[chn] + (i + 1) * window.vStep);
       else
         tmpStep[chn] = normalizeVoltage(window.vSet[chn]);
+
+      if (tmpStep[chn] <= 0.) tmpStep[chn] = 0.;
     });
     steps.push(tmpStep);
   }
 
+  // just push the final point again, this should take care of ramp down case
+  steps.push(window.vSet);
   console.log(steps);
-  
+  window.ramping = true;
+  toggleControlInRamping();
+
+  console.info("Ramping in progress ...");
+  doAllSteps(steps).then(()=>{
+    console.info("Done ramping")
+    window.ramping = false;
+    toggleControlInRamping();
+    return;
+  });
+
 }
 
-function max(obj) { return Math.max(...(Object.values(obj))); }
-function min(obj) { return Math.min(...(Object.values(obj))); }
+async function doAllSteps(steps) {
+  for (var i = 0, len = steps.length; i < len; i++) {
+    console.info("Step ", i, ": ", steps[i]);
+    await doVoltageStep(steps[i]);
+    await delay(Math.floor(window.vInterval) * 1000);
+    console.info("Done step ", i);
+  }
 
-function doVoltageStep(targetV) {
+}
+
+async function doVoltageStep(targetV) {
   if (!validateSetpoint2(targetV)){ // return upon bad request 
     console.error("Bad setpoint, abort " + arguments.callee.name + " function");
     console.error(targetV);
-    return;
+    return false;
   }
 
   // read current voltages
@@ -145,13 +166,13 @@ function doVoltageStep(targetV) {
     (async () => {
       await setVoltage(targetV);
     })();
-    return;
+    return true;
   }
   else {
     getPulseMode().then((currentMode) =>{
       if (currentMode === "Stop") {
         (async ()=>{ await setVoltage(targetV); })
-        return;
+        return true;
       }
       else {
         setPulseMode("Stop").then(async ()=>{
@@ -161,7 +182,7 @@ function doVoltageStep(targetV) {
             });
           })
         })
-        return;
+        return true;
       }
     });
   }
@@ -497,11 +518,14 @@ function validateSetpoint2(setpoint) {
   let goodPFS = setpoint["pfs"] >= 0.0 && setpoint["pfs"] <= 21.0;
   let goodNFS = setpoint["nfs"] >= 0.0 && setpoint["nfs"] <= 21.0;
 
-  let gap = setpoint["pss"] - setpoint["pfs"];
-  let goodGap = gap >= 0.3 && gap <= 7.0;
+  let gapP = setpoint["pss"] - setpoint["pfs"];
+  let gapN = setpoint["nss"] - setpoint["nfs"];
+  let goodGap = gapP >= 0.3 && gapP <= 7.0 && gapN >= 0.3 && gapN <= 7.0;
 
   if (setpoint["pfs"] >= 10.0) 
-    goodGap = goodGap && gap >= 3.0
+    goodGap = goodGap && gapP >= 3.0 
+  if (setpoint["nfs"] >= 10.0) 
+    goodGap = goodGap && gapN >= 3.0 
 
   let allGood = zero || (
     goodNOS && goodPSS && goodPFS && goodNOS && goodNSS && goodNFS && goodGap);
@@ -531,3 +555,7 @@ function validateSetpoint2(setpoint) {
   else
     return allGood;
 }
+
+function max(obj) { return Math.max(...(Object.values(obj))); }
+function min(obj) { return Math.min(...(Object.values(obj))); }
+

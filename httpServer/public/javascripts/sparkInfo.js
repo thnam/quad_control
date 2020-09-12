@@ -5,7 +5,7 @@ socket.on("sparkPattern", (data) => {
 
 socket.on("sparked", (data) =>{
   if (!window.trolleyRun) { // not handling when trolley run is going
-    if (window.handlingSparkEvent == false) {
+    if (window.handlingSparkEvent === false) {
       console.log("Sparked message received!");
       if (window.ramping) {
         window.ramping = false;
@@ -16,9 +16,7 @@ socket.on("sparked", (data) =>{
 
       // not handle this again for next 60 sec
       window.handlingSparkEvent = true;
-      setTimeout(function(){
-        window.handlingSparkEvent = false;
-      }, 60*1000);
+      setTimeout(function(){ window.handlingSparkEvent = false; }, 60*1000);
     }
   }
 });
