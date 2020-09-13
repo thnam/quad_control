@@ -47,7 +47,7 @@ $(() =>{
     window.sparkAlarmAudio.currentTime = 0.0;
   });
   // 
-  $("#setVoltages").click(()=>{ changeVoltage() });
+  $("#setVoltages").click(()=>{ ramp() });
   $("#zeroVoltages").click(()=>{ zeroVoltage() });
   $("#abortRamping").click(()=>{ abortRamping() });
   $("#p1kV").click(()=>{ increaseVoltages(1);});
