@@ -21,26 +21,31 @@ table.table.table-hover.table-bordered#timingInfoTable(style='width:80%,float:ce
         br
         | Pulser 1
         br
-        | (Short pulse Two step)
+        | (Short pulse Two step, NTS)
         br
+        input#cbEnablePulser1(type='checkbox', checked='', data-toggle='toggle', data-onstyle='success')
+
       th(colspan='2',style='text-align:center')
         br
         | Pulser 2
         br
-        | (Short pulse One step)
+        | (Short pulse One step, NOS)
         br
+        input#cbEnablePulser2(type='checkbox', checked='', data-toggle='toggle', data-onstyle='success')
       th(colspan='2',style='text-align:center')
         br
         | Pulser 3
         br
         | (1-step Long pulse test, POS)
         br
+        input#cbEnablePulser3(type='checkbox', checked='', data-toggle='toggle', data-onstyle='success')
       th(colspan='2',style='text-align:center')
         br
         | Pulser 4
         br
         | (2-step Long pulse test, PTS)
         br
+        input#cbEnablePulser4(type='checkbox', checked='', data-toggle='toggle', data-onstyle='success')
     tr
       td(style='text-align:center') Active
       td(style='text-align:center') 

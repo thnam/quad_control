@@ -102,8 +102,8 @@ function ramp() {
   let nStep = {};
   Object.keys(gap).forEach((k)=>{nStep[k] = Math.ceil(gap[k] / window.vStep);});
   
-  console.log("Gaps: ", gap);
-  console.log("nStep: ", nStep);
+  console.info("Gaps: ", gap);
+  console.info("nStep: ", nStep);
   let steps = [];
 
   for (var i = 0, len = max(nStep); i < len; i++) {
@@ -125,7 +125,7 @@ function ramp() {
   // then remove duplicated items
   cleanupSteps(steps);
 
-  console.log(steps);
+  console.info(steps);
   window.ramping = true;
   toggleControlInRamping();
 
@@ -135,6 +135,7 @@ function ramp() {
     $.jGrowl("Ramping completed", { life: 20000 });
     window.ramping = false;
     toggleControlInRamping();
+    return;
   }).catch( err =>{
     console.error("Ramping aborted");
     $.jGrowl("Ramping aborted", { life: 20000 });
@@ -172,7 +173,7 @@ async function doVoltageStep(targetV) {
   Object.keys(readbackV).forEach((k) => {gap[k] = targetV[k] - readbackV[k]; });
   let maxGap = max(gap);
 
-  console.log(gap, maxGap);
+  // console.log(gap, maxGap);
 
   if (normalizeVoltage(maxGap) <= 0.25) {
     (async () => {
