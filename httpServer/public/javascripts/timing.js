@@ -142,3 +142,7 @@ function configPulser(chn) {
       }});
   })
 }
+
+function toggleEnablePulser(pulser) {
+  console.log(pulser);
+}
