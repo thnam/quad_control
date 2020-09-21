@@ -13,7 +13,6 @@
 
 #include "g2quad/g2quad.hh"
 
-static void show_usage(std::string);
 int main(int argc, char *argv[])
 {
   unsigned int tsleep = atoi(argv[1]);
@@ -23,7 +22,7 @@ int main(int argc, char *argv[])
     std::string ipAddress("192.168.30.89");
 
     g2quad * quad = new g2quad(addressTable, ipAddress);
-    for (int i = 0; i < ncycles; ++i) {
+    for (unsigned int i = 0; i < ncycles; ++i) {
       std::bitset<8> bits(quad->Read("ADCBOARD.1.DB9.STATUS"));
       std::cout << std::hex << bits << std::endl;
       // unsigned int status = quad->Read("ADCBOARD.1.DB9.STATUS");
@@ -37,13 +36,3 @@ int main(int argc, char *argv[])
   }
   return 0;
 }
-
-static void show_usage(std::string name)
-{
-  std::cerr << "Usage: " << name << " <option(s)> SOURCES"
-    << "Options:\n"
-    << "\t-h,--help\t\tShow this help message\n"
-    << "\t-d,--destination DESTINATION\tSpecify the destination path"
-    << std::endl;
-}
-
