@@ -136,6 +136,7 @@ window.onload = () => {
   showTimingInfo();
   showSparkHistory();
   checkInhibitStatus();
+  readEnabledPulsers();
 };
 
 socket.on("pulseMode", (data) => {

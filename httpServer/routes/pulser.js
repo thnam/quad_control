@@ -26,10 +26,10 @@ router
 
     let cmd = "";
     cmd += global.appRoot + "/../hwInterface/bu/";
-    if (r.enable === 0) {
+    if (r.enable === false) {
       cmd += "disablePulser";
     }
-    else if (r.enable === 1) {
+    else if (r.enable === true) {
       cmd += "enablePulser";
     }
 

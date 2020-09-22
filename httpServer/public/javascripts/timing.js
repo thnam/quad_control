@@ -145,4 +145,48 @@ function configPulser(chn) {
 
 function toggleEnablePulser(pulser) {
   console.log(pulser);
+  let id = "cbEnablePulser" + pulser.toString();
+  let req = {"pulser": pulser,
+    "enable": document.getElementById(id).checked
+  };
+
+  return new Promise((resolve, reject)=>{
+    $.ajax({
+      type: 'POST',
+      url: baseUrl + '/pulser',
+      contentType: "application/json; charset=utf-8",
+      data: JSON.stringify(req),
+      traditional: true,
+      success: (res) =>{
+        resolve(true);
+        console.log(req, "succeeded");
+      },
+      error: (err, stat) =>{
+        resolve(false);
+        alert("Could not enable/disable pulser " + pulser.toString() + ": " + err.responseText);
+      }});
+  })
+
+
+}
+
+async function readEnabledPulsers() {
+  const ret = await $.ajax({
+    type: 'GET',
+    url: baseUrl + '/pulser',
+    success: function(data) {
+    },
+    error: (xhr)=>{
+      resolve(false);
+    },
+  })
+
+  for (const [key, value] of Object.entries(ret)) {
+    if (value === 1) {
+      $(`#cbEnablePulser${key}`).bootstrapToggle('on', true);
+    }
+    else if (value === 0) {
+      $(`#cbEnablePulser${key}`).bootstrapToggle('off', true);
+    }
+  }
 }
