@@ -163,7 +163,7 @@ function showSparkHistory(sparkSign="&#9889") {
 
       for (var i = 0; i < data.length; i++) {
         timestamp = new Date(data[i].timestamp);
-        timestamp = moment(timestamp).format('YYYY-MM-DD HH:mm:ss');
+        timestamp = moment(timestamp).format('YYYY/MM/DD HH:mm');
         pattern = data[i].meta;
 
         patternStr = "";

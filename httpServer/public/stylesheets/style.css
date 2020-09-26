@@ -105,3 +105,8 @@ td input {
         opacity: 0;
     }
 }
+
+#sparkHistoryTable{
+  text-align: center;
+  vertical-align: middle;
+}

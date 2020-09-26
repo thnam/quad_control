@@ -13,16 +13,16 @@
           - const quadPlates = ["T", "B", "I", "O"];
           thead
             tr
-              th(rowspan='3',width='15%') Timestamp
+              th(rowspan='3',width='12%') Timestamp
               each q in quadNums
-                th(colspan='8',width='21%')= q
+                th(colspan='8',width='22%')= q
             tr
               each q in quadNums
                 each ql in quadLengths
-                  td(colspan='4',width='11.5%')= ql
+                  td(colspan='4',width='11%')= ql
             tr
               each qn in quadNums
                 each ql in quadLengths
                   each qp in quadPlates
-                    td(width='2.875%')= qp
+                    td(width='2.75%')= qp
           tbody#sparkHistoryTableBody
