@@ -154,7 +154,7 @@ const quadNums = ["q1", "q2", "q3", "q4"];
 const quadLengths = ["l", "s"];
 const quadPlates = ["t", "b", "i", "o"];
 
-function showSparkHistory() {
+function showSparkHistory(sparkSign="&#9889") {
   $.get(baseUrl + "/sparkHistory")
     .done((data)=>{
       var sparkData = [];
@@ -176,8 +176,7 @@ function showSparkHistory() {
           for (const ql of quadLengths) 
             for (const qp of quadPlates){
               if (pattern[qn][ql][qp] > 0) 
-                // content += "<td>&#9889</td>";
-                content += "<td>&#x1F630</td>";
+                content += "<td>" + sparkSign + "</td>";
               else
                 content += "<td></td>";
             } 

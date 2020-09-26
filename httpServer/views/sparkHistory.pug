@@ -7,7 +7,7 @@
       .col-4
     .row.mt-4
       .table-responsive
-        table.table.table-hover.table-striped.table-bordered#sparkHistoryTable
+        table.table.table-sm.table-hover.table-striped.table-bordered#sparkHistoryTable
           - const quadNums = ["Q1", "Q2", "Q3", "Q4"];
           - const quadLengths = ["L", "S"];
           - const quadPlates = ["T", "B", "I", "O"];
@@ -19,10 +19,10 @@
             tr
               each q in quadNums
                 each ql in quadLengths
-                  td(colspan='4')= ql
+                  td(colspan='4',width='11.5%')= ql
             tr
               each qn in quadNums
                 each ql in quadLengths
                   each qp in quadPlates
-                    td= qp
+                    td(width='2.875%')= qp
           tbody#sparkHistoryTableBody
