@@ -150,41 +150,69 @@ function handleSparkEvent(msg) {
   // alert(msg);
 }
 
+const quadNums = ["q1", "q2", "q3", "q4"];
+const quadLengths = ["l", "s"];
+const quadPlates = ["t", "b", "i", "o"];
+
+function showSparkHistory() {
+  $.get(baseUrl + "/sparkHistory")
+    .done((data)=>{
+      var sparkData = [];
+      let sparkTable = $("#sparkHistoryTableBody");
+      sparkTable.empty();
+
+      for (var i = 0; i < data.length; i++) {
+        timestamp = new Date(data[i].timestamp);
+        timestamp = moment(timestamp).format('YYYY-MM-DD HH:mm:ss');
+        pattern = data[i].meta;
+
+        patternStr = "";
+        sparkedQuads = [];
+
+        let content = "<tr>";
+        content += "<td>" + timestamp + "</td>";
+
+        for (const qn of quadNums) 
+          for (const ql of quadLengths) 
+            for (const qp of quadPlates){
+              if (pattern[qn][ql][qp] > 0) 
+                // content += "<td>&#9889</td>";
+                content += "<td>&#x1F630</td>";
+              else
+                content += "<td></td>";
+            } 
+
+        content += "</tr>";
+        sparkTable.append(content);
+      }
+    })
+    .fail(()=>{
+      alert("Cannot get spark history ...");
+    })
+  
+}
+
 function showLastSpark() {
   $.get(baseUrl + "/lastSpark")
     .done((data)=>{
       timestamp = new Date(data.timestamp);
       timestamp = moment(timestamp).format('YYYY-MM-DD HH:mm:ss');
-
-      patternStr = "";
-      sparkedQuads = [];
-      quadType = ["l", "s"];
-
       pattern = data.meta;
+      patternStr = "";
 
-      for (var i = 0, len = 4; i < len; i++) {
-        quadStr = "q" + (i + 1).toString();
+      for (const qn of quadNums) 
+        for (const ql of quadLengths) 
+          for (const qp of quadPlates) 
+            if (pattern[qn][ql][qp] > 0) 
+              patternStr += (qn + ql + qp).toUpperCase() + ", ";
 
-        for (var j = 0; j < 2; j++) {
-          nSparks = sumSpark(pattern[quadStr][quadType[j]]);
-          if (nSparks > 0) {
-            sparkedQuads.push((quadStr + quadType[j]).toUpperCase());
-            patternStr += (quadStr + quadType[j]).toUpperCase() + ": ";
-            patternStr += JSON.stringify(pattern[quadStr][quadType[j]]) + "\n";
-          }
-        }
-      }
+      if (patternStr.length > 2)
+        patternStr = patternStr.slice(0, -2);
 
       $("#lastSpark").text("Last: " + timestamp);
-      $("#sparkedQuads").text("on: " + sparkedQuads);
+      $("#sparkedQuads").text("on: " + patternStr);
 
-      var table = document.getElementById("sparkHistoryTable");
-      var row = table.insertRow(1);
-      var cell0 = row.insertCell(0);
-      var cell1 = row.insertCell(1);
-      cell0.innerHTML = timestamp;
-      cell1.innerHTML = patternStr;
-
+      showSparkHistory();
     })
     .fail(()=>{
       $("#lastSpark").text("Last: None");
@@ -220,54 +248,6 @@ function clearSparkDisplay() {
 
   }
 };
-
-function showSparkHistory() {
-  $.get(baseUrl + "/sparkHistory")
-    .done((data)=>{
-      var sparkData = [];
-      for (var i = 0; i < data.length; i++) {
-        timestamp = new Date(data[i].timestamp);
-        timestamp = moment(timestamp).format('YYYY-MM-DD HH:mm:ss');
-
-        patternStr = "";
-        sparkedQuads = [];
-        quadType = ["l", "s"];
-
-        pattern = data[i].meta;
-
-        for (var k = 0; k < 4; k++) {
-          quadStr = "q" + (k + 1).toString();
-
-          for (var j = 0; j < 2; j++) { //s, l
-            nSparks = sumSpark(pattern[quadStr][quadType[j]]);
-            if (nSparks > 0) {
-              patternStr += (quadStr + quadType[j]).toUpperCase() + ": ";
-              patternStr += JSON.stringify(pattern[quadStr][quadType[j]]) + "\n";
-            }
-          }
-        }
-
-        sparkData.push({"timestamp": timestamp, "sparkPattern": patternStr});
-      }
-
-
-      $("#sparkHistoryTable:not(:first)").remove();
-      var table = document.getElementById("sparkHistoryTable");
-      nRows = table.rows.length;
-      for (var iR = 0, len = sparkData.length; iR < len; iR++) {
-        var row = table.insertRow();
-        var cell0 = row.insertCell(0);
-        var cell1 = row.insertCell(1);
-        cell0.innerHTML = sparkData[iR].timestamp;
-        cell1.innerHTML = sparkData[iR].sparkPattern;
-      }
-
-    })
-    .fail(()=>{
-      alert("Cannot get spark history ...");
-    })
-  
-}
 
 function sumSpark(obj){
   var sum = 0;

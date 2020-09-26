@@ -58,6 +58,7 @@ $(() =>{
   $("#m10kV").click(()=>{ increaseVoltages(-10);});
 
   $("#btnRefreshSparkHistory").click(() => {showSparkHistory();});
+  $("#btnRefreshFaultHistory").click(() => {showFaultHistory();});
   $("#btnResetPOSFault").click(() => {singlePulse(); resetFault("POS")});
   $("#btnResetNOSFault").click(() => {singlePulse(); resetFault("NOS")});
   $("#btnResetPTSFault").click(() => {singlePulse(); resetFault("PTS")});
@@ -135,6 +136,7 @@ window.onload = () => {
 
   showTimingInfo();
   showSparkHistory();
+  showFaultHistory();
   checkInhibitStatus();
   readEnabledPulsers();
 };

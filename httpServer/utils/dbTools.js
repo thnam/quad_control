@@ -56,6 +56,21 @@ function getSparkHistory(nSparks = 100){
   return result.toArray();
 }
 
+function getFaultHistory(nFaults = 20) {
+  const collection = db.get().db("quad").collection("pulserStatus");
+  const query = {
+    "$or": [
+      {"meta.nos.fault": {$gt: 0}}, {"meta.nts.fault": {$gt: 0}},
+      {"meta.pts.fault": {$gt: 0}}, {"meta.pos.fault": {$gt: 0}}]};
+  const options = {
+    sort: { "_id": -1 },
+    projection: { _id: 0, meta: 1, timestamp: 1}};
+
+  const result = collection.find(query, options).limit(nFaults).toArray();
+
+  return result;
+}
+
 function getSparkThreshold(){
   const collection = db.get().db("quad").collection('sparkThreshold');
   const result = collection.find().sort({$natural: -1}).limit(1).toArray();
@@ -78,4 +93,5 @@ module.exports = {
   getLastSpark: getLastSpark,
   getSparkHistory: getSparkHistory,
   getGlobalInhibit: getGlobalInhibit,
+  getFaultHistory: getFaultHistory
 }

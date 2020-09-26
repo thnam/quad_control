@@ -1,3 +1,14 @@
 #faultHistory.tab-pane.container.fade(role='tabpanel')
   #container(style='width:100%;')
-    Last 300 faults
+    .row.mt-4
+      .col-4
+      .col-4
+        button#btnRefreshFaultHistory.btn.btn-success Refresh Table
+      .col-4
+    .row.mt-4
+      .table-responsive
+        table.table.table-hover.table-bordered#faultHistoryTable
+          thead
+            tr
+              th(width='15%',data-field='timestamp') Timestamp
+              th(width='85%',data-field='fault') Fault(s)

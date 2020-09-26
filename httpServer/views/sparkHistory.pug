@@ -2,15 +2,27 @@
   #container(style='width:100%;')
     .row.mt-4
       .col-4
-        |Number of entries: 
       .col-4
         button#btnRefreshSparkHistory.btn.btn-success Refresh Table
       .col-4
     .row.mt-4
       .table-responsive
-        table.table.table-hover.table-bordered#sparkHistoryTable
+        table.table.table-hover.table-striped.table-bordered#sparkHistoryTable
+          - const quadNums = ["Q1", "Q2", "Q3", "Q4"];
+          - const quadLengths = ["L", "S"];
+          - const quadPlates = ["T", "B", "I", "O"];
           thead
             tr
-              th(width='15%',data-field='timestamp') Timestamp
-              th(width='85%',data-field='sparkPattern') Spark pattern
-
+              th(rowspan='3',width='15%') Timestamp
+              each q in quadNums
+                th(colspan='8',width='21%')= q
+            tr
+              each q in quadNums
+                each ql in quadLengths
+                  td(colspan='4')= ql
+            tr
+              each qn in quadNums
+                each ql in quadLengths
+                  each qp in quadPlates
+                    td= qp
+          tbody#sparkHistoryTableBody

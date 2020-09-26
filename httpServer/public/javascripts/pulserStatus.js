@@ -161,3 +161,39 @@ function resetFault(ps) {
       } });
   });
 };
+
+function showFaultHistory() {
+  $.get(baseUrl + "/faultHistory")
+    .done((data)=>{
+      var faultData = [];
+
+      for (var i = 0; i < data.length; i++) {
+        timestamp = new Date(data[i].timestamp);
+        timestamp = moment(timestamp).format('YYYY-MM-DD HH:mm:ss');
+
+        faultedPulser = "";
+        for (const p of ["pos", "nos", "pts", "nts"]) {
+          if (data[i].meta[p].fault !== 0) 
+            faultedPulser += p.toUpperCase() + ", ";
+        }
+
+        faultData.push({"timestamp": timestamp, "fault": faultedPulser});
+      }
+
+
+      $("#faultHistoryTable:not(:first)").remove();
+      var table = document.getElementById("faultHistoryTable");
+      for (var iR = 0, len = faultData.length; iR < len; iR++) {
+        var row = table.insertRow();
+        var cell0 = row.insertCell(0);
+        var cell1 = row.insertCell(1);
+        cell0.innerHTML = faultData[iR].timestamp;
+        cell1.innerHTML = faultData[iR].fault;
+      }
+
+    })
+    .fail(()=>{
+      alert("Cannot get fault history ...");
+    })
+  
+}

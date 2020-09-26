@@ -34,6 +34,7 @@ app.use('/resetFault', require(global.appRoot + '/routes/resetFault'));
 app.use('/timing', require(global.appRoot + '/routes/timing'));
 app.use('/globalInhibit', require(global.appRoot + '/routes/globalInhibit'));
 app.use('/pulser', require(global.appRoot + '/routes/pulser'));
+app.use('/faultHistory', require(global.appRoot + '/routes/faultHistory'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
