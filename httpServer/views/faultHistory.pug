@@ -7,8 +7,11 @@
       .col-4
     .row.mt-4
       .table-responsive
-        table.table.table-hover.table-bordered#faultHistoryTable
+        table.table.table-sm.table-striped.table-hover.table-bordered#faultHistoryTable
+          - const pulsers = ["NTS", "NOS", "POS", "PTS"]
           thead
             tr
-              th(width='15%',data-field='timestamp') Timestamp
-              th(width='85%',data-field='fault') Fault(s)
+              th(width='16%',data-field='timestamp') Timestamp
+              each p in pulsers
+                th(width='21%')= p
+          tbody#faultHistoryTableBody

@@ -157,7 +157,6 @@ const quadPlates = ["t", "b", "i", "o"];
 function showSparkHistory(sparkSign="&#9889") {
   $.get(baseUrl + "/sparkHistory")
     .done((data)=>{
-      var sparkData = [];
       let sparkTable = $("#sparkHistoryTableBody");
       sparkTable.empty();
 

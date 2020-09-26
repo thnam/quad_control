@@ -162,35 +162,30 @@ function resetFault(ps) {
   });
 };
 
-function showFaultHistory() {
+const pulsers = ["nts", "nos", "pos", "pts"]
+function showFaultHistory(faultSign="&#10060") {
   $.get(baseUrl + "/faultHistory")
     .done((data)=>{
-      var faultData = [];
+      let faultTable = $("#faultHistoryTableBody");
+      faultTable.empty();
 
       for (var i = 0; i < data.length; i++) {
         timestamp = new Date(data[i].timestamp);
-        timestamp = moment(timestamp).format('YYYY-MM-DD HH:mm:ss');
+        timestamp = moment(timestamp).format('YYYY/MM/DD HH:mm');
+
+        let content = "<tr>";
+        content += "<td>" + timestamp + "</td>";
 
         faultedPulser = "";
-        for (const p of ["pos", "nos", "pts", "nts"]) {
+        for (const p of pulsers) {
           if (data[i].meta[p].fault !== 0) 
-            faultedPulser += p.toUpperCase() + ", ";
+            content += "<td>" + faultSign + "</td>";
+          else
+            content += "<td></td>";
         }
-
-        faultData.push({"timestamp": timestamp, "fault": faultedPulser});
+        content += "</tr>";
+        faultTable.append(content);
       }
-
-
-      $("#faultHistoryTable:not(:first)").remove();
-      var table = document.getElementById("faultHistoryTable");
-      for (var iR = 0, len = faultData.length; iR < len; iR++) {
-        var row = table.insertRow();
-        var cell0 = row.insertCell(0);
-        var cell1 = row.insertCell(1);
-        cell0.innerHTML = faultData[iR].timestamp;
-        cell1.innerHTML = faultData[iR].fault;
-      }
-
     })
     .fail(()=>{
       alert("Cannot get fault history ...");
