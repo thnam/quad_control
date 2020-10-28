@@ -163,6 +163,7 @@ async function doVoltageStep(targetV) {
   if (!validateSetpoint(targetV)){ // return upon bad request 
     console.error("Bad setpoint, abort " + arguments.callee.name + " function");
     console.error(targetV);
+    abortRamping();
     return false;
   }
 
@@ -282,8 +283,8 @@ function normReadbackVoltage() {
 function atZero() {
   let readbackV = normReadbackVoltage();
   return (
-    readbackV.pos <= 0.1 && readbackV.pss <= 0.1 && readbackV.pfs <= 0.1 &&
-    readbackV.nos <= 0.1 && readbackV.nss <= 0.1 && readbackV.nfs <= 0.1)
+    readbackV.pos <= 0.3 && readbackV.pss <= 0.3 && readbackV.pfs <= 0.3 &&
+    readbackV.nos <= 0.3 && readbackV.nss <= 0.3 && readbackV.nfs <= 0.3)
 }
 
 function normalizeSetpoint(setpoint) {
