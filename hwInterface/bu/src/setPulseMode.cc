@@ -78,10 +78,12 @@ int main(int argc, char *argv[])
         pulser->Write(reg.str(), 0x1);
       }
       pulser->Write("TRIGGER.FREE_RUN.ENABLE", 0x0);
+      pulser->Write("TRIGGER.STATUS.ENABLE_PULSERS", 0x0);
       pulser->Write("TRIGGER.FREE_RUN.EN_FR_TRIG", 0x0);
       pulser->Write("TRIGGER.FREE_RUN.EN_EXT_TRIG", 0x1);
       std::this_thread::sleep_for(std::chrono::milliseconds(tsleep));
       pulser->Write("TRIGGER.FREE_RUN.ENABLE", 0x1);
+      pulser->Write("TRIGGER.STATUS.ENABLE_PULSERS", 0x1);
     }
     else if (mode_s == "Single"){ // single pulse on all channels
       for (uint32_t iBoard = 1; iBoard <= 4; ++iBoard) {
