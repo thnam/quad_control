@@ -17,9 +17,11 @@
 #include "g2quad/g2quad.hh"
 
 g2quad * quad;
+const uint32_t CLK_PERIOD_NS = 10; // ns
 void readPulserSettings(unsigned int chn = 1);
 std::string PulserSettingsJson(unsigned int chn = 1);
 std::string readRFSettings(unsigned int chn);
+std::string readSpareIOSettings(unsigned int chn);
 
 int main(int argc, char *argv[])
 {
@@ -42,6 +44,15 @@ int main(int argc, char *argv[])
   for (int i = 0; i < 4; ++i) {
     std::cout << readRFSettings(i + 1); 
     if (i == 3) 
+      std::cout << "},";
+    else
+      std::cout << ",";
+  }
+
+  std::cout << "\"Spare\":{";
+  for (int i = 0; i < 4; ++i) {
+    std::cout << readSpareIOSettings(i + 1); 
+    if (i == 3) 
       std::cout << "}}";
     else
       std::cout << ",";
@@ -51,6 +62,23 @@ int main(int argc, char *argv[])
   return 0;
 }
 
+std::string readSpareIOSettings(unsigned int chn){
+  char tmpStr[20];
+  sprintf(tmpStr, "ADCBOARD.%d", chn);
+  std::string prefix(tmpStr);
+
+  std::stringstream os;
+  os << "\"" << chn <<"\":{";
+
+  std::string reg;
+  reg = prefix + "." + "FP_RF_TRIG_SPARE_EN";
+  os << "\"en\":" << quad->Read(reg) << ",";
+  reg = prefix + "." + "FP_RF_TRIG_SPARE_LENGTH";
+  os << "\"length\":" << quad->Read(reg) * CLK_PERIOD_NS << ",";
+  reg = prefix + "." + "FP_RF_TRIG_SPARE_START";
+  os << "\"start\":" << quad->Read(reg) * CLK_PERIOD_NS << "}";
+  return os.str();
+}
 
 std::string PulserSettingsJson(unsigned int chn){
   char tmpStr[120];
@@ -65,17 +93,17 @@ std::string PulserSettingsJson(unsigned int chn){
 
   for (auto param : params){
     std::string key = prefix0 + prefix1.at(0) + "." + param;
-    unsigned int ret0 = 10 * (quad->Read(key));
+    unsigned int ret0 = CLK_PERIOD_NS * (quad->Read(key));
 
     key = prefix0 + prefix1.at(1) + "." + param;
-    unsigned int ret1 = 10 * (quad->Read(key));
+    unsigned int ret1 = CLK_PERIOD_NS * (quad->Read(key));
     if (param != "ENABLE_2STEP"){
       setting[prefix1.at(0)][param] = ret0;
       setting[prefix1.at(1)][param] = ret1;
     } 
     else{
-      setting[prefix1.at(0)][param] = ret0/10;
-      setting[prefix1.at(1)][param] = ret1/10;
+      setting[prefix1.at(0)][param] = ret0/CLK_PERIOD_NS;
+      setting[prefix1.at(1)][param] = ret1/CLK_PERIOD_NS;
     }
   }
 
@@ -111,8 +139,8 @@ void readPulserSettings(unsigned int chn){
   std::cout << "Pulser " << chn << "\t |\t" << prefix1.at(0)  << " (ns)"
     << "\t|\t" << prefix1.at(1)  << " (ns)"<< std::endl;
   for (std::string param : params){
-    unsigned int ret0 = 10 * (quad->Read(prefix0 + prefix1.at(0) + param));
-    unsigned int ret1 = 10 * (quad->Read(prefix0 + prefix1.at(1) + param));
+    unsigned int ret0 = CLK_PERIOD_NS * (quad->Read(prefix0 + prefix1.at(0) + param));
+    unsigned int ret1 = CLK_PERIOD_NS * (quad->Read(prefix0 + prefix1.at(1) + param));
     std::cout << param << "\t |\t" << ret0 << "\t\t|\t" << ret1  
       << std::endl;
   }
@@ -129,10 +157,10 @@ std::string readRFSettings(unsigned int chn){
   os << "\"" << chn <<"\":{";
 
   sprintf(reg, "%s.WIDTH", base);
-  os << "\"width\":" << quad->Read(std::string(reg)) * 10 << ",";
+  os << "\"width\":" << quad->Read(std::string(reg)) * CLK_PERIOD_NS << ",";
   for (int i = 0; i < 4; ++i) {
     sprintf(reg, "%s.START.%d", base, i + 1);
-    os << "\"delay" << i + 1 << "\":" << quad->Read(std::string(reg)) * 10 << ",";
+    os << "\"delay" << i + 1 << "\":" << quad->Read(std::string(reg)) * CLK_PERIOD_NS << ",";
   }
   os.seekp(-1, std::ios_base::end);
   os << "}";
