@@ -1,13 +1,14 @@
 
 let timingTab = document.getElementById("timingInfoTable");
 
-var pulser, attr, rfAttr, state;
+var pulser, attr, rfAttr, state, spareAttr;
 // if (window.controller === "BU") {
   pulser = ["1", "2", "3", "4"];
   attr = ["enable_2step", "charge_start", "step1_end",
     "step2_start", "charge_end", "discharge_start", "discharge_end"];
   rfAttr = ["width", "delay1", "delay2", "delay3", "delay4"];
   state = ["active", "proposed"];
+  spareAttr = ["en", "length", "start"];
 // }
 // else {
   // attr = ["os", "fs", "fs2ss", "ss", "ss2dis", "dis"];
@@ -53,6 +54,26 @@ function showTimingInfo() {
                 row.cells[colN].innerHTML = content;
               else
                 row.cells[colN].firstChild.defaultValue = content;
+            }
+          }
+        }
+
+        let spareInfo = data.spare;
+        for (var i = 0, len = pulser.length; i < len; i++) {
+          for (var k = 1, lenk = spareAttr.length; k < lenk; k++) {
+            for (var j = 0, lenj = state.length; j < lenj; j++) {
+              let colN = [1 + 2 * i + j];
+              let row = timingTab.rows[13 + k];
+              if (j === 0) 
+                if (spareInfo[pulser[i]]["en"] === 1) 
+                  row.cells[colN].innerHTML = spareInfo[pulser[i]][spareAttr[k]];
+                else 
+                  row.cells[colN].innerHTML = "0";
+              else
+                if (spareInfo[pulser[i]]["en"] === 1) 
+                  row.cells[colN].firstChild.defaultValue = spareInfo[pulser[i]][spareAttr[k]];
+                else 
+                  row.cells[colN].firstChild.defaultValue = 0;
             }
           }
         }
