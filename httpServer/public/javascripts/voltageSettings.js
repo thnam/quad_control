@@ -149,33 +149,6 @@ function ramp() {
 
   readbackV = normReadbackVoltage();
   let steps = generateSteps(readbackV, window.vSet, window.vStep);
-  // let gap = {};
-  // Object.keys(readbackV).forEach((k)=>{gap[k] = window.vSet[k] - readbackV[k];});
-  // let nStep = {};
-  // Object.keys(gap).forEach((k)=>{nStep[k] = Math.ceil(gap[k] / window.vStep);});
-  
-  // console.info("Gaps: ", gap);
-  // console.info("nStep: ", nStep);
-  // let steps = [];
-
-  // for (var i = 0, len = max(nStep); i < len; i++) {
-    // let tmpStep = {};
-    // Object.keys(readbackV).forEach((chn)=>{
-      // if (i < nStep[chn] - 1)
-        // tmpStep[chn] = normalizeVoltage(readbackV[chn] + (i + 1) * window.vStep);
-      // else
-        // tmpStep[chn] = normalizeVoltage(window.vSet[chn]);
-
-      // if (tmpStep[chn] <= 0.) tmpStep[chn] = 0.;
-    // });
-    // steps.push(tmpStep);
-  // }
-
-  // just push the final point again, this should take care of ramp down case
-  // steps.push(window.vSet);
-  // then remove duplicated items
-  // cleanupSteps(steps);
-
   console.info(steps);
   window.ramping = true;
   toggleControlInRamping();
