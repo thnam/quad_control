@@ -84,6 +84,57 @@ function rampFromZero(nextPulseMode) {
     })();
 }
 
+function generateSteps(currentVoltage, targetVoltage, stepVoltage) {
+  let gap = {};
+  Object.keys(currentVoltage).forEach((k)=>{
+    gap[k] = targetVoltage[k] - currentVoltage[k];
+  });
+
+  let nStep = {};
+  Object.keys(gap).forEach((k)=>{nStep[k] = Math.ceil(gap[k] / stepVoltage);});
+
+  // console.info("Gaps: ", gap);
+  // console.info("nStep: ", nStep);
+  let steps = [];
+
+  for (var i = 0, len = max(nStep); i < len; i++) {
+    let tmpStep = {};
+    Object.keys(currentVoltage).forEach((chn)=>{
+      // make sure the step does not overshoot final voltage
+      if (i < nStep[chn] - 1)
+        tmpStep[chn] = normalizeVoltage(currentVoltage[chn] + (i + 1) * stepVoltage);
+      else
+        tmpStep[chn] = normalizeVoltage(targetVoltage[chn]);
+
+      if (tmpStep[chn] <= 0.) tmpStep[chn] = 0.;
+    });
+    steps.push(tmpStep);
+  }
+
+  // and some post processing
+  steps.forEach((s) =>{
+    let gapP = s.pss - s.pfs;
+    let gapN = s.nss - s.nfs;
+    if (gapP <= 0.3) 
+      s.pfs = s.pss - 0.3;
+    if (gapN <= 0.3) 
+      s.nfs = s.nss - 0.3;
+
+    if ((gapP <= 3.0) && (s.pss >= 10.0)){
+      s.pfs = s.pss - 3.1;
+    }
+    if ((gapN <= 3.0) && (s.nss >= 10.0)){
+      s.nfs = s.nss - 3.1;
+    }
+  })
+
+  steps.push(targetVoltage);
+  // then remove duplicated items
+  cleanupSteps(steps);
+
+  return steps;
+}
+
 function ramp() {
   getSetpoint();
   if (!validateSetpoint(window.vSet)){ // return upon bad request 
@@ -97,33 +148,33 @@ function ramp() {
   }
 
   readbackV = normReadbackVoltage();
-  let gap = {};
-  Object.keys(readbackV).forEach((k)=>{gap[k] = window.vSet[k] - readbackV[k];});
-  let nStep = {};
-  Object.keys(gap).forEach((k)=>{nStep[k] = Math.ceil(gap[k] / window.vStep);});
+  let steps = generateSteps(readbackV, window.vSet, window.vStep);
+  // let gap = {};
+  // Object.keys(readbackV).forEach((k)=>{gap[k] = window.vSet[k] - readbackV[k];});
+  // let nStep = {};
+  // Object.keys(gap).forEach((k)=>{nStep[k] = Math.ceil(gap[k] / window.vStep);});
   
-  console.info("Gaps: ", gap);
-  console.info("nStep: ", nStep);
-  let steps = [];
+  // console.info("Gaps: ", gap);
+  // console.info("nStep: ", nStep);
+  // let steps = [];
 
-  for (var i = 0, len = max(nStep); i < len; i++) {
-    let tmpStep = {};
-    Object.keys(readbackV).forEach((chn)=>{
-      // make sure the step does not overshoot final voltage
-      if (i < nStep[chn] - 1)
-        tmpStep[chn] = normalizeVoltage(readbackV[chn] + (i + 1) * window.vStep);
-      else
-        tmpStep[chn] = normalizeVoltage(window.vSet[chn]);
+  // for (var i = 0, len = max(nStep); i < len; i++) {
+    // let tmpStep = {};
+    // Object.keys(readbackV).forEach((chn)=>{
+      // if (i < nStep[chn] - 1)
+        // tmpStep[chn] = normalizeVoltage(readbackV[chn] + (i + 1) * window.vStep);
+      // else
+        // tmpStep[chn] = normalizeVoltage(window.vSet[chn]);
 
-      if (tmpStep[chn] <= 0.) tmpStep[chn] = 0.;
-    });
-    steps.push(tmpStep);
-  }
+      // if (tmpStep[chn] <= 0.) tmpStep[chn] = 0.;
+    // });
+    // steps.push(tmpStep);
+  // }
 
   // just push the final point again, this should take care of ramp down case
-  steps.push(window.vSet);
+  // steps.push(window.vSet);
   // then remove duplicated items
-  cleanupSteps(steps);
+  // cleanupSteps(steps);
 
   console.info(steps);
   window.ramping = true;
