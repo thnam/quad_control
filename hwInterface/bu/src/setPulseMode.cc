@@ -121,7 +121,8 @@ int main(int argc, char *argv[])
     }
     else if (found != std::string::npos){ // periodic internal modes
       std::stringstream ss(mode);
-      unsigned int freq;
+      // unsigned int freq;
+      double freq;
       ss >> freq;
 
       if (freq > maxFreq || freq < 0) {

@@ -13,7 +13,7 @@ router
     exec(cmd, {env: BUEnv}).then((data)=>{
       httpLog.info("Read enabled pulsers successfully.");
       setting = JSON.parse(data.stdout.toLowerCase());
-      httpLog.info(setting);
+      // httpLog.info(setting);
       res.status(200).json(setting);
     }).catch((err)=>{
       httpLog.error("Cannot read enabled pulsers: " + err.stderr);

@@ -4,10 +4,12 @@
     button#btnStop.btn.btn-fill.btn-danger Stop
   .col-6
     .row.mb-3
-      .col-6
+      .col-4
         button#btnInternal1Hz.btn.btn-block.btn-info 1 Hz
-      .col-6
+      .col-4
         button#btnInternal2Hz.btn.btn-block.btn-info 2 Hz
+      .col-4
+        button#btnInternal5Hz.btn.btn-block.btn-info 5 Hz
 
         //- select#internalMode.combobox(name='internalMode')
           //- option(value="Single") Single
@@ -17,9 +19,9 @@
           //- option(value="Burst", selected="") Burst
     .row
       .col-6
-        button#btnInternal5Hz.btn.btn-block.btn-info 5 Hz
-      .col-6
         button#btnInternal10Hz.btn.btn-block.btn-info 10 Hz
+      .col-6
+        button#btnInternal0_7Hz.btn.btn-block.btn-info 0.714 Hz
   .col-3
     .text-center.pulseModeBox
       | State:
