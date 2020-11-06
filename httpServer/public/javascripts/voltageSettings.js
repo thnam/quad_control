@@ -373,6 +373,7 @@ function max(obj) { return Math.max(...(Object.values(obj))); }
 function min(obj) { return Math.min(...(Object.values(obj))); }
 
 function cleanupSteps(steps) {
+  // duplicate removal
   for (let i = steps.length - 1; i > 0; i--) {
     thisStep = steps[i];
     preStep = steps[i - 1];
@@ -382,5 +383,14 @@ function cleanupSteps(steps) {
       (thisStep.pos === preStep.pos) && (thisStep.nos === preStep.nos)
     )
       steps.pop();
+  }
+
+  // make sure the is no step back, effectively ramp 2nd step before doing 1st
+  // one
+  for (let i = steps.length - 1; i > 0; i--) {
+    thisStep = steps[i];
+    preStep = steps[i - 1];
+    if (thisStep.pfs < preStep.pfs) preStep.pfs = thisStep.pfs;
+    if (thisStep.nfs < preStep.nfs) preStep.nfs = thisStep.nfs;
   }
 }
