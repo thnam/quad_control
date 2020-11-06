@@ -143,7 +143,7 @@ function ramp() {
   }
   
   if (atZero()){
-    rampFromZero("1 Hz");
+    rampFromZero("0.714 Hz");
     return;
   }
 
