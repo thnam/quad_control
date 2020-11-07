@@ -61,8 +61,36 @@ int main(int argc, char *argv[])
 
     g2quad * pulser = new g2quad(addressTable, std::string(ipAddress));
 
-    std::size_t found = mode_s.find("Hz");
+    std::size_t foundHz = mode_s.find("Hz");
 
+    const uint32_t nominal_charge_width = 770000; // ns
+    const double max_freq = 1.3; // Hz
+    uint32_t charge_width[4];
+    bool long_pulse = false;
+
+    for (uint32_t i = 0; i < 4; ++i) {
+      std::stringstream reg0, reg1;
+      reg0 << "ADCBOARD." << i + 1 << ".FP_PULSER.ACTIVE.CHARGE_START";
+      reg1 << "ADCBOARD." << i + 1 << ".FP_PULSER.ACTIVE.CHARGE_END";
+      charge_width[i] = 10 * (pulser->Read(reg1.str()) - pulser->Read(reg0.str()));
+      if (charge_width[i] > nominal_charge_width) 
+        long_pulse = true;
+    }
+
+    // in case of long pulse and periodic mode
+    if (long_pulse && foundHz) {
+      std::stringstream ss(mode);
+      double freq;
+      ss >> freq;
+      if (freq > max_freq) {
+        std::cerr << "The requested frequency (" << mode 
+          << ") is higher than what hardware pulser can hanle "
+          << "with current timing settings. Either choose a frequency less than "
+          << max_freq << " Hz, or change timing settings." 
+          << std::endl;
+        return -1;
+      }
+    }
     // General rule: stop pulsing first, sleep for some time before switch
     // back to pulsing
     if (mode_s == "Stop") { // easy one
@@ -119,7 +147,7 @@ int main(int argc, char *argv[])
       pulser->Write("TRIGGER.STATUS.ENABLE_PULSERS", 0x1);
       pulser->Write("TRIGGER.FREE_RUN.ENABLE", 0x1);
     }
-    else if (found != std::string::npos){ // periodic internal modes
+    else if (foundHz != std::string::npos){ // periodic internal modes
       std::stringstream ss(mode);
       // unsigned int freq;
       double freq;
