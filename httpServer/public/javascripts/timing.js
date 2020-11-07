@@ -14,11 +14,13 @@ var pulser, attr, rfAttr, state, spareAttr;
   // attr = ["os", "fs", "fs2ss", "ss", "ss2dis", "dis"];
 // }
 
+const nominal_charge_width = 770000;
 function showTimingInfo() {
   $.get(baseUrl + "/timing")
     .done((data)=>{
       if (window.controller === "BU") {
         let pulserInfo = data.pulser;
+        let charge_width = [];
         for (var i = 0, len = pulser.length; i < len; i++) {
           for (var k = 0, lenk = attr.length; k < lenk; k++) {
             let row = timingTab.rows[k + 2];
@@ -41,6 +43,25 @@ function showTimingInfo() {
               }
             }
           }
+          charge_width.push(pulserInfo[pulser[i]].active.charge_end - pulserInfo[pulser[i]].active.charge_start);
+        }
+
+        let long_pulse = false;
+        charge_width.forEach((w) => {
+          if (w > nominal_charge_width) 
+            long_pulse = true;
+        });
+        if (long_pulse) {
+          document.getElementById("btnInternal5Hz").disabled = true; 
+          document.getElementById("btnInternal2Hz").disabled = true; 
+          document.getElementById("btnInternal10Hz").disabled = true; 
+          document.getElementById("btnInternalBurst").disabled = true; 
+        }
+        else {
+          document.getElementById("btnInternal5Hz").disabled = false; 
+          document.getElementById("btnInternal2Hz").disabled = false; 
+          document.getElementById("btnInternal10Hz").disabled = false; 
+          document.getElementById("btnInternalBurst").disabled = false; 
         }
 
         let rfInfo = data.rf;
