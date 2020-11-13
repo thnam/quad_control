@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
       pulser->Write("TRIGGER.FREE_RUN.EN_FR_TRIG", 0x0);
       pulser->Write("TRIGGER.FREE_RUN.EN_EXT_TRIG", 0x0);
     }
-    else if (mode_s == "External"){ // disable fr_trig, enable ext_trig
+    else if (mode_s == "External" || mode_s == "CCC"){ // disable fr_trig, enable ext_trig
       resetInhibit(pulser);
       pulser->Write("TRIGGER.FREE_RUN.ENABLE", 0x0);
       pulser->Write("TRIGGER.STATUS.ENABLE_PULSERS", 0x0);
@@ -173,7 +173,7 @@ int main(int argc, char *argv[])
 void showUsage(char * name){
   std::cout << "Usage: " << std::string(name) << " -m \"pulse_mode\"" 
     << " [-h \"zynq_ip_address\"]" << std::endl;
-  std::cout << "Available modes are: Stop, 1 Hz, 5 Hz, 10 Hz, Burst, and Single" << std::endl;
+  std::cout << "Available modes are: Stop, 1 Hz, 5 Hz, 10 Hz, Burst, Single, External, and CCC" << std::endl;
 }
 
 

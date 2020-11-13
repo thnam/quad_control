@@ -52,7 +52,7 @@ router
               case 'Burst':
                 cmd += ' ' + newMode;
                 break;
-              case 'External':
+              case 'CCC':
                 cmd += ' ' + newMode;
                 break;
               default:

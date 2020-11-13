@@ -1,7 +1,7 @@
 $(() =>{
   trolleyRunToggle();
   // pulse mode buttons
-  $("#btnExternal").click(()=>{ changePulseMode("External");});
+  $("#btnCCC").click(()=>{ changePulseMode("CCC");});
   $("#btnStop").click(()=>{ changePulseMode("Stop");});
   $("#btnInternal1Hz").click(()=>{ changePulseMode("1 Hz");});
   $("#btnInternal2Hz").click(()=>{ changePulseMode("2 Hz");});

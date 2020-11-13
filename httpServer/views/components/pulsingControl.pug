@@ -5,23 +5,16 @@
   .col-6
     .row.mb-3
       .col-4
-        button#btnInternal1Hz.btn.btn-block.btn-info 1 Hz
+        button#btnInternal1Hz.btn.btn-block.btn-info(title="1 Hz") 1 Hz
       .col-4
-        button#btnInternal2Hz.btn.btn-block.btn-info 2 Hz
+        button#btnInternal2Hz.btn.btn-block.btn-info(title="2 Hz") 2 Hz
       .col-4
-        button#btnInternal5Hz.btn.btn-block.btn-info 5 Hz
-
-        //- select#internalMode.combobox(name='internalMode')
-          //- option(value="Single") Single
-          //- option(value="1 Hz") 1 Hz
-          //- option(value="5 Hz") 5 Hz
-          //- option(value="10 Hz") 10 Hz
-          //- option(value="Burst", selected="") Burst
+        button#btnInternal5Hz.btn.btn-block.btn-info(title="5 Hz") 5 Hz
     .row
       .col-6
-        button#btnInternal10Hz.btn.btn-block.btn-info 10 Hz
+        button#btnInternal10Hz.btn.btn-block.btn-info(title="10 Hz") 10 Hz
       .col-6
-        button#btnInternal0_7Hz.btn.btn-block.btn-info 0.714 Hz
+        button#btnInternal0_7Hz.btn.btn-block.btn-info(title="0.714 Hz (1.4 sec period)") 0.714 Hz
   .col-3
     .text-center.pulseModeBox
       | State:
@@ -34,7 +27,7 @@
       .col-6
         button#btnInternalSingle.btn.btn-block.btn-info Single
       .col-6
-        button#btnInternalBurst.btn.btn-block.btn-info(title="Internal trigger mimics beam time structure: 16 pulses separated by 10 ms every 1.4 s") Burst
+        button#btnInternalBurst.btn.btn-block.btn-info(title="Internal trigger mimics beam time structure: 2X 8-pulse trains separated by 190 ms every 1.4 s") Burst
   .col-3
-    button#btnExternal.btn.btn-block.btn-success(title='Repeats the trigger given by CCC') External
+    button#btnCCC.btn.btn-block.btn-success(title='Repeats the trigger given by CCC') CCC
 

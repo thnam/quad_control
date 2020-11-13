@@ -60,7 +60,7 @@ async function getPulseMode() {
 
 function displayPulseMode(newMode) {
   $("#labelPulseMode").text(newMode);
-  if (newMode == "External") 
+  if (newMode == "CCC") 
     $("#labelPulseMode").css({ 'color': $(".btn-success").css("background-color"),
       'font-size': '120%' });
   else if (newMode == "Stop") 
