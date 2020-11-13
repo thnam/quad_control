@@ -34,7 +34,7 @@ $(() =>{
     clearSparkDisplay();
   });
 
-  $("#btnClearSparkDiplay").click(() => {clearSparkDisplay();});
+  // $("#btnClearSparkDiplay").click(() => {clearSparkDisplay();});
 
   $("#btnFaultAlarmReset").click(() => {
     window.faultAlarmAudio.pause();

@@ -16,7 +16,7 @@ socket.on("sparked", (data) =>{
 
       // not handle this again for next 60 sec
       window.handlingSparkEvent = true;
-      setTimeout(function(){ window.handlingSparkEvent = false; }, 60*1000);
+      setTimeout(function(){ window.handlingSparkEvent = false; }, 20*1000);
     }
   }
 });
@@ -207,7 +207,7 @@ function showLastSpark() {
       if (patternStr.length > 2)
         patternStr = patternStr.slice(0, -2);
 
-      $("#lastSpark").text("Last: " + timestamp);
+      $("#lastSpark").text("Last spark: " + timestamp);
       $("#sparkedQuads").text("on: " + patternStr);
 
       showSparkHistory();

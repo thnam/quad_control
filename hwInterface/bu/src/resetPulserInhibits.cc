@@ -33,6 +33,10 @@ int main(int argc, char *argv[]) {
     // ADCBOARD.1.FP_PULSER.RESET_INHIBIT
     reg << "ADCBOARD." << iBoard << ".FP_PULSER.RESET_INHIBIT";
     quad->Write(reg.str(), 0x1);
+
+    std::stringstream rf_reg;
+    rf_reg << "ADCBOARD." << iBoard << ".FP_RF_PULSER.RESET";
+    quad->Write(rf_reg.str(), 0x1);
   }
 }
 

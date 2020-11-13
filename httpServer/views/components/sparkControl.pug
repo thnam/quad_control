@@ -12,7 +12,7 @@
     .row.mt-1.mb-1
       button#btnSetThreshold.btn.btn-block.btn-info  Set Threshold
   .col-1
-  .col-5
+  .col-7
     if stenController
       .row.mt-1.mb-1
         | Slot 3: 
@@ -27,25 +27,25 @@
       .row.mt-1.mb-1
         | Lower:
         input#lowerThreshold(type='number', value=1750)
-  .col-1
-  .col-2
-    .row.mt-1.mb-1
-      strong#slot3Readback
-    .row.mt-1.mb-1
-      strong#slot6Readback
+  //- .col-1
+  //- .col-2
+    //- .row.mt-1.mb-1
+      //- strong#slot3Readback
+    //- .row.mt-1.mb-1
+      //- strong#slot6Readback
 
 .row.mb-3.mt-3
   .col-4
-    | Spark count: 
-    big#nSparks(style='color: green;') 0
-  .col-8
     #lastSpark
+  .col-5
     #sparkedQuads
-
-.row.mb-3.mt-3
-  .col-4
-    button#btnSparkCountReset.btn.btn-block.btn-warning Reset Count
-  .col-4
+  .col-3
     button#btnSparkAlarmReset.btn.btn-block.btn-success Reset Alarm
-  .col-4
-    button#btnClearSparkDiplay.btn.btn-block.btn-warning Clear Display
+
+//- .row.mb-3.mt-3
+  //- .col-4
+    //- button#btnSparkCountReset.btn.btn-block.btn-warning Reset Count
+  //- .col-4
+    //- button#btnSparkAlarmReset.btn.btn-block.btn-success Reset Alarm
+  //- .col-4
+    //- button#btnClearSparkDiplay.btn.btn-block.btn-warning Clear Display
