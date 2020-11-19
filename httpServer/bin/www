@@ -13,7 +13,14 @@ const http = require('http');
  * Get port from environment and store in Express.
  */
 
-const port = require("config").server.port;
+var port;
+if (process.env.role === "main") {
+  port = require("config").server.port;
+}
+else if (process.env.role === "monitor") {
+  port = require("config").monitor.port;
+}
+
 app.set('port', port);
 
 /**

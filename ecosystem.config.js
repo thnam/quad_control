@@ -14,7 +14,16 @@ module.exports = {
     watch: ["./httpServer/bin", "./httpServer/app.js",
       "./httpServer/routes", "./httpServer/utils", "./httpServer/views"
     ],
-    env: { NODE_ENV: "production" }
+    env: { NODE_ENV: "production" , role: "main"}
+  }, {
+    name: 'monitor',
+    script: 'httpServer/bin/www',
+    max_memory_restart : "200M",
+    watch_delay: 1000,
+    watch: ["./httpServer/bin", "./httpServer/app.js",
+      "./httpServer/routes", "./httpServer/utils", "./httpServer/views"
+    ],
+    env: { NODE_ENV: "production" , role: "monitor"}
   },
   ]
 };
