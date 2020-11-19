@@ -15,7 +15,8 @@ io.on('connection', function (socket) {
 
   socket.emit('greeting', {
     message: "Greeting from quad controller.",
-    controller: config.controller
+    controller: config.controller,
+    role: process.env.role
   });
 
   setInterval(()=>{
