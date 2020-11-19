@@ -1,4 +1,9 @@
 #timingTab.tab-pane.container.fade(role='tabpanel')
   #container(style='width:100%;')
+    .row.mb-1.mt-1
+      .col-3
+        button#btnLoadNominalTiming.btn.btn-block.btn-success(title="770 us long charge pulse, 700 us long discharge pulse") Load Nominal Timing
+      .col-3
+        button#btnLoadPOS100ms.btn.btn-block.btn-danger(title="Set charge length of POS to 100 ms, and leave other pulsers unchanged") Set POS to 100 ms
     include components/timingTableBU
     //- include components/timingTableSten

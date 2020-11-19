@@ -185,6 +185,29 @@ function configPulser(chn) {
   })
 }
 
+function loadPOS100ms() {
+  let setting = {"chn":3,"enable_2step":0,"charge_start":10,"step1_end":30010,"step2_start":35010,"charge_end":100030010,"discharge_start":100040010,"discharge_end":100740010,"width":30000,"delay1":10,"delay2":10,"delay3":10,"delay4":10};
+
+  return new Promise((resolve, reject)=>{
+    $.ajax({
+      type: 'POST',
+      url: baseUrl + '/timing',
+      contentType: "application/json; charset=utf-8",
+      data: JSON.stringify(setting),
+      traditional: true,
+      success: (res) =>{
+        resolve(true);
+        console.log(res + ", timing on pulser " + chn +
+          " is configured successfully: " + JSON.stringify(setting));
+        showTimingInfo();
+      },
+      error: (err, stat) =>{
+        resolve(false);
+        alert("Could not config pulser timing" + err.responseText);
+      }});
+  })
+}
+
 function toggleEnablePulser(pulser) {
   console.log(pulser);
   let id = "cbEnablePulser" + pulser.toString();
