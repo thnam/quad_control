@@ -96,8 +96,12 @@ socket.on('greeting', function(data) {
   window.controller = data.controller;
   console.info(data.message);
   console.info('Controller in use is', window.controller);
-  console.info("Role of this GUI is: ", data.role);
-  // socket.emit('join', 'Hello World from client');
+  console.info("Role of this GUI is:", data.role);
+
+  // disable all inputs unless it is the main GUI
+  if (data.role !== "main") {
+    $(':input').prop('disabled', true);
+  }
 });
 
 socket.on("reload", ()=>{
