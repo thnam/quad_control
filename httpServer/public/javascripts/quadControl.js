@@ -101,6 +101,7 @@ socket.on('greeting', function(data) {
   // disable all inputs unless it is the main GUI
   if (data.role !== "main") {
     $(':input').prop('disabled', true);
+    $('#topheader').text('ESQ Monitor (read-only)'); 
   }
 });
 
