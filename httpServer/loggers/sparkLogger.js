@@ -9,7 +9,7 @@ var sparkOptions = {
     enable: false
   },
   console: {
-    enable: true
+    enable: false
   },
   dbOnline: {
     enable: false

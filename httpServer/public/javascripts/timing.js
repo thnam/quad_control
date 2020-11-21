@@ -8,7 +8,7 @@ var pulser, attr, rfAttr, state, spareAttr;
     "step2_start", "charge_end", "discharge_start", "discharge_end"];
   rfAttr = ["width", "delay1", "delay2", "delay3", "delay4"];
   state = ["active", "proposed"];
-  spareAttr = ["en", "length", "start"];
+  spareAttr = ["length", "start"];
 // }
 // else {
   // attr = ["os", "fs", "fs2ss", "ss", "ss2dis", "dis"];
@@ -81,10 +81,10 @@ function showTimingInfo() {
 
         let spareInfo = data.spare;
         for (var i = 0, len = pulser.length; i < len; i++) {
-          for (var k = 1, lenk = spareAttr.length; k < lenk; k++) {
+          for (var k = 0, lenk = spareAttr.length; k < lenk; k++) {
             for (var j = 0, lenj = state.length; j < lenj; j++) {
               let colN = [1 + 2 * i + j];
-              let row = timingTab.rows[13 + k];
+              let row = timingTab.rows[13 + k + 1];
               if (j === 0) 
                 if (spareInfo[pulser[i]]["en"] === 1) 
                   row.cells[colN].innerHTML = spareInfo[pulser[i]][spareAttr[k]];
@@ -162,7 +162,10 @@ function configPulser(chn) {
     setting[attr[i]] = parseInt(timingTab.rows[2 + i].cells[colN].firstChild.value);
   }
   for (var i = 0, leni = rfAttr.length; i < leni; i++) {
-    setting[rfAttr[i]] = parseInt(timingTab.rows[9 + i].cells[colN].firstChild.value);
+    setting["rf_" + rfAttr[i]] = parseInt(timingTab.rows[9 + i].cells[colN].firstChild.value);
+  }
+  for (var i = 0, leni = spareAttr.length; i < leni; i++) {
+    setting["spare_" + spareAttr[i]] = parseInt(timingTab.rows[14 + i].cells[colN].firstChild.value);
   }
 
   return new Promise((resolve, reject)=>{
@@ -185,27 +188,42 @@ function configPulser(chn) {
   })
 }
 
-function loadPOS100ms() {
-  let setting = {"chn":3,"enable_2step":0,"charge_start":10,"step1_end":30010,"step2_start":35010,"charge_end":100030010,"discharge_start":100040010,"discharge_end":100740010,"width":30000,"delay1":10,"delay2":10,"delay3":10,"delay4":10};
+async function loadPOS100ms() {
+  let current_setting = await $.get(baseUrl + "/timing");
 
-  return new Promise((resolve, reject)=>{
-    $.ajax({
-      type: 'POST',
-      url: baseUrl + '/timing',
-      contentType: "application/json; charset=utf-8",
-      data: JSON.stringify(setting),
-      traditional: true,
-      success: (res) =>{
-        resolve(true);
-        console.log(res + ", timing on pulser " + chn +
-          " is configured successfully: " + JSON.stringify(setting));
-        showTimingInfo();
-      },
-      error: (err, stat) =>{
-        resolve(false);
-        alert("Could not config pulser timing" + err.responseText);
-      }});
-  })
+  for (var i_chn = 1; i_chn <= 4; i_chn++){
+    let setting = {"chn": i_chn};
+    Object.entries(current_setting["rf"][i_chn]).forEach(entry => {
+      const [key, value] = entry;
+      setting["rf_" + key] = value;
+    });
+    Object.entries(current_setting["spare"][i_chn]).forEach(entry => {
+      const [key, value] = entry;
+      setting["spare_" + key] = value;
+    });
+
+    console.log(setting);
+  }
+
+
+  // return new Promise((resolve, reject)=>{
+    // $.ajax({
+      // type: 'POST',
+      // url: baseUrl + '/timing',
+      // contentType: "application/json; charset=utf-8",
+      // data: JSON.stringify(setting),
+      // traditional: true,
+      // success: (res) =>{
+        // resolve(true);
+        // console.log(res + ", timing on pulser " + chn +
+          // " is configured successfully: " + JSON.stringify(setting));
+        // showTimingInfo();
+      // },
+      // error: (err, stat) =>{
+        // resolve(false);
+        // alert("Could not config pulser timing" + err.responseText);
+      // }});
+  // })
 }
 
 function toggleEnablePulser(pulser) {

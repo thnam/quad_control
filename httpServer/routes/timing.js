@@ -31,14 +31,17 @@ router
 
     // rf
     let cmd = "";
-    if (s.width > 0){
+    if (s.rf_width > 0){
       cmd += global.appRoot + "/../hwInterface/bu/configRFPulser";
-      cmd += " " + s.chn + " " + s.delay1 + " " + s.delay2 +
-        " " + s.delay3 + " " + s.delay4;
-      cmd += " " + s.width + " && ";
+      cmd += " " + s.chn + " " + s.rf_delay1 + " " + s.rf_delay2 +
+        " " + s.rf_delay3 + " " + s.rf_delay4;
+      cmd += " " + s.rf_width + " && ";
     }
     else
       httpLog.info("No RF config since width is 0");
+
+    cmd += global.appRoot + "/../hwInterface/bu/configSparePulser";
+    cmd += " " + s.chn + " " + s.spare_length + " " + s.spare_start + " && ";
 
     // pulser
     cmd += global.appRoot + "/../hwInterface/bu/configPulser";
