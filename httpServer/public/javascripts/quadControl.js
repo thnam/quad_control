@@ -104,6 +104,16 @@ socket.on('greeting', function(data) {
   if (data.role !== "main") {
     $(':input').prop('disabled', true);
     $('#topheader').text('ESQ Monitor (read-only)'); 
+
+    // refresh things every 10 sec
+    setInterval(async ()=>{
+      showSparkHistory();
+      showFaultHistory();
+      let pulseMode = await getPulseMode();
+      displayPulseMode(pulseMode);
+      showLastSpark();
+
+    }, 15*1000);
   }
 });
 
