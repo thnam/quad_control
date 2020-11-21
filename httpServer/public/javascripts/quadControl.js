@@ -15,6 +15,8 @@ $(() =>{
   $("#btnSetP2Timing").click(()=>{ configPulser(2);});
   $("#btnSetP3Timing").click(()=>{ configPulser(3);});
   $("#btnSetP4Timing").click(()=>{ configPulser(4);});
+  $("#btnLoadNominalTiming").click(()=>{loadPresetTiming("nominal");});
+  $("#btnLoadPOS100ms").click(()=>{loadPresetTiming("POS100ms");});
 
   getPulseMode().then((currentMode)=>{
     displayPulseMode(currentMode);
@@ -136,7 +138,7 @@ window.onload = () => {
     reflectVPreset();
   })();
 
-  showTimingInfo();
+  refreshTimingInfo();
   showSparkHistory();
   showFaultHistory();
   checkInhibitStatus();

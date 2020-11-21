@@ -15,7 +15,7 @@ var pulser, attr, rfAttr, state, spareAttr;
 // }
 
 const nominal_charge_width = 770000;
-function showTimingInfo() {
+function refreshTimingInfo() {
   $.get(baseUrl + "/timing")
     .done((data)=>{
       if (window.controller === "BU") {
@@ -141,7 +141,7 @@ function longPulse(chn, duration) {
           resolve(true);
           console.log(res + ", timing on pulser " + chn +
             " is configured successfully: " + JSON.stringify(setting));
-          showTimingInfo();
+          refreshTimingInfo();
         },
         error: (err, stat) =>{
           resolve(false);
@@ -154,7 +154,28 @@ function longPulse(chn, duration) {
     return -1;
   }
 }
-function configPulser(chn) {
+
+async function sendConfigTimingRequest(chn, setting) {
+  return new Promise((resolve, reject)=>{
+    $.ajax({
+      type: 'POST',
+      url: baseUrl + '/timing',
+      contentType: "application/json; charset=utf-8",
+      data: JSON.stringify(setting),
+      traditional: true,
+      success: (res) =>{
+        resolve(true);
+        console.log(res + ", timing on pulser " + chn +
+          " is configured successfully: " + JSON.stringify(setting));
+      },
+      error: (err, stat) =>{
+        resolve(false);
+        alert("Could not config pulser", chn, err.responseText);
+      }});
+  })
+}
+
+async function configPulser(chn) {
   let colN = 2 * Number(pulser[chn - 1]);
   let is2Step = timingTab.rows[2].cells[colN].firstChild.value;
   let setting = {"chn": chn};
@@ -168,27 +189,28 @@ function configPulser(chn) {
     setting["spare_" + spareAttr[i]] = parseInt(timingTab.rows[14 + i].cells[colN].firstChild.value);
   }
 
-  return new Promise((resolve, reject)=>{
-    $.ajax({
-      type: 'POST',
-      url: baseUrl + '/timing',
-      contentType: "application/json; charset=utf-8",
-      data: JSON.stringify(setting),
-      traditional: true,
-      success: (res) =>{
-        resolve(true);
-        console.log(res + ", timing on pulser " + chn +
-          " is configured successfully: " + JSON.stringify(setting));
-        showTimingInfo();
-      },
-      error: (err, stat) =>{
-        resolve(false);
-        alert("Could not config pulser timing" + err.responseText);
-      }});
-  })
+  let ret = await sendConfigTimingRequest(chn, setting);
+  refreshTimingInfo();
 }
 
-async function loadPOS100ms() {
+
+// Declaring the parameters as constant makes things easier
+const presetTiming = {
+  "nominal" : {
+    "1":{"charge_end":770010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":1,"step1_end":35010,"step2_start":30010},
+    "4":{"charge_end":770010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":1,"step1_end":35010,"step2_start":30010},
+    "2":{"charge_end":770010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":0,"step1_end":35000,"step2_start":30000},
+    "3":{"charge_end":770010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":0,"step1_end":35000,"step2_start":30000}
+  },
+  "POS100ms" : {
+    "1":{"charge_end":770010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":1,"step1_end":35010,"step2_start":30010},
+    "4":{"charge_end":770010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":1,"step1_end":35010,"step2_start":30010},
+    "2":{"charge_end":770010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":0,"step1_end":35000,"step2_start":30000},
+    "3":{"charge_end":100030010,"charge_start":10,"discharge_end":100740010,"discharge_start":100040010,"enable_2step":0,"step1_end":30010,"step2_start":35010}
+  }
+};
+
+async function loadPresetTiming(config) {
   let current_setting = await $.get(baseUrl + "/timing");
 
   for (var i_chn = 1; i_chn <= 4; i_chn++){
@@ -201,29 +223,15 @@ async function loadPOS100ms() {
       const [key, value] = entry;
       setting["spare_" + key] = value;
     });
+    Object.entries(presetTiming[config][i_chn]).forEach(entry =>{
+      const [key, value] = entry;
+      setting[key] = value;
+    })
 
-    console.log(setting);
+    let ret = await sendConfigTimingRequest(i_chn, setting);
   }
 
-
-  // return new Promise((resolve, reject)=>{
-    // $.ajax({
-      // type: 'POST',
-      // url: baseUrl + '/timing',
-      // contentType: "application/json; charset=utf-8",
-      // data: JSON.stringify(setting),
-      // traditional: true,
-      // success: (res) =>{
-        // resolve(true);
-        // console.log(res + ", timing on pulser " + chn +
-          // " is configured successfully: " + JSON.stringify(setting));
-        // showTimingInfo();
-      // },
-      // error: (err, stat) =>{
-        // resolve(false);
-        // alert("Could not config pulser timing" + err.responseText);
-      // }});
-  // })
+  refreshTimingInfo();
 }
 
 function toggleEnablePulser(pulser) {
