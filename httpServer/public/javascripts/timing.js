@@ -13,8 +13,24 @@ var pulser, attr, rfAttr, state, spareAttr;
 // else {
   // attr = ["os", "fs", "fs2ss", "ss", "ss2dis", "dis"];
 // }
+// Declaring the parameters as constant makes things easier down the road
+const presetTiming = {
+  "nominal" : {
+    "1":{"charge_end":770010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":1,"step1_end":35010,"step2_start":30010},
+    "4":{"charge_end":770010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":1,"step1_end":35010,"step2_start":30010},
+    "2":{"charge_end":770010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":0,"step1_end":35000,"step2_start":30000},
+    "3":{"charge_end":770010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":0,"step1_end":35000,"step2_start":30000}
+  },
+  "POS100ms" : {
+    "1":{"charge_end":770010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":1,"step1_end":35010,"step2_start":30010},
+    "4":{"charge_end":770010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":1,"step1_end":35010,"step2_start":30010},
+    "2":{"charge_end":770010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":0,"step1_end":35000,"step2_start":30000},
+    "3":{"charge_end":100030010,"charge_start":10,"discharge_end":100740010,"discharge_start":100040010,"enable_2step":0,"step1_end":30010,"step2_start":35010}
+  }
+};
 
-const nominal_charge_width = 770000;
+const nominal_charge_width = presetTiming.nominal["1"].charge_end - presetTiming.nominal["1"].charge_start;
+
 function refreshTimingInfo() {
   $.get(baseUrl + "/timing")
     .done((data)=>{
@@ -193,22 +209,6 @@ async function configPulser(chn) {
   refreshTimingInfo();
 }
 
-
-// Declaring the parameters as constant makes things easier
-const presetTiming = {
-  "nominal" : {
-    "1":{"charge_end":770010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":1,"step1_end":35010,"step2_start":30010},
-    "4":{"charge_end":770010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":1,"step1_end":35010,"step2_start":30010},
-    "2":{"charge_end":770010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":0,"step1_end":35000,"step2_start":30000},
-    "3":{"charge_end":770010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":0,"step1_end":35000,"step2_start":30000}
-  },
-  "POS100ms" : {
-    "1":{"charge_end":770010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":1,"step1_end":35010,"step2_start":30010},
-    "4":{"charge_end":770010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":1,"step1_end":35010,"step2_start":30010},
-    "2":{"charge_end":770010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":0,"step1_end":35000,"step2_start":30000},
-    "3":{"charge_end":100030010,"charge_start":10,"discharge_end":100740010,"discharge_start":100040010,"enable_2step":0,"step1_end":30010,"step2_start":35010}
-  }
-};
 
 async function loadPresetTiming(config) {
   let current_setting = await $.get(baseUrl + "/timing");
