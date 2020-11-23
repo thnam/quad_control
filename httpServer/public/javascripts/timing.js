@@ -47,12 +47,12 @@ function refreshTimingInfo() {
               let content = pulserInfo[pulser[i]][state[j]][attr[k]];
               if (j === 0) { //active
                 if (!([2, 3].includes(k))) {
-                  row.cells[colN].innerHTML = content;
+                  row.cells[colN].innerHTML = content.toLocaleString('en-US');
                 }
                 else{
                   let is2Step = (pulserInfo[pulser[i]][state[j]][attr[0]]);
                   if (is2Step) 
-                    row.cells[colN].innerHTML = content;
+                    row.cells[colN].innerHTML = content.toLocaleString("en-US");
                   else 
                     row.cells[colN].innerHTML = "N/A";
                 }
