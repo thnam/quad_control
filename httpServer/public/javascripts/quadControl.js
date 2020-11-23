@@ -96,12 +96,14 @@ const baseUrl = "http://" + document.location.hostname + ":" + document.location
 var socket = io.connect(baseUrl);
 socket.on('greeting', function(data) {
   window.controller = data.controller;
+  window.role = data.role;
   console.info(data.message);
   console.info('Controller in use is', window.controller);
   console.info("Role of this GUI is:", data.role);
 
   // disable all inputs unless it is the main GUI
   if (data.role !== "main") {
+    document.title = "ESQ Monitor (read-only)";
     $(':input').prop('disabled', true);
     $('#topheader').text('ESQ Monitor (read-only)'); 
 

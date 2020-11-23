@@ -14,17 +14,19 @@ var pulser, attr, rfAttr, state, spareAttr;
   // attr = ["os", "fs", "fs2ss", "ss", "ss2dis", "dis"];
 // }
 // Declaring the parameters as constant makes things easier down the road
+// see https://dbweb5.fnal.gov:8443/ECL/gm2/E/show?e=24183 for nominal timing
+// (as of 03/25/2018)
 const presetTiming = {
   "nominal" : {
-    "1":{"charge_end":770010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":1,"step1_end":35010,"step2_start":30010},
-    "4":{"charge_end":770010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":1,"step1_end":35010,"step2_start":30010},
-    "2":{"charge_end":770010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":0,"step1_end":35000,"step2_start":30000},
-    "3":{"charge_end":770010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":0,"step1_end":35000,"step2_start":30000}
+    "1":{"charge_end":775010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":1,"step1_end":35010,"step2_start":30010},
+    "4":{"charge_end":775010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":1,"step1_end":35010,"step2_start":30010},
+    "2":{"charge_end":775010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":0,"step1_end":35000,"step2_start":30000},
+    "3":{"charge_end":775010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":0,"step1_end":35000,"step2_start":30000}
   },
   "POS100ms" : {
-    "1":{"charge_end":770010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":1,"step1_end":35010,"step2_start":30010},
-    "4":{"charge_end":770010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":1,"step1_end":35010,"step2_start":30010},
-    "2":{"charge_end":770010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":0,"step1_end":35000,"step2_start":30000},
+    "1":{"charge_end":775010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":1,"step1_end":35010,"step2_start":30010},
+    "4":{"charge_end":775010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":1,"step1_end":35010,"step2_start":30010},
+    "2":{"charge_end":775010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":0,"step1_end":35000,"step2_start":30000},
     "3":{"charge_end":100030010,"charge_start":10,"discharge_end":100740010,"discharge_start":100040010,"enable_2step":0,"step1_end":30010,"step2_start":35010}
   }
 };
@@ -280,4 +282,48 @@ async function readEnabledPulsers() {
       $(`#cbEnablePulser${key}`).bootstrapToggle('off', true);
     }
   }
+}
+
+function NumericInput(inp, locale) {
+  var numericKeys = '0123456789';
+
+  // restricts input to numeric keys 0-9
+  inp.addEventListener('keypress', function(e) {
+    var event = e || window.event;
+    var target = event.target;
+
+    if (event.charCode == 0) {
+      return;
+    }
+
+    if (-1 == numericKeys.indexOf(event.key)) {
+      // Could notify the user that 0-9 is only acceptable input.
+      event.preventDefault();
+      return;
+    }
+  });
+
+  // add the thousands separator when the user blurs
+  inp.addEventListener('blur', function(e) {
+    var event = e || window.event;
+    var target = event.target;
+
+    var tmp = target.value.replace(/,/g, '');
+    var val = Number(tmp).toLocaleString(locale);
+
+    if (tmp == '') {
+      target.value = '';
+    } else {
+      target.value = val;
+    }
+  });
+
+  // strip the thousands separator when the user puts the input in focus.
+  inp.addEventListener('focus', function(e) {
+    var event = e || window.event;
+    var target = event.target;
+    var val = target.value.replace(/[,.]/g, '');
+
+    target.value = val;
+  });
 }
