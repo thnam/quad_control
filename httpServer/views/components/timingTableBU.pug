@@ -4,7 +4,7 @@ mixin row(title)
     each val, index in [1, 2, 3, 4]
       td(style='text-align:right', id="timing_tab_"+title.toLowerCase().replace(/\W+/g, '_')+"_active_"+index)
       td(style='text-align:right', id="timing_tab_"+title.toLowerCase().replace(/\W+/g, '_')+"_proposed_"+index)
-        input(type='number')
+        input(type='text')
 
 
 .table-responsive

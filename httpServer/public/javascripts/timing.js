@@ -131,48 +131,6 @@ function refreshTimingInfo() {
     });
 }
 
-function longPulse(chn, duration) {
-  if ((chn === 3) | (chn === 4)) {
-    let setting = {"chn": chn};
-    let colN = 2 * Number(pulser[chn - 1]);
-    for (var i = 0, leni = 4; i < leni; i++) {
-      setting[attr[i]] = parseInt(timingTab.rows[2 + i].cells[colN].firstChild.value);
-    }
-      
-    if (setting["enable_2step"] === 0) {
-      setting["charge_end"] = setting["charge_start"] + duration * 1000 * 1000;
-    }
-    else
-      setting["charge_end"] = setting["step2_start"] + duration * 1000 * 1000;
-
-    setting["discharge_start"] = setting["charge_end"] + 10000;
-    setting["discharge_end"] = setting["discharge_start"] + 700000;
-
-    return new Promise((resolve, reject)=>{
-      $.ajax({
-        type: 'POST',
-        url: baseUrl + '/timing',
-        contentType: "application/json; charset=utf-8",
-        data: JSON.stringify(setting),
-        traditional: true,
-        success: (res) =>{
-          resolve(true);
-          console.log(res + ", timing on pulser " + chn +
-            " is configured successfully: " + JSON.stringify(setting));
-          refreshTimingInfo();
-        },
-        error: (err, stat) =>{
-          resolve(false);
-          alert("Could not config pulser timing" + err.responseText);
-        }});
-    })
-  }
-  else {
-    console.log("Invalid request, can only set long pulse on pulser 3 or 4");
-    return -1;
-  }
-}
-
 async function sendConfigTimingRequest(chn, setting) {
   return new Promise((resolve, reject)=>{
     $.ajax({
