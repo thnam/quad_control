@@ -74,7 +74,7 @@ function rampFromZero(nextPulseMode) {
   }
 
   alert("Starting from zero, will only go to 0.8/1.6 kV, then the pulsers will be put in "
-    + nextPulseMode + " pulsing mode.");
+    + nextPulseMode + " pulsing mode. You may want to change pulse mode to CCC manually!");
     window.vSet = {"pfs": 0.8, "pss": 1.6, "pos": 1.6,
       "nfs": 0.8, "nss": 1.6, "nos": 1.6};
     (async function startFromZero() {
@@ -200,7 +200,7 @@ async function doVoltageStep(targetV) {
 
   // console.log(gap, maxGap);
 
-  if (normalizeVoltage(maxGap) <= 0.25) {
+  if (normalizeVoltage(maxGap) <= 0.3) {
     (async () => {
       await setVoltage(targetV);
     })();
