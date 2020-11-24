@@ -3,9 +3,8 @@ mixin row(title)
     td= title
     each val, index in [1, 2, 3, 4]
       td(style='text-align:right', id="timing_tab_"+title.toLowerCase().replace(/\W+/g, '_')+"_active_"+index)
-      td(style='text-align:right', id="timing_tab_"+title.toLowerCase().replace(/\W+/g, '_')+"_proposed_"+index)
-        input(type='text')
-
+      td(style='text-align:right')
+        input(type='text', id="timing_tab_"+title.toLowerCase().replace(/\W+/g, '_')+"_proposed_"+index).proposed_timing
 
 .table-responsive
 table.table.table-hover.table-bordered#timingInfoTable(style='width:80%,float:center')

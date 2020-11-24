@@ -285,3 +285,8 @@ function NumericInput(inp, locale) {
     target.value = val;
   });
 }
+
+proposed_values = document.querySelectorAll(".proposed_timing");
+proposed_values.forEach((node)=>{
+  new NumericInput(node);
+})
