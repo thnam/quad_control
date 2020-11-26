@@ -162,13 +162,13 @@ async function configPulser(chn) {
   let is2Step = timingTab.rows[2].cells[colN].firstChild.value;
   let setting = {"chn": chn};
   for (var i = 0, leni = attr.length; i < leni; i++) {
-    setting[attr[i]] = parseInt(timingTab.rows[2 + i].cells[colN].firstChild.value.replace(/,/g, ''));
+    setting[attr[i]] = parseNumber(timingTab.rows[2 + i].cells[colN].firstChild.value);
   }
   for (var i = 0, leni = rfAttr.length; i < leni; i++) {
-    setting["rf_" + rfAttr[i]] = parseInt(timingTab.rows[9 + i].cells[colN].firstChild.value.replace(/,/g,''));
+    setting["rf_" + rfAttr[i]] = parseNumber(timingTab.rows[9 + i].cells[colN].firstChild.value);
   }
   for (var i = 0, leni = spareAttr.length; i < leni; i++) {
-    setting["spare_" + spareAttr[i]] = parseInt(timingTab.rows[14 + i].cells[colN].firstChild.value.replace(/,/g, ''));
+    setting["spare_" + spareAttr[i]] = parseNumber(timingTab.rows[14 + i].cells[colN].firstChild.value);
   }
 
   let ret = await sendConfigTimingRequest(chn, setting);
@@ -296,3 +296,12 @@ proposed_values = document.querySelectorAll(".proposed_timing");
 proposed_values.forEach((node)=>{
   new NumericInput(node);
 })
+
+function parseNumber(value, locales = navigator.languages) {
+  const example = Intl.NumberFormat(locales).format('1.1');
+  const cleanPattern = new RegExp(`[^-+0-9${ example.charAt( 1 ) }]`, 'g');
+  const cleaned = value.replace(cleanPattern, '');
+  const normalized = cleaned.replace(example.charAt(1), '.');
+
+  return parseInt(normalized);
+}
