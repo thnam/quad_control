@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
 
     std::size_t foundHz = mode_s.find("Hz");
 
-    const uint32_t nominal_charge_width = 770000; // ns
+    const uint32_t nominal_charge_width = 780000; // ns
     const double max_freq = 1.3; // Hz
     uint32_t charge_width[4];
     bool long_pulse = false;
