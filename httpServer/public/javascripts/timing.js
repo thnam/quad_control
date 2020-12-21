@@ -82,10 +82,12 @@ function refreshTimingInfo() {
           document.getElementById("btnInternalBurst").disabled = true; 
         }
         else {
-          document.getElementById("btnInternal5Hz").disabled = false; 
-          document.getElementById("btnInternal2Hz").disabled = false; 
-          document.getElementById("btnInternal10Hz").disabled = false; 
-          document.getElementById("btnInternalBurst").disabled = false; 
+          if (window.role === "main") {
+            document.getElementById("btnInternal5Hz").disabled = false; 
+            document.getElementById("btnInternal2Hz").disabled = false; 
+            document.getElementById("btnInternal10Hz").disabled = false; 
+            document.getElementById("btnInternalBurst").disabled = false; 
+          }
         }
 
         let rfInfo = data.rf;
