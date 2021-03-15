@@ -61,7 +61,7 @@ router
             }
           }
         } else 
-          cmd += global.appRoot + "/../hwInterface/success 2";
+          cmd += global.appRoot + "/../hwInterface/dummy/success 2";
 
         httpLog.info("Command:" + cmd);
         exec(cmd, {env: BUEnv}).then(()=>{
