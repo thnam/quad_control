@@ -147,6 +147,7 @@ function handleSparkEvent(msg) {
   showSparkHistory();
   showLastSpark();
   showAlert("spark");
+  sendSlackAlarm(msg);
   // alert(msg);
 }
 

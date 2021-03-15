@@ -75,7 +75,7 @@ function singlePulse() {
   changePulseMode("1 Hz");
   setTimeout(function(){
     changePulseMode("Stop");
-  }, 1500);
+  }, 2500);
 }
 
 async function getInhibitFlag() {

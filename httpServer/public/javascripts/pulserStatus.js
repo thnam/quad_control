@@ -55,6 +55,7 @@ function handleFaultEvent(msg) {
   changePulseMode("Stop");
   playAlarmSound(window.faultAlarmAudio);
   showAlert("fault");
+  sendSlackAlarm(msg);
   // alert(msg);
 }
 
