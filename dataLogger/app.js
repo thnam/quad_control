@@ -93,6 +93,7 @@ setInterval( () => {
       sparkPatternLogger.info({message: " ", meta: pattern});
     })
     .catch((err)=>{
+      pattern = {"cmd": sparkDataCmd};
       pattern["error"] = true;
       pattern["source"] = config.controller;
       pattern["message"] = JSON.stringify(err.stderr);
