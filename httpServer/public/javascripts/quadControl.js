@@ -173,3 +173,20 @@ socket.on("pulseMode", (data) => {
   displayPulseMode(data.message);
 });
 
+
+const slackHook = 'https://hooks.slack.com/services/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';
+
+function sendSlackAlarm(msg) {
+  return new Promise(function (resolve, reject){
+    $.ajax({
+      type: 'POST',
+      url: slackHook,
+      header: { 'Content-Type': 'application/json' },
+      data: 'payload=' + JSON.stringify({ "text": msg }),
+      dataType: 'json',
+      processData: false,
+      success: (res) => {console.log("Alarm sent."); resolve(true)},
+      error: (err, stat) => {console.error(err.responseText), resolve(false)}
+    });
+  });
+}
