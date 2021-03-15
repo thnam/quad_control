@@ -47,9 +47,9 @@ for ps in pulsers:
   ostr += '"%s" : {"pv": %.3f, "nv": %.3f, "pc": %.3f, "nc": %.3f},' % (
       ps,
       gauss(setpoint["v"][ps], setpoint["v"]["sigma"]),
-      gauss(-1 * setpoint["v"][ps], setpoint["v"]["sigma"]),
+      gauss(setpoint["v"][ps], setpoint["v"]["sigma"]),
       gauss(setpoint["c"][ps], setpoint["v"]["sigma"]),
-      gauss(-1 * setpoint["c"][ps], setpoint["v"]["sigma"]))
+      gauss(setpoint["c"][ps], setpoint["v"]["sigma"]))
 
 ostr += ' "spark": %s}' % float('%.3g' % gauss(-.4, .2))
 #  ostr += ' "spark": %s}' % float('%.3g' % gauss(setpoint["spark"]["value"], setpoint["spark"]["sigma"]))
