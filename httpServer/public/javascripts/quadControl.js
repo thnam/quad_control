@@ -183,10 +183,9 @@ function sendSlackAlarm(msg) {
       url: slackHook,
       header: { 'Content-Type': 'application/json' },
       data: 'payload=' + JSON.stringify({ "text": msg }),
-      dataType: 'json',
       processData: false,
       success: (res) => {console.log("Alarm sent."); resolve(true)},
-      error: (err, stat) => {console.error(err.responseText), resolve(false)}
+      error: (err, stat) => { console.log(err.responseText); resolve(false)}
     });
   });
 }
