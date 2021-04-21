@@ -69,6 +69,14 @@ $(() =>{
     resetFault("POS");
   });
 
+  $("#btnTestSparkAlarm").click(() => {playAlarmSound(window.sparkAlarmAudio);});
+  $("#btnTestFaultAlarm").click(() => {playAlarmSound(window.faultAlarmAudio);});
+  $("#btnTestStopAlarm").click(() => {
+    window.faultAlarmAudio.pause();
+    window.faultAlarmAudio.currentTime = 0.0;
+    window.sparkAlarmAudio.pause();
+    window.sparkAlarmAudio.currentTime = 0.0;
+  });
 })
 
 plotColor = [
