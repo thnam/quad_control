@@ -1,6 +1,6 @@
 window.handlingFaultEvent = false;
 
-socket.on("pulserStatus", (data) => {
+socket.on("pulserStatus", async (data) => {
   const values = data.pulserStatus;
   displayPulserStatus(values[0].meta);
 
@@ -11,7 +11,8 @@ socket.on("pulserStatus", (data) => {
   let ps0 = values[0].meta;
   let nFaults = ps0.pos.fault + ps0.nos.fault + ps0.pts.fault + ps0.nts.fault;
   if (nFaults > 0) {
-    if (!window.trolleyRun) { // not handling when trolley run is going
+    let inhib = await getInhibitFlag();
+    if ((!window.trolleyRun) && (!inhib.inhibit)) { // not handling when trolley run is going
       if (window.handlingFaultEvent == false) {
         console.log("Faulted!");
         if (window.ramping) {

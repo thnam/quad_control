@@ -3,8 +3,10 @@ socket.on("sparkPattern", (data) => {
   displaySparkInfo();
 });
 
-socket.on("sparked", (data) =>{
-  if (!window.trolleyRun) { // not handling when trolley run is going
+socket.on("sparked", async (data) =>{
+  let inhib = await getInhibitFlag();
+
+  if ((!window.trolleyRun) && (!inhib.inhibit)) { // not handling when trolley run is going
     if (window.handlingSparkEvent === false) {
       console.log("Sparked message received!");
       if (window.ramping) {

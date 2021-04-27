@@ -182,7 +182,8 @@ socket.on("pulseMode", (data) => {
 });
 
 
-const slackHook = 'https://hooks.slack.com/services/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';
+// const slackHook = 'https://hooks.slack.com/services/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';
+const slackHook = 'https://hooks.slack.com/services/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';
 
 function sendSlackAlarm(msg) {
   return new Promise(function (resolve, reject){
