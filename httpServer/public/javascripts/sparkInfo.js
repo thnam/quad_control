@@ -164,7 +164,7 @@ function showSparkHistory(sparkSign="&#9889") {
       sparkTable.empty();
 
       for (var i = 0; i < data.length; i++) {
-        timestamp = new Date(data[i].timestamp);
+        timestamp = new Date(data[i].timestamp).toLocaleString('en-US', { timeZone: 'America/Chicago' });
         timestamp = moment(timestamp).format('YYYY/MM/DD HH:mm');
         pattern = data[i].meta;
 
@@ -196,7 +196,7 @@ function showSparkHistory(sparkSign="&#9889") {
 function showLastSpark() {
   $.get(baseUrl + "/lastSpark")
     .done((data)=>{
-      timestamp = new Date(data.timestamp);
+      timestamp = new Date(data.timestamp).toLocaleString('en-US', { timeZone: 'America/Chicago' });
       timestamp = moment(timestamp).format('YYYY-MM-DD HH:mm:ss');
       pattern = data.meta;
       patternStr = "";

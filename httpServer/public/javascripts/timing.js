@@ -34,7 +34,19 @@ const presetTiming = {
     "4":{"charge_end":100030010,"charge_start":10,"discharge_end":100740010,"discharge_start":100040010,"enable_2step":1,"step1_end":35010,"step2_start":30010},
     "2":{"charge_end":100030010,"charge_start":10,"discharge_end":100740010,"discharge_start":100040010,"enable_2step":0,"step1_end":30010,"step2_start":35010},
     "3":{"charge_end":100030010,"charge_start":10,"discharge_end":100740010,"discharge_start":100040010,"enable_2step":0,"step1_end":30010,"step2_start":35010}
-  }
+  },
+  "conventional_vertical_scraping_only" : {
+    "1":{"charge_end":775010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":1,"step1_end":35010,"step2_start":30010},
+    "4":{"charge_end":775010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":1,"step1_end":61010,"step2_start":56010},
+    "2":{"charge_end":775010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":0,"step1_end":35000,"step2_start":30000},
+    "3":{"charge_end":775010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":0,"step1_end":35000,"step2_start":30000}
+  },
+  "conventional_horizontal_scraping_only" : {
+    "1":{"charge_end":775010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":1,"step1_end":61010,"step2_start":56010},
+    "4":{"charge_end":775010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":1,"step1_end":35010,"step2_start":30010},
+    "2":{"charge_end":775010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":0,"step1_end":35000,"step2_start":30000},
+    "3":{"charge_end":775010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":0,"step1_end":35000,"step2_start":30000}
+  },
 };
 
 const nominal_charge_width = presetTiming.nominal["1"].charge_end - presetTiming.nominal["1"].charge_start;
