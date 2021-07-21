@@ -1,35 +1,31 @@
 // Adapt from BUTool.cxx
 #include <string>
 #include <vector>
+#include <map>
 #include <iostream>
 #include <sstream>
 #include <stdlib.h>
 #include <cstdlib>
 #include <bitset>
+#include <fstream>
+#include <iostream>
+#include <string>
 
 #include <future>         // std::async, std::future
 #include <chrono>         // std::chrono::milliseconds
 #include <thread>
 
-int main()
-{
-	std::future<int> future = std::async(std::launch::async, [](){ 
-			std::this_thread::sleep_for(std::chrono::seconds(3));
-			return 8;  
-			}); 
+#include "BoardMap.h"
 
-	std::cout << "waiting...\n";
-	std::future_status status;
-	do {
-		status = future.wait_for(std::chrono::seconds(1));
-		if (status == std::future_status::deferred) {
-			std::cout << "deferred\n";
-		} else if (status == std::future_status::timeout) {
-			std::cout << "timeout\n";
-		} else if (status == std::future_status::ready) {
-			std::cout << "ready!\n";
-		}
-	} while (status != std::future_status::ready); 
+int main() {
+  BoardMap boardMap = readBoardMap();
 
-	std::cout << "result is " << future.get() << '\n';
+  for (auto& t : boardMap) {
+    std::cout << t.first << ": ";
+    for (auto& k : t.second)
+      std::cout << k << " ";
+    std::cout << std::endl;
+  }
+
+  return 0;
 }

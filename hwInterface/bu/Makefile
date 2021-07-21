@@ -1,6 +1,6 @@
 CXX = g++
 CXXFLAGS+=-g -O2 -std=c++11 -Wall 
-CXXFLAGS+=-Iinclude -I$(G2QUAD_COMPILETIME_PATH)/include
+CXXFLAGS+=-Iinclude -I$(G2QUAD_COMPILETIME_PATH)/include -Isrc
 CXXFLAGS+=-I$(BUTOOL_COMPILETIME_PATH)/include
 
 LIBS = -L$(BUTOOL_LINK_PATH)/lib -lBUException
@@ -11,6 +11,7 @@ LIBS += -Wl,-rpath=$(G2QUAD_COMPILETIME_PATH)/lib
 
 src = ./src
 obj = ./obj
+tool = readBoardMap.cc
 
 targets = test pulserStatus setPulseMode getFaultPattern readPulserTiming\
 					configPulser configRFPulser armSparkDetection getSparkStatus\
@@ -21,7 +22,7 @@ all: $(targets)
 
 .PHONY: all clean
 
-%: $(obj)/%.o
+%: $(obj)/%.o $(obj)/readBoardMap.o
 	@echo "Linking $@ ..."
 	@$(CXX) -o $@ $^ $(LIBS)
 
