@@ -15,7 +15,10 @@
 #include <getopt.h>
 
 #include "g2quad/g2quad.hh"
-g2quad * quad;
+#include "BoardMap.h"
+
+g2quad * topQuad;
+g2quad * botQuad;
 
 // brd 1 <-> Q1, channel: 1-st, 2-sb, 3-si, 4-so, 5-lt, 6-lb, 7-li, 8-lo
 // std::vector<std::string> qPlates = {"st", "sb", "si", "so",
@@ -25,16 +28,19 @@ std::vector<std::string> qPlates = {"t", "b", "i", "o"};
 
 int main(int argc, char *argv[]) {
   std::string addressTable(std::getenv("G2QUAD_ADDRESS_TABLE"));
-  std::string ipAddress("192.168.30.89");
+  std::string topZynqIpAddress("192.168.30.12");
+  std::string botZynqIpAddress("192.168.30.11");
+  BoardMap boardMap = readBoardMap();
+
   try {
-    quad = new g2quad(addressTable, ipAddress);
+    topQuad = new g2quad(addressTable, topZynqIpAddress);
+    botQuad = new g2quad(addressTable, botZynqIpAddress);
   }catch(const std::exception & e) {
-    std::cerr << "Could not connect to the Zynq at " << ipAddress << std::endl;
+    std::cerr << "Could not connect to the Zynq at " << topZynqIpAddress <<
+      " or at " << botZynqIpAddress << std::endl;
     std::cerr<< e.what() << std::endl;
     return -1;
   }
-
-
 
   std::stringstream os;
   os << "{";
@@ -42,7 +48,12 @@ int main(int argc, char *argv[]) {
     os << "\"q" << iboard << "\":{";
     std::stringstream reg;
     reg << "ADCBOARD." << iboard << ".ED.ARMED";
-    uint32_t ret = quad->Read(reg.str()) & 0xFF;
+    uint32_t ret;
+    if (std::find(boardMap["top"].begin(), boardMap["top"].end(), iboard) != boardMap["top"].end())
+      ret = topQuad->Read(reg.str()) & 0xFF;
+    else if (std::find(boardMap["bot"].begin(), boardMap["bot"].end(), iboard) != boardMap["bot"].end())
+      ret = botQuad->Read(reg.str()) & 0xFF;
+
     for (uint32_t k = 0; k < qTypes.size(); ++k) {
       os << "\"" << qTypes.at(k) << "\": {"; 
       for (uint32_t j = 0; j < qPlates.size(); ++j) {

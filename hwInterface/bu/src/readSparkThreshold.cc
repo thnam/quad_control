@@ -15,7 +15,10 @@
 #include <getopt.h>
 
 #include "g2quad/g2quad.hh"
-g2quad * quad;
+#include "BoardMap.h"
+
+g2quad * topQuad;
+g2quad * botQuad;
 std::vector<std::string> params { "EN_LOW", "EN_HIGH", "LOW_THRESH",
   "HIGH_THRESH"};
 std::vector<uint32_t> values { 0x1, 0x1};
@@ -24,11 +27,16 @@ std::vector<std::string> qPlates = {"t", "b", "i", "o"};
 
 int main(int argc, char *argv[]) {
   std::string addressTable(std::getenv("G2QUAD_ADDRESS_TABLE"));
-  std::string ipAddress("192.168.30.89");
+  std::string topZynqIpAddress("192.168.30.12");
+  std::string botZynqIpAddress("192.168.30.11");
+  BoardMap boardMap = readBoardMap();
+
   try {
-    quad = new g2quad(addressTable, ipAddress);
+    topQuad = new g2quad(addressTable, topZynqIpAddress);
+    botQuad = new g2quad(addressTable, botZynqIpAddress);
   }catch(const std::exception & e) {
-    std::cerr << "Could not connect to the Zynq at " << ipAddress << std::endl;
+    std::cerr << "Could not connect to the Zynq at " << topZynqIpAddress <<
+      " or at " << botZynqIpAddress << std::endl;
     std::cerr<< e.what() << std::endl;
     return -1;
   }
@@ -49,8 +57,8 @@ int main(int argc, char *argv[]) {
     // ADCBOARD.4.ED.CH8.HIGH_THRESH: 2240
   std::string regLo("ADCBOARD.1.ED.CH1.LOW_THRESH");
   std::string regHi("ADCBOARD.1.ED.CH1.HIGH_THRESH");
-  std::cout << "{\"low\":" <<  quad->Read(regLo) <<
-    "," << "\"high\":" << quad->Read(regHi) << "}"
+  std::cout << "{\"low\":" <<  topQuad->Read(regLo) <<
+    "," << "\"high\":" << topQuad->Read(regHi) << "}"
     << std::endl;
 
 }

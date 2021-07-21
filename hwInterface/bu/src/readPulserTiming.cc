@@ -15,24 +15,33 @@
 #include <getopt.h>
 
 #include "g2quad/g2quad.hh"
+#include "BoardMap.h"
 
-g2quad * quad;
+g2quad * topQuad;
+g2quad * botQuad;
+
 const uint32_t CLK_PERIOD_NS = 10; // ns
-void readPulserSettings(unsigned int chn = 1);
-std::string PulserSettingsJson(unsigned int chn = 1);
-std::string readRFSettings(unsigned int chn);
-std::string readSpareIOSettings(unsigned int chn);
+void readPulserSettings(g2quad * quad = topQuad, unsigned int chn = 1);
+std::string PulserSettingsJson(g2quad * quad = topQuad, unsigned int chn = 1);
+std::string readRFSettings(g2quad * quad = topQuad, unsigned int chn = 1);
+std::string readSpareIOSettings(g2quad * quad = topQuad, unsigned int chn = 1);
 
 int main(int argc, char *argv[])
 {
   std::string addressTable(std::getenv("G2QUAD_ADDRESS_TABLE"));
-  std::string ipAddress("192.168.30.89");
+  std::string topZynqIpAddress("192.168.30.12");
+  std::string botZynqIpAddress("192.168.30.11");
+  BoardMap boardMap = readBoardMap();
 
-  quad = new g2quad(addressTable, ipAddress);
+  topQuad = new g2quad(addressTable, topZynqIpAddress);
+  botQuad = new g2quad(addressTable, botZynqIpAddress);
 
   std::cout << "{\"Pulser\":{";
   for (int i = 0; i < 4; ++i) {
-    std::cout << PulserSettingsJson(1 + i);
+    if (std::find(boardMap["top"].begin(), boardMap["top"].end(), i+1) != boardMap["top"].end())
+      std::cout << PulserSettingsJson(topQuad, 1 + i);
+    if (std::find(boardMap["bot"].begin(), boardMap["bot"].end(), i+1) != boardMap["bot"].end())
+      std::cout << PulserSettingsJson(botQuad, 1 + i);
 
     if (i == 3) 
       std::cout << "},";
@@ -42,7 +51,11 @@ int main(int argc, char *argv[])
 
   std::cout << "\"RF\":{";
   for (int i = 0; i < 4; ++i) {
-    std::cout << readRFSettings(i + 1); 
+    if (std::find(boardMap["top"].begin(), boardMap["top"].end(), i+1) != boardMap["top"].end())
+      std::cout << readRFSettings(topQuad, i + 1); 
+    if (std::find(boardMap["bot"].begin(), boardMap["bot"].end(), i+1) != boardMap["bot"].end())
+      std::cout << readRFSettings(botQuad, i + 1); 
+
     if (i == 3) 
       std::cout << "},";
     else
@@ -51,7 +64,10 @@ int main(int argc, char *argv[])
 
   std::cout << "\"Spare\":{";
   for (int i = 0; i < 4; ++i) {
-    std::cout << readSpareIOSettings(i + 1); 
+    if (std::find(boardMap["top"].begin(), boardMap["top"].end(), i+1) != boardMap["top"].end())
+      std::cout << readSpareIOSettings(topQuad, i + 1); 
+    if (std::find(boardMap["bot"].begin(), boardMap["bot"].end(), i+1) != boardMap["bot"].end())
+      std::cout << readSpareIOSettings(botQuad, i + 1); 
     if (i == 3) 
       std::cout << "}}";
     else
@@ -62,7 +78,7 @@ int main(int argc, char *argv[])
   return 0;
 }
 
-std::string readSpareIOSettings(unsigned int chn){
+std::string readSpareIOSettings(g2quad * quad, unsigned int chn){
   char tmpStr[20];
   sprintf(tmpStr, "ADCBOARD.%d", chn);
   std::string prefix(tmpStr);
@@ -80,7 +96,7 @@ std::string readSpareIOSettings(unsigned int chn){
   return os.str();
 }
 
-std::string PulserSettingsJson(unsigned int chn){
+std::string PulserSettingsJson(g2quad * quad, unsigned int chn){
   char tmpStr[120];
   sprintf(tmpStr, "ADCBOARD.%d.FP_PULSER.", chn);
   std::string prefix0(tmpStr);
@@ -123,7 +139,7 @@ std::string PulserSettingsJson(unsigned int chn){
   return os.str();
 }
 
-void readPulserSettings(unsigned int chn){
+void readPulserSettings(g2quad * quad, unsigned int chn){
   char tmpStr[120];
   sprintf(tmpStr, "ADCBOARD.%d.FP_PULSER.", chn);
   std::string prefix0(tmpStr);
@@ -148,7 +164,7 @@ void readPulserSettings(unsigned int chn){
 
 }
 
-std::string readRFSettings(unsigned int chn){
+std::string readRFSettings(g2quad * quad, unsigned int chn){
   char base[120];
   char reg[256];
   sprintf(base, "ADCBOARD.%d.FP_RF_PULSER", chn);

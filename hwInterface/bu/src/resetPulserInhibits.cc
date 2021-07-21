@@ -15,13 +15,20 @@
 #include <getopt.h>
 
 #include "g2quad/g2quad.hh"
-g2quad * quad;
+#include "BoardMap.h"
+
+g2quad * topQuad;
+g2quad * botQuad;
 
 int main(int argc, char *argv[]) {
   std::string addressTable(std::getenv("G2QUAD_ADDRESS_TABLE"));
-  std::string ipAddress("192.168.30.89");
+  std::string topZynqIpAddress("192.168.30.12");
+  std::string botZynqIpAddress("192.168.30.11");
+  BoardMap boardMap = readBoardMap();
+
   try {
-    quad = new g2quad(addressTable, ipAddress);
+    topQuad = new g2quad(addressTable, topZynqIpAddress);
+    botQuad = new g2quad(addressTable, botZynqIpAddress);
   }catch(const std::exception & e) {
     std::cerr << "Could not connect to the Zynq at " << ipAddress << std::endl;
     std::cerr<< e.what() << std::endl;
