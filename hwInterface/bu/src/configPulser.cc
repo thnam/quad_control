@@ -15,12 +15,15 @@
 #include <getopt.h>
 
 #include "g2quad/g2quad.hh"
+#include "BoardMap.h"
+
+g2quad * quad;
+BoardMap bm;
 
 std::vector<std::string> state = {"ACTIVE", "PROPOSED"};
 std::vector<std::string> params { "ENABLE_2STEP",
   "CHARGE_START", "CHARGE_END", "STEP1_END", "STEP2_START",
   "DISCHARGE_START", "DISCHARGE_END" };
-g2quad * quad;
 
 void showUsage(char * name);
 void readPulserSettings(unsigned int chn = 1);
@@ -36,14 +39,8 @@ int main(int argc, char *argv[])
 
   // open a connection
   std::string addressTable(std::getenv("G2QUAD_ADDRESS_TABLE"));
-  std::string ipAddress("192.168.30.89");
-  try {
-    quad = new g2quad(addressTable, ipAddress);
-  }catch(const std::exception & e) {
-    std::cerr << "Could not connect to the Zynq at " << ipAddress << std::endl;
-    std::cerr<< e.what() << std::endl;
-    return -1;
-  }
+  std::string topZynqIpAddress("192.168.30.12");
+  std::string botZynqIpAddress("192.168.30.11");
 
   std::map<std::string, uint32_t> setting;
   int32_t chn = atoi(argv[1]);
@@ -70,6 +67,19 @@ int main(int argc, char *argv[])
   char tmpStr[120];
   sprintf(tmpStr, "ADCBOARD.%d.FP_PULSER.", chn);
   std::string const base(tmpStr);
+
+  bm = readBoardMap();
+  try {
+    if (std::find(bm["top"].begin(), bm["top"].end(), chn) != bm["top"].end()) 
+      quad = new g2quad(addressTable, topZynqIpAddress);
+    else if (std::find(bm["bot"].begin(), bm["bot"].end(), chn) != bm["bot"].end()) 
+      quad = new g2quad(addressTable, botZynqIpAddress);
+  }catch(const std::exception & e) {
+    std::cerr << "Could not connect to the Zynq at " << topZynqIpAddress <<
+      " or at " << botZynqIpAddress << std::endl;
+    std::cerr<< e.what() << std::endl;
+    return -1;
+  }
 
   quad->Write("TRIGGER.FREE_RUN.ENABLE", 0);
   quad->Write(base + "ENABLE", 0);

@@ -81,7 +81,6 @@ int main(int argc, char *argv[])
     std::string addressTable(std::getenv("G2QUAD_ADDRESS_TABLE"));
     std::string mode_s(mode);
 
-    // g2quad * pulser = new g2quad(addressTable, std::string(ipAddress));
     devTop = new g2quad(addressTable, std::string(topZynqIpAddress));
     devBot = new g2quad(addressTable, std::string(botZynqIpAddress));
 

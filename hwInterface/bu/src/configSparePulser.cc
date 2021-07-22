@@ -15,7 +15,9 @@
 #include <getopt.h>
 
 #include "g2quad/g2quad.hh"
+#include "BoardMap.h"
 
+BoardMap bm;
 g2quad * quad;
 
 void showUsage(char * name);
@@ -27,6 +29,10 @@ std::vector<std::string> spareIORegs = {
 };
 const uint32_t CLK_PERIOD_NS = 10; // ns
 
+std::string addressTable(std::getenv("G2QUAD_ADDRESS_TABLE"));
+std::string topZynqIpAddress("192.168.30.12");
+std::string botZynqIpAddress("192.168.30.11");
+
 int main(int argc, char *argv[])
 {
   // check arguments, only accept 2 cases
@@ -36,17 +42,7 @@ int main(int argc, char *argv[])
     return -1;
   }
 
-  // open a connection
-  std::string addressTable(std::getenv("G2QUAD_ADDRESS_TABLE"));
-  std::string ipAddress("192.168.30.89");
-  try {
-    quad = new g2quad(addressTable, ipAddress);
-  }catch(const std::exception & e) {
-    std::cerr << "Could not connect to the Zynq at " << ipAddress << std::endl;
-    std::cerr<< e.what() << std::endl;
-    return -1;
-  }
-
+  bm = readBoardMap();
   // if there is no argument, just printout the settings
   if (argc == 1) {
     std::cout << "{\"Spare\":{";
@@ -65,6 +61,19 @@ int main(int argc, char *argv[])
   int chn = atoi(argv[1]);
   int length = atoi(argv[2]);
   int delay = atoi(argv[3]);
+
+  try {
+    if (std::find(bm["top"].begin(), bm["top"].end(), chn) != bm["top"].end()) 
+      quad = new g2quad(addressTable, topZynqIpAddress);
+    else if (std::find(bm["bot"].begin(), bm["bot"].end(), chn) != bm["bot"].end()) 
+      quad = new g2quad(addressTable, botZynqIpAddress);
+  }catch(const std::exception & e) {
+    std::cerr << "Could not connect to the Zynq at " << topZynqIpAddress <<
+      " or at " << botZynqIpAddress << std::endl;
+    std::cerr<< e.what() << std::endl;
+    return -1;
+  }
+
   if (length < 0) {
     std::cerr << "Invalid length, should be a positive integer" << std::endl;
     return -1;
@@ -105,6 +114,11 @@ std::string readSpareIOSettings(unsigned int chn){
 
   std::stringstream os;
   os << "\"" << chn <<"\":{";
+
+  if (std::find(bm["top"].begin(), bm["top"].end(), chn) != bm["top"].end()) 
+    quad = new g2quad(addressTable, topZynqIpAddress);
+  else if (std::find(bm["bot"].begin(), bm["bot"].end(), chn) != bm["bot"].end()) 
+    quad = new g2quad(addressTable, botZynqIpAddress);
 
   std::string reg;
   reg = prefix + "." + "FP_RF_TRIG_SPARE_EN";
