@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
 {
   // open a connection
   std::string addressTable(std::getenv("G2QUAD_ADDRESS_TABLE"));
-  std::string ipAddress("192.168.30.89");
+  std::string ipAddress("192.168.30.11");
   try {
     quad = new g2quad(addressTable, ipAddress);
   }catch(const std::exception & e) {

@@ -1,0 +1,4 @@
+# Two lines show ADC board configuration
+# first line shows boards on top zynq, second line shows boards on bot zynq
+1 2
+3 4

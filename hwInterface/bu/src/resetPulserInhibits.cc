@@ -30,7 +30,8 @@ int main(int argc, char *argv[]) {
     topQuad = new g2quad(addressTable, topZynqIpAddress);
     botQuad = new g2quad(addressTable, botZynqIpAddress);
   }catch(const std::exception & e) {
-    std::cerr << "Could not connect to the Zynq at " << ipAddress << std::endl;
+    std::cerr << "Could not connect to the Zynq at " << topZynqIpAddress <<
+      " or at " << botZynqIpAddress << std::endl;
     std::cerr<< e.what() << std::endl;
     return -1;
   }
@@ -39,11 +40,18 @@ int main(int argc, char *argv[]) {
     std::stringstream reg;
     // ADCBOARD.1.FP_PULSER.RESET_INHIBIT
     reg << "ADCBOARD." << iBoard << ".FP_PULSER.RESET_INHIBIT";
-    quad->Write(reg.str(), 0x1);
+    if (std::find(boardMap["top"].begin(), boardMap["top"].end(), iBoard) != boardMap["top"].end())
+      topQuad->Write(reg.str(), 0x1);
+    else if (std::find(boardMap["bot"].begin(), boardMap["bot"].end(), iBoard) != boardMap["bot"].end())
+      botQuad->Write(reg.str(), 0x1);
 
     std::stringstream rf_reg;
     rf_reg << "ADCBOARD." << iBoard << ".FP_RF_PULSER.RESET";
-    quad->Write(rf_reg.str(), 0x1);
+    if (std::find(boardMap["top"].begin(), boardMap["top"].end(), iBoard) != boardMap["top"].end())
+      topQuad->Write(rf_reg.str(), 0x1);
+    else if (std::find(boardMap["bot"].begin(), boardMap["bot"].end(), iBoard) != boardMap["bot"].end())
+      botQuad->Write(rf_reg.str(), 0x1);
+
   }
 }
 

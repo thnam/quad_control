@@ -15,9 +15,22 @@
 #include <getopt.h>
 
 #include "g2quad/g2quad.hh"
+#include "BoardMap.h"
+
+g2quad * devTop;
+g2quad * devBot;
+BoardMap bm;
 
 void showUsage(char * name);
-void resetInhibit(g2quad * pulser);
+void resetInhibit();
+void enableTop(){
+  devTop->Write("TRIGGER.STATUS.ENABLE_PULSERS", 0x1);
+  devTop->Write("TRIGGER.FREE_RUN.ENABLE", 0x1);
+}
+void enableBot(){
+  devBot->Write("TRIGGER.STATUS.ENABLE_PULSERS", 0x1);
+  devBot->Write("TRIGGER.FREE_RUN.ENABLE", 0x1);
+}
 
 int main(int argc, char *argv[])
 {
@@ -25,7 +38,8 @@ int main(int argc, char *argv[])
   int tsleep = 750; // ms
   unsigned int maxFreq = 12;
   const char *mode = NULL;
-  const char *ipAddress = NULL;
+  const char *topZynqIpAddress = NULL;
+  const char *botZynqIpAddress = NULL;
 
   if (argc < 2) {
     std::cerr << "A pulse mode is required." << std::endl;
@@ -33,13 +47,16 @@ int main(int argc, char *argv[])
     return -1;
   }
 
-  while ((opt = getopt(argc, argv, "m:h:")) != -1) {
+  while ((opt = getopt(argc, argv, "m:t:b:")) != -1) {
     switch (opt) {
       case 'm':
         mode = optarg;
         break;
-      case 'h':
-        ipAddress = optarg;
+      case 't':
+        topZynqIpAddress = optarg;
+        break;
+      case 'b':
+        botZynqIpAddress = optarg;
         break;
       default: /* '?' */
         showUsage(argv[0]);
@@ -53,14 +70,20 @@ int main(int argc, char *argv[])
     return -1;
   }
 
-  if (!ipAddress) 
-    ipAddress = "192.168.30.89";
+  if (!topZynqIpAddress) 
+    topZynqIpAddress = "192.168.30.12";
+  if (!botZynqIpAddress) 
+    botZynqIpAddress = "192.168.30.11";
+
+  bm = readBoardMap();
 
   try {
     std::string addressTable(std::getenv("G2QUAD_ADDRESS_TABLE"));
     std::string mode_s(mode);
 
-    g2quad * pulser = new g2quad(addressTable, std::string(ipAddress));
+    // g2quad * pulser = new g2quad(addressTable, std::string(ipAddress));
+    devTop = new g2quad(addressTable, std::string(topZynqIpAddress));
+    devBot = new g2quad(addressTable, std::string(botZynqIpAddress));
 
     std::size_t foundHz = mode_s.find("Hz");
 
@@ -73,7 +96,12 @@ int main(int argc, char *argv[])
       std::stringstream reg0, reg1;
       reg0 << "ADCBOARD." << i + 1 << ".FP_PULSER.ACTIVE.CHARGE_START";
       reg1 << "ADCBOARD." << i + 1 << ".FP_PULSER.ACTIVE.CHARGE_END";
-      charge_width[i] = 10 * (pulser->Read(reg1.str()) - pulser->Read(reg0.str()));
+
+      if (std::find(bm["top"].begin(), bm["top"].end(), i+1) != bm["top"].end()) 
+        charge_width[i] = 10 * (devTop->Read(reg1.str()) - devTop->Read(reg0.str()));
+      else if (std::find(bm["bot"].begin(), bm["bot"].end(), i+1) != bm["bot"].end()) 
+        charge_width[i] = 10 * (devBot->Read(reg1.str()) - devBot->Read(reg0.str()));
+
       if (charge_width[i] > nominal_charge_width) 
         long_pulse = true;
     }
@@ -95,43 +123,73 @@ int main(int argc, char *argv[])
     // General rule: stop pulsing first, sleep for some time before switch
     // back to pulsing
     if (mode_s == "Stop") { // easy one
-      pulser->Write("TRIGGER.FREE_RUN.ENABLE", 0x0);
-      pulser->Write("TRIGGER.FREE_RUN.EN_FR_TRIG", 0x0);
-      pulser->Write("TRIGGER.FREE_RUN.EN_EXT_TRIG", 0x0);
+      devTop->Write("TRIGGER.FREE_RUN.ENABLE", 0x0);
+      devTop->Write("TRIGGER.FREE_RUN.EN_FR_TRIG", 0x0);
+      devTop->Write("TRIGGER.FREE_RUN.EN_EXT_TRIG", 0x0);
+      devBot->Write("TRIGGER.FREE_RUN.ENABLE", 0x0);
+      devBot->Write("TRIGGER.FREE_RUN.EN_FR_TRIG", 0x0);
+      devBot->Write("TRIGGER.FREE_RUN.EN_EXT_TRIG", 0x0);
     }
     else if (mode_s == "External" || mode_s == "CCC"){ // disable fr_trig, enable ext_trig
-      resetInhibit(pulser);
-      pulser->Write("TRIGGER.FREE_RUN.ENABLE", 0x0);
-      pulser->Write("TRIGGER.STATUS.ENABLE_PULSERS", 0x0);
-      pulser->Write("TRIGGER.FREE_RUN.EN_FR_TRIG", 0x0);
-      pulser->Write("TRIGGER.FREE_RUN.EN_EXT_TRIG", 0x1);
+      resetInhibit();
+      devTop->Write("TRIGGER.FREE_RUN.ENABLE", 0x0);
+      devTop->Write("TRIGGER.STATUS.ENABLE_PULSERS", 0x0);
+      devTop->Write("TRIGGER.FREE_RUN.EN_FR_TRIG", 0x0);
+      devTop->Write("TRIGGER.FREE_RUN.EN_EXT_TRIG", 0x1);
+
+      devBot->Write("TRIGGER.FREE_RUN.ENABLE", 0x0);
+      devBot->Write("TRIGGER.STATUS.ENABLE_PULSERS", 0x0);
+      devBot->Write("TRIGGER.FREE_RUN.EN_FR_TRIG", 0x0);
+      devBot->Write("TRIGGER.FREE_RUN.EN_EXT_TRIG", 0x1);
       std::this_thread::sleep_for(std::chrono::milliseconds(tsleep));
-      pulser->Write("TRIGGER.FREE_RUN.ENABLE", 0x1);
-      pulser->Write("TRIGGER.STATUS.ENABLE_PULSERS", 0x1);
+      devTop->Write("TRIGGER.FREE_RUN.ENABLE", 0x1);
+      devTop->Write("TRIGGER.STATUS.ENABLE_PULSERS", 0x1);
+      devBot->Write("TRIGGER.FREE_RUN.ENABLE", 0x1);
+      devBot->Write("TRIGGER.STATUS.ENABLE_PULSERS", 0x1);
     }
     else if (mode_s == "Single"){ // single pulse on all channels
-      resetInhibit(pulser);
-      pulser->Write("TRIGGER.FREE_RUN.ENABLE", 0x0);
-      pulser->Write("TRIGGER.STATUS.ENABLE_PULSERS", 0x1);
-      pulser->Write("ADCBOARD.1.FP_PULSER.USER_PULSE", 0x1);
-      pulser->Write("ADCBOARD.2.FP_PULSER.USER_PULSE", 0x1);
-      pulser->Write("ADCBOARD.3.FP_PULSER.USER_PULSE", 0x1);
-      pulser->Write("ADCBOARD.4.FP_PULSER.USER_PULSE", 0x1);
-      pulser->Write("TRIGGER.STATUS.ENABLE_PULSERS", 0x0);
+      resetInhibit();
+      devTop->Write("TRIGGER.FREE_RUN.ENABLE", 0x0);
+      devTop->Write("TRIGGER.STATUS.ENABLE_PULSERS", 0x1);
+      devTop->Write("ADCBOARD.1.FP_PULSER.USER_PULSE", 0x1);
+      devTop->Write("ADCBOARD.2.FP_PULSER.USER_PULSE", 0x1);
+      devTop->Write("ADCBOARD.3.FP_PULSER.USER_PULSE", 0x1);
+      devTop->Write("ADCBOARD.4.FP_PULSER.USER_PULSE", 0x1);
+      devTop->Write("TRIGGER.STATUS.ENABLE_PULSERS", 0x0);
+
+      devBot->Write("TRIGGER.FREE_RUN.ENABLE", 0x0);
+      devBot->Write("TRIGGER.STATUS.ENABLE_PULSERS", 0x1);
+      devBot->Write("ADCBOARD.1.FP_PULSER.USER_PULSE", 0x1);
+      devBot->Write("ADCBOARD.2.FP_PULSER.USER_PULSE", 0x1);
+      devBot->Write("ADCBOARD.3.FP_PULSER.USER_PULSE", 0x1);
+      devBot->Write("ADCBOARD.4.FP_PULSER.USER_PULSE", 0x1);
+      devBot->Write("TRIGGER.STATUS.ENABLE_PULSERS", 0x0);
     }
     else if (mode_s == "Burst"){
-      resetInhibit(pulser);
-      pulser->Write("TRIGGER.FREE_RUN.ENABLE", 0x0);
+      resetInhibit();
+      devTop->Write("TRIGGER.FREE_RUN.ENABLE", 0x0);
 
-      pulser->Write("TRIGGER.FREE_RUN.BURST_MASK", 0xFF0000FF);
-      pulser->Write("TRIGGER.FREE_RUN.BURST_MODE", 0x1);
-      pulser->Write("TRIGGER.FREE_RUN.BURST_SPACING", 10000); // 10k ticks = 0.1ms
-      pulser->Write("TRIGGER.FREE_RUN.PERIOD", 1400); // msec
-      pulser->Write("TRIGGER.FREE_RUN.EN_FR_TRIG", 0x1);
-      pulser->Write("TRIGGER.FREE_RUN.EN_EXT_TRIG", 0x0);
+      devTop->Write("TRIGGER.FREE_RUN.BURST_MASK", 0xFF0000FF);
+      devTop->Write("TRIGGER.FREE_RUN.BURST_MODE", 0x1);
+      devTop->Write("TRIGGER.FREE_RUN.BURST_SPACING", 10000); // 10k ticks = 0.1ms
+      devTop->Write("TRIGGER.FREE_RUN.PERIOD", 1400); // msec
+      devTop->Write("TRIGGER.FREE_RUN.EN_FR_TRIG", 0x1);
+      devTop->Write("TRIGGER.FREE_RUN.EN_EXT_TRIG", 0x0);
+
+      devBot->Write("TRIGGER.FREE_RUN.ENABLE", 0x0);
+
+      devBot->Write("TRIGGER.FREE_RUN.BURST_MASK", 0xFF0000FF);
+      devBot->Write("TRIGGER.FREE_RUN.BURST_MODE", 0x1);
+      devBot->Write("TRIGGER.FREE_RUN.BURST_SPACING", 10000); // 10k ticks = 0.1ms
+      devBot->Write("TRIGGER.FREE_RUN.PERIOD", 1400); // msec
+      devBot->Write("TRIGGER.FREE_RUN.EN_FR_TRIG", 0x1);
+      devBot->Write("TRIGGER.FREE_RUN.EN_EXT_TRIG", 0x0);
+
       std::this_thread::sleep_for(std::chrono::milliseconds(tsleep));
-      pulser->Write("TRIGGER.STATUS.ENABLE_PULSERS", 0x1);
-      pulser->Write("TRIGGER.FREE_RUN.ENABLE", 0x1);
+      std::thread threadTop(enableTop);
+      std::thread threadBot(enableBot);
+      threadTop.join();
+      threadBot.join(); 
     }
     else if (foundHz != std::string::npos){ // periodic internal modes
       std::stringstream ss(mode);
@@ -145,16 +203,26 @@ int main(int argc, char *argv[])
         return -1;
       }
 
-      resetInhibit(pulser);
-      pulser->Write("TRIGGER.FREE_RUN.BURST_MODE", 0x0);
-      pulser->Write("TRIGGER.FREE_RUN.ENABLE", 0x0);
+      resetInhibit();
+      devTop->Write("TRIGGER.FREE_RUN.BURST_MODE", 0x0);
+      devTop->Write("TRIGGER.FREE_RUN.ENABLE", 0x0);
 
-      pulser->Write("TRIGGER.FREE_RUN.EN_FR_TRIG", 0x1);
-      pulser->Write("TRIGGER.FREE_RUN.EN_EXT_TRIG", 0x0);
-      pulser->Write("TRIGGER.FREE_RUN.PERIOD", int(1000/freq));
+      devTop->Write("TRIGGER.FREE_RUN.EN_FR_TRIG", 0x1);
+      devTop->Write("TRIGGER.FREE_RUN.EN_EXT_TRIG", 0x0);
+      devTop->Write("TRIGGER.FREE_RUN.PERIOD", int(1000/freq));
+
+      devBot->Write("TRIGGER.FREE_RUN.BURST_MODE", 0x0);
+      devBot->Write("TRIGGER.FREE_RUN.ENABLE", 0x0);
+
+      devBot->Write("TRIGGER.FREE_RUN.EN_FR_TRIG", 0x1);
+      devBot->Write("TRIGGER.FREE_RUN.EN_EXT_TRIG", 0x0);
+      devBot->Write("TRIGGER.FREE_RUN.PERIOD", int(1000/freq));
+
       std::this_thread::sleep_for(std::chrono::milliseconds(tsleep));
-      pulser->Write("TRIGGER.STATUS.ENABLE_PULSERS", 0x1);
-      pulser->Write("TRIGGER.FREE_RUN.ENABLE", 0x1);
+      std::thread threadTop(enableTop);
+      std::thread threadBot(enableBot);
+      threadTop.join();
+      threadBot.join(); 
     }
     else {
       std::cerr << "Invalid pulse mode" << std::endl;
@@ -177,14 +245,20 @@ void showUsage(char * name){
 }
 
 
-void resetInhibit(g2quad * pulser){
+void resetInhibit(){
   for (uint32_t iBoard = 1; iBoard <= 4; ++iBoard) {
     std::stringstream reg;
     reg << "ADCBOARD." << iBoard << ".FP_PULSER.RESET_INHIBIT";
-    pulser->Write(reg.str(), 0x1);
+    if (std::find(bm["top"].begin(), bm["top"].end(), iBoard) != bm["top"].end()) 
+      devTop->Write(reg.str(), 0x1);
+    else if (std::find(bm["bot"].begin(), bm["bot"].end(), iBoard) != bm["bot"].end()) 
+      devBot->Write(reg.str(), 0x1);
 
     std::stringstream rf_reg;
     rf_reg << "ADCBOARD." << iBoard << ".FP_RF_PULSER.RESET";
-    pulser->Write(rf_reg.str(), 0x1);
+    if (std::find(bm["top"].begin(), bm["top"].end(), iBoard) != bm["top"].end()) 
+      devTop->Write(rf_reg.str(), 0x1);
+    else if (std::find(bm["bot"].begin(), bm["bot"].end(), iBoard) != bm["bot"].end()) 
+      devBot->Write(rf_reg.str(), 0x1);
   }
 }
