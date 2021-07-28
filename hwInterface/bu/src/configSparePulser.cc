@@ -30,8 +30,8 @@ std::vector<std::string> spareIORegs = {
 const uint32_t CLK_PERIOD_NS = 10; // ns
 
 std::string addressTable(std::getenv("G2QUAD_ADDRESS_TABLE"));
-std::string topZynqIpAddress("192.168.30.12");
-std::string botZynqIpAddress("192.168.30.11");
+std::string topZynqIpAddress("192.168.30.180");
+std::string botZynqIpAddress("192.168.30.181");
 
 int main(int argc, char *argv[])
 {

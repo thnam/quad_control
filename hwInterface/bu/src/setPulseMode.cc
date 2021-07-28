@@ -71,9 +71,9 @@ int main(int argc, char *argv[])
   }
 
   if (!topZynqIpAddress) 
-    topZynqIpAddress = "192.168.30.12";
+    topZynqIpAddress = "192.168.30.180";
   if (!botZynqIpAddress) 
-    botZynqIpAddress = "192.168.30.11";
+    botZynqIpAddress = "192.168.30.181";
 
   bm = readBoardMap();
 

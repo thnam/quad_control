@@ -39,8 +39,8 @@ int main(int argc, char *argv[])
 
   // open a connection
   std::string addressTable(std::getenv("G2QUAD_ADDRESS_TABLE"));
-  std::string topZynqIpAddress("192.168.30.12");
-  std::string botZynqIpAddress("192.168.30.11");
+  std::string topZynqIpAddress("192.168.30.180");
+  std::string botZynqIpAddress("192.168.30.181");
 
   std::map<std::string, uint32_t> setting;
   int32_t chn = atoi(argv[1]);

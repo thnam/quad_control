@@ -22,8 +22,8 @@ g2quad * botQuad;
 
 int main(int argc, char *argv[]) {
   std::string addressTable(std::getenv("G2QUAD_ADDRESS_TABLE"));
-  std::string topZynqIpAddress("192.168.30.12");
-  std::string botZynqIpAddress("192.168.30.11");
+  std::string topZynqIpAddress("192.168.30.180");
+  std::string botZynqIpAddress("192.168.30.181");
   BoardMap boardMap = readBoardMap();
 
   try {
