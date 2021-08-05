@@ -126,10 +126,10 @@ socket.on('greeting', function(data) {
     }, 15*1000);
   }
 
-  document.getElementById("btnSetP1Timing").disabled = true;
-  document.getElementById("btnSetP2Timing").disabled = true;
-  document.getElementById("btnSetP3Timing").disabled = true;
-  document.getElementById("btnSetP4Timing").disabled = true;
+  // document.getElementById("btnSetP1Timing").disabled = true;
+  // document.getElementById("btnSetP2Timing").disabled = true;
+  // document.getElementById("btnSetP3Timing").disabled = true;
+  // document.getElementById("btnSetP4Timing").disabled = true;
   document.getElementById("btnLoadNominalTiming").disabled = true;
   document.getElementById("btnLoadPOS100ms").disabled = true;
   document.getElementById("cbEnablePulser1").disabled = true;

@@ -27,7 +27,7 @@ const presetTiming = {
     "1":{"charge_end":775010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":1,"step1_end":35010,"step2_start":30010},
     "4":{"charge_end":775010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":1,"step1_end":35010,"step2_start":30010},
     "2":{"charge_end":775010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":0,"step1_end":35000,"step2_start":30000},
-    "3":{"charge_end":100030010,"charge_start":10,"discharge_end":100740010,"discharge_start":100040010,"enable_2step":0,"step1_end":30010,"step2_start":35010}
+    "3":{"charge_end":100030010,"charge_start":10,"discharge_end":100740010,"discharge_start":100040010,"enable_2step":0,"step1_end":30010,"step2_start":35010,"rf_width":0,"rf_delay1":0,"rf_delay2":0,"rf_delay3":0,"rf_delay4":0,"spare_length":70000000,"spare_start":20000000}
   },
   "Option4" : {
     "1":{"charge_end":775010,"charge_start":10,"discharge_end":1480010,"discharge_start":780010,"enable_2step":1,"step1_end":35010,"step2_start":30010},
