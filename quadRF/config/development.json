@@ -1,0 +1,30 @@
+{
+	"server": {
+		"port": 5555
+	},
+
+	"monitor": {
+		"port": 5252
+	},
+
+	"controller": "localhost",
+
+	"mongo": {
+		"host": "localhost",
+		"port": 27017,
+		"db": "rf",
+		"user": "daq",
+		"password": "g2muon"
+	},
+	
+	"waveformConfig": {
+		"numberOfRows": 5,
+		"waveformSpan": 50
+    },
+
+	"backendServer": {
+		"ip": "localhost",
+		"port": 5050,
+		"updatePeriod": 10000
+	}
+}

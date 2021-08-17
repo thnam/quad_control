@@ -1,0 +1,46 @@
+each quad in ['Q1', 'Q2', 'Q3', 'Q4']
+    div(id=`tab${quad}`, role='tabpanel', aria-labelledby=`btnTab${quad}`).tab-pane.fade.container.mainTabBG
+        .container-fluid.tabBG1(align='center')
+            div(id=`waveformPlots${quad}`, style='width:100%;height:100%;')
+        
+        .mt-2.container-fluid.tabBG1(align='center')
+            table.table.align-middle.text-center
+                thead
+                    tr
+                        th(scope='col') On
+                        th(scope='col', style='width:10%') Mode
+                        th(scope='col') Frequency (kHz)
+                        th(scope='col') Start time (us)
+                        th(scope='col') NPeriods
+                        th(scope='col') Duration (us)
+                        th(scope='col') Actual time (us)
+                        th(scope='col') Amplitude (V)
+                        th(scope='col') Delay phase (deg)
+                        th(scope='col') Reference phase (deg)
+                tbody
+                    each row in [ ...Array(config.waveformConfig.numberOfRows+1).keys() ].slice(1) 
+                        tr
+                            th(scope='col')
+                                input(id=`checkbox${quad}_On${row}`, type='checkbox').checkbox.chekbox-success
+                            th(scope='col')
+                                select(id=`select${quad}_Mode${row}`).form-select
+                                    option(selected='', value='HD') HD
+                                    option(value='VD') VD
+                                    option(value='Q') Q
+                            th(scope='col')
+                                input(id=`input${quad}_Freq${row}`, style='width:100%')
+                            th(scope='col')
+                                input(id=`input${quad}_StartTime${row}`, style='width:100%')
+                            th(scope='col')
+                                input(id=`input${quad}_NPeriods${row}`, style='width:100%')
+                            th(scope='col')
+                                label(id=`label${quad}_Duration${row}`) 0
+                            th(scope='col')
+                                label(id=`label${quad}_ActualTime${row}`) 0 / 0
+                            th(scope='col')
+                                input(id=`input${quad}_Amplitude${row}`, style='width:100%')
+                            th(scope='col')
+                                input(id=`input${quad}_DelayPhase${row}`, style='width:100%')
+                            th(scope='col')
+                                label(id=`label${quad}_RefPhase${row}`) 0
+
