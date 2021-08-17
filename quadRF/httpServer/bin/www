@@ -1,0 +1,69 @@
+#! /usr/bin/env node
+'use strict';
+
+global.appRoot = require('app-root-path').toString();
+const app = require(`${global.appRoot}/app`);
+const debug = require('debug')('httpserver:server');
+const http = require('http');
+const config = require('config');
+
+let port;
+if (process.env.role === 'main'){			// Main web
+	port = config.server.port;
+}
+else if (process.env.role === 'monitor'){	// Read-only
+	port = config.monitor.port;
+}
+
+app.set('port', port);
+const server = http.createServer(app); // Create HTTP server.
+
+
+/**
+ * Database setup.
+ */
+const db = require(`${global.appRoot}/utils/db`);
+db.connect(()=>{
+    server.listen(port);
+    server.on('error', onError);
+    server.on('listening', onListening);
+});
+
+
+/**
+ * Event listener for HTTP server error event.
+ */
+function onError(error){
+	if (error.syscall !== 'listen'){
+		throw error;
+	}
+
+	const bind = typeof port === 'string' ? `Pipe ${port}` : `Port ${port}`;
+
+	// Handle specific listen errors with friendly messages.
+	switch (error.code){
+		case 'EACCES':
+			console.error(`${bind} requires elevated privileges.`);
+			process.exit(1);
+			break;
+		case 'EADDRINUSE':
+			console.error(`${bind} is already in use.`);
+			process.exit(1);
+			break;
+		default:
+			throw error;
+	}
+}
+
+/**
+ * Event listener for HTTP server listening event.
+ */
+function onListening(){
+	const addr = server.address();
+	const bind = typeof addr === 'string' ? `pipe ${addr}` : `port ${addr.port}`;
+	debug(`Listening on ${bind}...`);
+}
+
+module.exports = server;
+
+const io = require(`${global.appRoot}/utils/sockets`);

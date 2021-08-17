@@ -39,6 +39,8 @@ html(lang='en')
         a.nav-link(data-toggle='tab', href='#timingTab', role='tab') Pulser Timing
       li.nav-item
         a.nav-link(data-toggle='tab', href='#testTab', role='tab') Testing Ground
+      li.nav-item
+        a.nav-link(data-toggle='tab', href='#rfTab', role='tab') RF Tab (Under Dev.)
 
     .tab-content
       include mainTab.pug
@@ -47,6 +49,7 @@ html(lang='en')
       include faultHistory.pug
       include timingTab.pug
       include testingGround.pug
+      include rfTab.pug
 
     //- script sequence is important
     script(src='javascripts/jquery-3.3.1.min.js')

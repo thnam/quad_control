@@ -1,0 +1,19 @@
+.container {
+	max-width: 82%;
+}
+
+.mainTabBG{
+	background-color: #ECE8E4;
+}
+
+.tabBG1{
+	background-color: #E9E5E1;
+}
+.tabBG2{
+	background-color: #E7E5E1;
+}
+
+.blockTitle{
+	color: #4FD2CD;
+	padding-top: 5px;
+}

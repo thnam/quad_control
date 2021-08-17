@@ -1,0 +1,24 @@
+.h6.blockTitle Signal Generator Control
+
+.d-flex.justify-content-around
+    button#btnWaveform.btn.btn-primary(title="Send waveforms to all") Waveform
+    button#btnOutputOn.btn.btn-success(title="Turn ON all outputs") Output On
+    button#btnOutputOff.btn.btn-danger(title="Turn OFF all outputs") Output Off
+
+.row.mt-3.row-cols-3.mb-3(align="center")
+    .col Status
+    .col Waveform
+    .col Output
+
+each plate in ['Q1T', 'Q1I', 'Q1O', 'Q2T', 'Q2I', 'Q2O', 'Q3T', 'Q3I', 'Q3O', 'Q4T', 'Q4I', 'Q4O', 'QB']
+    .row.mb-3.align-items-center
+        .col-4.ps-5.align-items-center
+            div(id=`radioGroup${plate}`).ps-5.radio.radio-success
+                input(id=`radioStatus${plate}`, type="radio", checked="")
+                label(for=`radioStatus${plate}`) #{plate}
+
+        .col-4(align="center")
+            button(id=`btnWaveform${plate}`).btn.btn-outline-dark Waveform
+
+        .col-4(align="center")
+            button(id=`btnOutput${plate}`).btn.btn-outline-dark Output
