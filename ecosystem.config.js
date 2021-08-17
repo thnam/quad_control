@@ -9,7 +9,7 @@ module.exports = {
   }, {
     name: 'http',
     script: 'httpServer/bin/www',
-    max_memory_restart : "200M",
+    max_memory_restart : "300M",
     watch_delay: 1000,
     watch: ["./httpServer/bin", "./httpServer/app.js",
       "./httpServer/routes", "./httpServer/utils", "./httpServer/views"
@@ -18,8 +18,8 @@ module.exports = {
   }, {
     name: 'monitor',
     script: 'httpServer/bin/www',
-    max_memory_restart : "200M",
-    watch_delay: 1000,
+    max_memory_restart : "300M",
+    watch_delay: 1500,
     watch: ["./httpServer/bin", "./httpServer/app.js",
       "./httpServer/routes", "./httpServer/utils", "./httpServer/views"
     ],
