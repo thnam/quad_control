@@ -74,10 +74,10 @@ class Db_Update(object):
                     sg["device"].write("C{}:BTWV STATE, ON".format(chWhich))
                     sg["device"].write("C{}:BTWV?".format(chWhich))
                     read = sg["device"].read().split(",")
-                    frequency = read[22]
+                    frequency = read[20]
                     phase = read[-1]
-                    cycletime = read[11]
-                    nPeriods = cycletime*frequency  #nPeriods=cycletime/Timeperiod,Timeperiod = 1/frequency
+                    #cycletime = read[11]
+                    #nPeriods = cycletime*frequency  #nPeriods=cycletime/Timeperiod,Timeperiod = 1/frequency
                 except:
                     print("No resources found")
                 try:
@@ -87,7 +87,7 @@ class Db_Update(object):
                     self.colName = "RFParameters"
                 except Exception as e:                                                                                                    
                     raise e                                                                                                                                                      
-                getCollection(self).insert_one({"Quad_Plate": self.QuadPlateEntries[n],"frequency":frequency,"nPeriods":nPeriods,"phase":phase,"channel_name":chName})                                                                                                        
+                getCollection(self).insert_one({"Quad_Plate": self.QuadPlateEntries[n],"frequency":frequency,"phase":phase,"channel_name":chName})                                                                                                        
 
 
 if __name__ == "__main__":
