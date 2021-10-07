@@ -1,2 +1,10 @@
-.h6.blockTitle Waveform Plots
+.h6.blockTitle Save/Load Presets
 .row
+    div.mt-3
+        label(for='loadPreset').pe-3 Load preset
+        input#loadPreset(type='file', onchange='onChooseFile(event, readPreset.bind(this))')
+    div.mt-3
+        label(for='savePreset').pe-3 Save preset
+        button#savePreset().btn.btn-outline-dark Save as
+
+.mt-3.h6.blockTitle Waveform Plots

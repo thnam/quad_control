@@ -43,6 +43,8 @@ function connectElementFunctions() {
 			getWaveParamElement('DelayPhase', quad, row).addEventListener('input', ()=>calculateWaveParams(quad, row));
 		}
 	}
+
+    document.querySelector('#savePreset').addEventListener('click', ()=>writePreset());
 }
 
 function getWaveParamElement(classifier, quad, row) {
