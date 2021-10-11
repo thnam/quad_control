@@ -26,7 +26,15 @@ class BackendServer {
 		});
 
 		this.socket.on('data', data=>{
+      console.log(data);
 			io.emit('backendData', JSON.parse(data));
+      /**
+       * Sometimes JSON.parse(data) raises error because the received json
+       * strings are concatenated rather than separated. I put some time intervals
+       * everytime the sgServer sends data to FE, but the better solution is to
+       * catch this event and smartly separate two or more concatenated JSON
+       * strings into individuals and to proceed. To be updated.
+       */
 		});
 
 		this.socket.on('close', ()=>{
@@ -64,7 +72,9 @@ class BackendServer {
 	}
 
 	write(data) {
-		this.socket.write(JSON.stringify(data));
+    const str = JSON.stringify(data);
+    // this.socket.write(`${str.length}:${str}`);
+    this.socket.write(str);
 	}
 }
 

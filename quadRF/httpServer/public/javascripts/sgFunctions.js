@@ -34,9 +34,8 @@ function sendWaveform(quadPlate) {
         const quad = quadPlate.slice(0, 2);
         const plate = quadPlate.slice(2);
         const ind = ['T', 'B', 'I', 'O'].indexOf(plate);
-        
         const waveform = window.waveformPlotly[quad][ind].y;
-        const formatted = waveform.map(val => val === 0 ? val : val.toFixed(5)).join(); // Keep only to 5 decimal places (except 0).
+        const formatted = waveform.map(val => val === 0 ? val : val.toFixed(4)).join(); // Keep only to 4 decimal places (except 0).
         data = {
             cmd: 'sendWaveform',
             target: quadPlate,
@@ -91,7 +90,7 @@ function updateStatus(sgData) {
         const wvName = sp[5];
         const wvFullName = `M${wvSlot}:${wvName}`;
 
-        const btnClass = ['M50', 'M51'].includes(wvSlot) ? 'btn-outline-success' : 'btn-outline-danger';
+        const btnClass = ['50', '51'].includes(wvSlot) ? 'btn-outline-success' : 'btn-outline-danger';
         setElementProperties(`#btnWaveform${quadPlate}`, {
             className: `btn ${btnClass}`,
             value: wvFullName,

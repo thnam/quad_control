@@ -19,12 +19,12 @@ function readPreset(event){
     let i = 0;
     for (let quad of window.quads){
 		for (let row of window.rows){
-            let presets = lines[i++].split('\t').map(val=>Number.parseFloat(val));
+            let presets = lines[i++].split('\t');
             if (presets.includes(null) || presets.includes(NaN) || presets.includes(undefined)){
                 return raisePresetFileError();
             }
-			getWaveParamElement('On', quad, row).checked = presets[0];
-            getWaveParamElement('Mode', quad, row).value = isFinite(presets[1]) ? ['HD', 'VD', 'Q'][presets[1]] : presets[1];
+			getWaveParamElement('On', quad, row).checked = Number.parseFloat(presets[0]);
+            getWaveParamElement('Mode', quad, row).value = isFinite(presets[1]) ? ['HD', 'VD', 'Q'][Number.parseFloat(presets[1])] : presets[1];
 			getWaveParamElement('Freq', quad, row).value = presets[2];
 			getWaveParamElement('StartTime', quad, row).value = presets[3];
 			getWaveParamElement('NPeriods', quad, row).value = presets[4];

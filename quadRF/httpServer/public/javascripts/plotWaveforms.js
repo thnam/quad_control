@@ -29,8 +29,12 @@ function initWaveformPlots() {
     let outer  = { x: window.timeRange, y: zeros, mode: 'lines', name: 'Outer' , xaxis: 'x4', yaxis: 'y4' };
 
     window.waveformPlotly = {};
+
     window.quads.forEach(quad=>{
-        window.waveformPlotly[quad] = [ new Object(top), new Object(bottom), new Object(inner), new Object(outer) ];
+      window.waveformPlotly[quad] = [ JSON.parse(JSON.stringify(top)), 
+                                      JSON.parse(JSON.stringify(bottom)),
+                                      JSON.parse(JSON.stringify(inner)),
+                                      JSON.parse(JSON.stringify(outer)) ];
 
         Plotly.newPlot(
             document.querySelector(`#waveformPlots${quad}`),
@@ -39,6 +43,7 @@ function initWaveformPlots() {
             { responsive: true }
         );
     });
+    
 }
 
 function updateWaveformPlots(quad) {
@@ -69,7 +74,7 @@ function updateWaveformPlots(quad) {
 	}
 	
 	['top', 'bottom', 'inner', 'outer'].forEach((plate, ind)=>{
-		window.waveformPlotly[quad][ind].y = waveform[plate];
+		window.waveformPlotly[quad][ind].y = waveform[plate].slice();
 	});
 	
 	Plotly.redraw(document.querySelector(`#waveformPlots${quad}`));
