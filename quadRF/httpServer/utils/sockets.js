@@ -3,6 +3,8 @@ const io = require('socket.io')(require(`${global.appRoot}/bin/www`), { cookie: 
 const httpLog = require(`${global.appRoot}/loggers/httpLogger`);
 const config = require('config');
 const net = require('net');
+// const { spawn } = require('child_process');
+const fs = require('fs');
 
 /**
  * Socket communication with the backend server to control and monitor the signal generators.
@@ -72,9 +74,71 @@ class BackendServer {
 	}
 
 	write(data) {
-    const str = JSON.stringify(data);
-    // this.socket.write(`${str.length}:${str}`);
-    this.socket.write(str);
+	    const str = JSON.stringify(data);
+    	this.socket.write(str);
+	}
+}
+
+function sendFileList(socket){
+	fs.readdir('./httpServer/presets/', (err, files)=>{
+		socket.emit('returnFileSystem', {
+			cmd: 'refresh',
+			data: files
+		});
+	});
+}
+
+function accessFileSystem(socket, data){
+	switch (data.cmd) {
+		case 'refresh':
+			sendFileList(socket);
+			break;
+		case 'load':
+			fs.open(`./httpServer/presets/${data.name}`, 'r', (err, fd)=>{
+				if (err){
+					httpLog.error(err);
+				}
+				let buffer = new Buffer.alloc(1024);
+				fs.read(fd, buffer, 0, buffer.length, 0, (err, bytes)=>{
+					if (err){
+						httpLog.error(err);
+					}
+					socket.emit('returnFileSystem', {
+						cmd: 'load',
+						name: data.name,
+						content: buffer.toString()
+					});
+				});
+			});
+			break;
+		case 'save':
+			fs.open(`./httpServer/presets/${data.name}`, 'w', (err, fd)=>{
+				if (err){
+					httpLog.error(err);
+				}
+				fs.write(fd, data.content, (err, bytes)=>{
+					if (err){
+						httpLog.error(err);
+					}
+					// Refresh the dialog after save.
+					sendFileList(socket);
+				});
+			});
+			break;
+		case 'rename':
+			fs.rename(`./httpServer/presets/${data.name}`, `./httpServer/presets/${data.rename}`, err=>{
+				if (err) httpLog.error(err);
+			});
+			// Refresh the dialog after rename.
+			sendFileList(socket);
+			break;
+		case 'remove':
+			fs.unlink(`./httpServer/presets/${data.name}`, err=>{
+				if (err) httpLog.error(err);
+			});
+			// Refresh the dialog after removal.
+			sendFileList(socket);
+			break;
 	}
 }
 
@@ -133,6 +197,11 @@ io.on('connection', function (socket) {
 				backendServer.write(data.data);
 				break;
 		}
+	});
+
+	socket.on('accessFileSystem', data=>{
+		httpLog.info('Request to access the file system in the server.');
+		accessFileSystem(socket, data);
 	});
 
 	socket.on('debug', data=>{
