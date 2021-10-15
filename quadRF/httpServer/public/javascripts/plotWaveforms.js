@@ -78,6 +78,8 @@ function updateWaveformPlots(quad) {
 	});
 	
 	Plotly.redraw(document.querySelector(`#waveformPlots${quad}`));
+	const currentPreset = document.querySelector('#loadedPresetName');
+	if (currentPreset.innerText && !currentPreset.innerText.includes('(Being modified)')) currentPreset.innerText += ' (Being modified)';
 }
 
 function updateWaveform(waveform, mode, freq, actualStartTime, actualEndTime, amplitude) {
@@ -145,16 +147,25 @@ Array.prototype.scaleArray = function (scalar) {
 	return this.map(val => scalar*val);
 };
 
+function sumArrays(...arrays) {
+	let arr = new Array(arrays[0].length).fill(0);
+	for (let i=0; i<arrays[0].length; i++) {
+		for (let array of arrays) {
+			arr[i] += array[i];
+		}
+	}
+	return arr;
+}
 
 function mod(n, m) {
 	// To always return a positive value.
 	return ((n % m) + m) % m;
 }
 
-function arange(start, stop, step=1){
+function arange(start, stop, step=1) {
 	step = step || 1;
 	let arr = [];
-	for (let i=start; i<stop; i+=step){
+	for (let i=start; i<stop; i+=step) {
 		arr.push(i);
 	}
 	return arr;

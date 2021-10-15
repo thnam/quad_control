@@ -44,7 +44,11 @@ function connectElementFunctions() {
 		}
 	}
 
-    document.querySelector('#savePreset').addEventListener('click', ()=>writePreset());
+    document.querySelector('#refreshDialog').addEventListener('click', ()=>socket.emit('accessFileSystem', {cmd:'refresh'}));
+    document.querySelector('#loadPreset').addEventListener('click', ()=>emitLoadPreset());
+    document.querySelector('#savePreset').addEventListener('click', ()=>savePreset());
+    document.querySelector('#renamePreset').addEventListener('click', ()=>renamePreset());
+    document.querySelector('#removePreset').addEventListener('click', ()=>removePreset());
 }
 
 function getWaveParamElement(classifier, quad, row) {

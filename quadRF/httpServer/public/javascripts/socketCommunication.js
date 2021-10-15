@@ -42,6 +42,20 @@ socket.on('noBackendConnection', ()=>{
     noBackendConnection();
 });
 
+socket.on('returnFileSystem', data=>{
+	switch (data.cmd){
+		case 'refresh':
+			refreshDialog(data.data);
+			break;
+		case 'load':
+			loadPreset(data.name, data.content);
+			break;
+		case 'save':
+			savePreset();
+			break;
+	}
+});
+
 function forceReload(){
 	socket.emit('reloadReq');
 }
