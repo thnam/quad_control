@@ -3,7 +3,6 @@ const io = require('socket.io')(require(`${global.appRoot}/bin/www`), { cookie: 
 const httpLog = require(`${global.appRoot}/loggers/httpLogger`);
 const config = require('config');
 const net = require('net');
-// const { spawn } = require('child_process');
 const fs = require('fs');
 
 /**
@@ -30,13 +29,6 @@ class BackendServer {
 		this.socket.on('data', data=>{
       console.log(data);
 			io.emit('backendData', JSON.parse(data));
-      /**
-       * Sometimes JSON.parse(data) raises error because the received json
-       * strings are concatenated rather than separated. I put some time intervals
-       * everytime the sgServer sends data to FE, but the better solution is to
-       * catch this event and smartly separate two or more concatenated JSON
-       * strings into individuals and to proceed. To be updated.
-       */
 		});
 
 		this.socket.on('close', ()=>{
@@ -228,13 +220,13 @@ io.on('connection', function (socket) {
 		}, 1000)
 	);
 
-	intervals.push(
-		setInterval(()=>{
-			if (backendServer.checkConnection() === 'open') {
-				backendServer.write({cmd: 'updateStatus'});
-			}
-		}, config.backendServer.updatePeriod)
-	);
+  intervals.push(
+  	setInterval(()=>{
+  		if (backendServer.checkConnection() === 'open') {
+  			backendServer.write({cmd: 'updateStatus'});
+  		}
+  	}, config.backendServer.updatePeriod)
+  );
 });
 
 module.exports = io;
