@@ -11,40 +11,71 @@
  * 
  */
 
-function turnOutput(quadPlate, state) {
-    if (quadPlate !== 'All') {
-        state = document.querySelector(`#btnOutput${quadPlate}`).value === 'OFF' ? 'ON' : 'OFF';
-    }
-    data = {
-        cmd: 'turnOutput',
-        target: quadPlate,
-        state: state
-    };
-    socket.emit('backendServer', {cmd: 'write', data});
-}
-
-function sendWaveform(quadPlate) {
-    if (quadPlate === 'All') {
-        // Not embodied yet.
-        return;
-    } else if (quadPlate === 'QB') {
-        // Not embodied yet.
-        return;
+function getWaveform(quadPlate) {
+    let waveform;
+    if (quadPlate === 'QB') {
+        // For the case of QB, average Q1B, Q2B, Q3B and Q4B.
+        waveform = sumArrays(window.waveformPlotly.Q1[1].y, window.waveformPlotly.Q2[1].y, window.waveformPlotly.Q3[1].y, window.waveformPlotly.Q4[1].y).map(v=>v/4);
     } else {
         const quad = quadPlate.slice(0, 2);
         const plate = quadPlate.slice(2);
         const ind = ['T', 'B', 'I', 'O'].indexOf(plate);
-        const waveform = window.waveformPlotly[quad][ind].y;
-        const formatted = waveform.map(val => val === 0 ? val : val.toFixed(4)).join(); // Keep only to 4 decimal places (except 0).
+        waveform = window.waveformPlotly[quad][ind].y
+    }
+    return waveform;
+}
+
+function isWaveformEmpty(waveform) {
+    if (Math.max(...waveform.map(Math.abs)) === 0) return true;
+    return false;
+}
+
+function turnOutput(quadPlate, state) {
+    if (quadPlate === 'All') {
+        // Turn on/off only to those who have non-zero waveforms.
+        for (let qp of window.quadPlates) {
+            let waveform = getWaveform(qp);
+            if (!isWaveformEmpty(waveform)) {
+                data = {cmd:'turnOutput', target:qp, state};
+                socket.emit('backendServer', {cmd: 'write', data});
+                document.querySelector(`#radioGroup${qp}`).className = 'radio radio-warning';
+            }
+        }
+    } else {
+        state = document.querySelector(`#btnOutput${quadPlate}`).value === 'OFF' ? 'ON' : 'OFF';
+        const data = {cmd:'turnOutput', target:quadPlate, state};
+        socket.emit('backendServer', {cmd:'write', data});
+        document.querySelector(`#radioGroup${quadPlate}`).className = 'radio radio-warning';
+    }
+}
+
+function sendWaveform(quadPlate) {
+    if (quadPlate === 'All') {
+        // Send waveform only to those who have non-zero waveforms.
+        for (let qp of window.quadPlates) {
+            let waveform = getWaveform(qp);
+            if (!isWaveformEmpty(waveform)) {
+                data = {
+                    cmd: 'sendWaveform',
+                    target: qp,
+                    waveformSpan: window.waveformConfig.waveformSpan,
+                    waveformData: waveform.map(val => val === 0 ? val : val.toFixed(4)).join() // Keep only to 4 decimal places (except 0).
+                }
+                socket.emit('backendServer', {cmd:'write', data});
+                document.querySelector(`#radioGroup${qp}`).className = 'radio radio-warning';
+            }
+        }
+    } else {
+        const waveform = getWaveform(quadPlate);
         data = {
             cmd: 'sendWaveform',
             target: quadPlate,
             waveformSpan: window.waveformConfig.waveformSpan,
-            waveformData: formatted
+            waveformData: waveform.map(val => val === 0 ? val : val.toFixed(4)).join() // Keep only to 4 decimal places (except 0).
         }
-        socket.emit('backendServer', {cmd: 'write', data});
+        socket.emit('backendServer', {cmd:'write', data});
+        document.querySelector(`#radioGroup${quadPlate}`).className = 'radio radio-warning';
     }
-    
 }
 
 function updateStatus(sgData) {
@@ -61,11 +92,14 @@ function updateStatus(sgData) {
 
     for (let quadPlate of [ch1, ch2]) {
         if (quadPlate === '-') continue;
-        document.querySelector(`#radioGroup${quadPlate}`).className = document.querySelector(`#radioGroup${quadPlate}`).className.replace('radio-danger', 'radio-success');
+        document.querySelector(`#radioGroup${quadPlate}`).className = 'radio radio-success';
     }
 
     if (data.includes('ROSC')) {
         const rosc = data.trim().split(' ')[1];
+		/**
+		 *  ALERT USER IF THIS IS NOT DESIRED VALUE
+		 */
     }
     else if (data.includes('OUTP')) {
         const sp = data.trim().split(/,| |:/);
@@ -81,6 +115,7 @@ function updateStatus(sgData) {
             innerHTML: `Output: ${outp}`,
             disabled: false
         });
+        document.querySelector(`#radioGroup${quadPlate}`).className = 'radio radio-success';
     }
     else if (data.includes('ARWV')) {
         const sp = data.trim().split(/,| |:/);
@@ -97,11 +132,12 @@ function updateStatus(sgData) {
             innerHTML: wvFullName,
             disabled: false
         });
+        document.querySelector(`#radioGroup${quadPlate}`).className = 'radio radio-success';
     }
     else if (data.includes('DISCONNECTED')) {
         for (let quadPlate of [ch1, ch2]) {
             if (quadPlate === '-') continue;
-            document.querySelector(`#radioGroup${quadPlate}`).className = document.querySelector(`#radioGroup${quadPlate}`).className.replace('radio-success', 'radio-danger');
+            document.querySelector(`#radioGroup${quadPlate}`).className = 'radio radio-danger';
 
             setElementProperties(`#btnWaveform${quadPlate}`, {
                 className: 'btn btn-outline-dark',
@@ -127,7 +163,7 @@ function noBackendConnection() {
     document.querySelector('#btnOutputOff').disabled = true;
 
     for (let quadPlate of window.quadPlates) {
-        document.querySelector(`#radioGroup${quadPlate}`).className = document.querySelector(`#radioGroup${quadPlate}`).className.replace('radio-success', 'radio-danger');
+        document.querySelector(`#radioGroup${quadPlate}`).className = 'radio radio-danger';
         document.querySelector(`#radioStatus${quadPlate}`).disabled = true;
 
         setElementProperties(`#btnWaveform${quadPlate}`, {
