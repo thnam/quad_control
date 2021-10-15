@@ -12,13 +12,14 @@
 
 each plate in ['Q1T', 'Q1I', 'Q1O', 'Q2T', 'Q2I', 'Q2O', 'Q3T', 'Q3I', 'Q3O', 'Q4T', 'Q4I', 'Q4O', 'QB']
     .row.mb-3.align-items-center
-        .col-4.ps-5.align-items-center
-            div(id=`radioGroup${plate}`).ps-5.radio.radio-success
-                input(id=`radioStatus${plate}`, type="radio", checked="")
+        .col-1
+        .col-3
+            div(id=`radioGroup${plate}`).radio.radio-danger
+                input(id=`radioStatus${plate}`, type="radio", checked)
                 label(for=`radioStatus${plate}`) #{plate}
 
         .col-4(align="center")
-            button(id=`btnWaveform${plate}`).btn.btn-outline-dark Waveform
+            button(id=`btnWaveform${plate}`, disabled).btn.btn-outline-dark Waveform
 
         .col-4(align="center")
-            button(id=`btnOutput${plate}`).btn.btn-outline-dark Output
+            button(id=`btnOutput${plate}`, disabled).btn.btn-outline-dark Output
