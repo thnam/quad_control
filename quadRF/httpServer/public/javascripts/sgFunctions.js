@@ -80,7 +80,7 @@ function sendWaveform(quadPlate) {
 
 function updateStatus(sgData) {
     const {type, ch1, ch2, data} = sgData;
-    // console.log(type, ch1, ch2, data);
+  // console.log(type, ch1, ch2, data);
 
     document.querySelector('#btnWaveform') .disabled = false;
     document.querySelector('#btnOutputOn') .disabled = false;
@@ -97,9 +97,11 @@ function updateStatus(sgData) {
 
     if (data.includes('ROSC')) {
         const rosc = data.trim().split(' ')[1];
-		/**
-		 *  ALERT USER IF THIS IS NOT DESIRED VALUE
-		 */
+        if (rosc !== 'EXT') {
+            alert(`Signal generator with channels ${ch1} and ${ch2} has wrong reference clock. It must set to EXT (external).`);
+            document.querySelector(`#radioGroup${ch1}`).className = 'radio radio-danger';
+            document.querySelector(`#radioGroup${ch2}`).className = 'radio radio-danger';
+        }
     }
     else if (data.includes('OUTP')) {
         const sp = data.trim().split(/,| |:/);

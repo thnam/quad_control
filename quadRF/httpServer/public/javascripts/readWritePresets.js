@@ -166,6 +166,7 @@ function renamePreset(){
 	}
 	const name = dialog.options[dialog.selectedIndex].innerText;
 	const rename = window.prompt(`Rename the preset "${name}" to?`, name);
+  if (!rename) return;
 	socket.emit('accessFileSystem', {cmd:'rename', name, rename});
 }
 
