@@ -32,15 +32,22 @@ socket.on('timeStamp', data=>{
 
 socket.on('backendData', data=>{
     if (data.type === 'message') {
+        // Users can check messages in the browser conosle (for debugging).
         console.info(data.content);
+    } else if (data.type === 'server') {
+        // Update status of the backend server connection.
+        updateServer(data.state);
     } else if (data.type === 'data') {
+        // Update the signal generator status (mainly connection, waveform and output).
         updateStatus(data);
     }
 });
 
+/*
 socket.on('noBackendConnection', ()=>{
     noBackendConnection();
 });
+*/
 
 socket.on('returnFileSystem', data=>{
 	switch (data.cmd){

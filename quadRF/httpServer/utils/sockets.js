@@ -8,57 +8,89 @@ const fs = require('fs');
 /**
  * Socket communication with the backend server to control and monitor the signal generators.
  */
+
 class BackendServer {
 	constructor(host, port) {
 		this.host = host;
 		this.port = port;
+		console.log('BackendServer instance is constructed!');
 	}
 
 	connect() {
+		if (this.hasOwnProperty('socket')) {
+			if (this.socket.readyState === 'open') {
+				this.write({cmd:'updateStatus'});
+				httpLog.warn('BackendServer is already connected.');
+				return;
+			} else if (this.socket.readyState === 'opening') {
+				httpLog.warn('BackendServer is being connected. Please wait.');
+				return;
+			}
+		}
 		this.socket = net.connect({
 			host: this.host,
 			port: this.port
 		});
+		// Wait 3 seconds to connect to the server.
+		this.socket.setTimeout(3000);
 
 		this.socket.setEncoding('utf-8');
 
 		this.socket.on('connect', ()=>{
-			httpLog.info('Connected to the server.');
+			httpLog.info('Connected to the backend server.');
+			this.write({cmd:'updateStatus'});
+			
+			if (this.hasOwnProperty('periodicUpdate')) {
+				// clearInterval(this.periodicUpdate);
+				this.periodicUpdate.refresh();
+			} else {
+				this.periodicUpdate = setInterval(()=>{
+					if (this.socket.readyState === 'open') {
+						this.write({cmd:'updateStatus'});
+					}
+				}, config.backendServer.updatePeriod);
+			}
+
+			this.socket.setTimeout(0);
+			io.emit('backendData', {type:'server', state:this.socket.readyState});
 		});
 
 		this.socket.on('data', data=>{
-      console.log(data);
-			io.emit('backendData', JSON.parse(data));
+			console.log(data);
+			// Make sure accidently concatenated JSON strings are separated properly.
+			const split = data.split('}{');
+			if (split.length === 1) {
+				io.emit('backendData', JSON.parse(data));
+			} else {
+				split.forEach((datum, index)=>{
+					if (index === 0) {
+						io.emit('backendData', JSON.parse(datum + '}'));
+					} else if (index === split.length-1) {
+						io.emit('backendData', JSON.parse('{' + datum));
+					} else {
+						io.emit('backendData', JSON.parse('{' + datum + '}'));
+					}
+				});
+			}
 		});
 
 		this.socket.on('close', ()=>{
-			httpLog.warn('close');
-			io.emit('noBackendConnection');
+			httpLog.warn('No connection with the backend server.');
+			io.emit('backendData', {type:'server', state:this.socket.readyState});
 		});
 
 		this.socket.on('error', err=>{
 			httpLog.error(`Failed to connect to the backend server: ${err.code}`);
 		});
+		
+		this.socket.on('timeout', ()=>{
+			console.log('Seems like the backend server is not running.');
+			this.socket.destroy();
+		});
 	}
 
 	disconnect() {
 		this.socket.destroy();
-		io.emit('noBackendConnection');
-	}
-
-	reconnect() {
-		this.socket.destroy();
-		this.connect();
-	}
-
-	checkConnection() {
-		if (this.hasOwnProperty('socket')) {
-			httpLog.info('ReadyState: ' + this.socket.readyState);
-			if (this.socket.readyState === 'closed') {
-				this.connect();
-			}
-			return this.socket.readyState;
-		}
 	}
 
 	shutdownBackendServer() {
@@ -176,12 +208,6 @@ io.on('connection', function (socket) {
 			case 'disconnect':
 				backendServer.disconnect();
 				break;
-			case 'reconnect':
-				backendServer.reconnect();
-				break;
-			case 'checkConnection':
-				backendServer.checkConnection();
-				break;
 			case 'shutdownBackendServer':
 				backendServer.shutdownBackendServer();
 				break;
@@ -210,7 +236,7 @@ io.on('connection', function (socket) {
 
 	intervals.forEach(clearInterval);
 	intervals = [];
-	// All the setInterval periodic jobs should be below here!
+	// All the setInterval periodic jobs for the websocket should be below here!
 	
 	intervals.push(
 		setInterval(()=>{
@@ -219,14 +245,6 @@ io.on('connection', function (socket) {
 			socket.emit('timeStamp', { timeStamp: dateStr });
 		}, 1000)
 	);
-
-  intervals.push(
-  	setInterval(()=>{
-  		if (backendServer.checkConnection() === 'open') {
-  			backendServer.write({cmd: 'updateStatus'});
-  		}
-  	}, config.backendServer.updatePeriod)
-  );
 });
 
 module.exports = io;

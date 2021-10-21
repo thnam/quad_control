@@ -25,13 +25,29 @@ function whenDefined(object, property, callback) {
 }
 
 function connectElementFunctions() {
-    document.querySelector('#btnWaveform') .addEventListener('click', ()=>sendWaveform('All'));
-    document.querySelector('#btnOutputOn') .addEventListener('click', ()=>turnOutput('All', 'On'));
-    document.querySelector('#btnOutputOff').addEventListener('click', ()=>turnOutput('All', 'Off'));
+    document.querySelector('#btnConnect')   .addEventListener('click', connectBackendServer);
+    document.querySelector('#btnDisconnect').addEventListener('click', disconnectBackendServer);
 
+    document.querySelector('#btnWaveform')  .quadPlate = 'All';
+    document.querySelector('#btnWaveform')  .addEventListener('click', clickWaveform);
+
+    document.querySelector('#btnOutputOn')  .quadPlate = 'All';
+    document.querySelector('#btnOutputOn')  .state = 'On';
+    document.querySelector('#btnOutputOn')  .addEventListener('click', turnOutput);
+
+    document.querySelector('#btnOutputOff') .quadPlate = 'All';
+    document.querySelector('#btnOutputOff') .state = 'Off';
+    document.querySelector('#btnOutputOff').addEventListener('click', turnOutput);
+
+    window.waveformButtonProperties = {}; 
     for (let quadPlate of window.quadPlates) {
-        document.querySelector(`#btnWaveform${quadPlate}`).addEventListener('click', ()=>sendWaveform(quadPlate));
-        document.querySelector(`#btnOutput${quadPlate}`)  .addEventListener('click', ()=>turnOutput(quadPlate));
+        document.querySelector(`#btnWaveform${quadPlate}`).quadPlate = quadPlate;
+        document.querySelector(`#btnWaveform${quadPlate}`).addEventListener('click', clickWaveform);
+        document.querySelector(`#btnWaveform${quadPlate}`).addEventListener('mouseover', mouseoverWaveform);
+        document.querySelector(`#btnWaveform${quadPlate}`).addEventListener('mouseout', mouseoutWaveform);
+		
+        document.querySelector(`#btnOutput${quadPlate}`)  .quadPlate = quadPlate;
+        document.querySelector(`#btnOutput${quadPlate}`)  .addEventListener('click', turnOutput);
     }
 
     for (let quad of window.quads){

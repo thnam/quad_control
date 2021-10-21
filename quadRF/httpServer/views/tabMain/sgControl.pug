@@ -1,25 +1,39 @@
 .h6.blockTitle Signal Generator Control
 
-.d-flex.justify-content-around
-    button#btnWaveform.btn.btn-primary(title="Send waveforms to all") Waveform
-    button#btnOutputOn.btn.btn-success(title="Turn ON all outputs") Output On
-    button#btnOutputOff.btn.btn-danger(title="Turn OFF all outputs") Output Off
-
 .row.mt-3.row-cols-3.mb-3(align="center")
-    .col Status
-    .col Waveform
-    .col Output
+    .col-4
+        .row.p-2
+            button#btnConnect.btn.btn-success(title="Connect to the signal generators") Connect
+        .row.p-2
+            button#btnDisconnect.btn.btn-danger(title="Disconnect to the signal generators", disabled) Disconnect
+    .col-4
+        .pt-2.mt-1
+        button#btnWaveform.btn.btn-primary(title="Send waveforms to all", style='height: 80%', disabled) Update All
+    .col-4
+        .row.p-2
+            button#btnOutputOn.btn.btn-success(title="Turn ON all outputs", disabled) Turn On All
+        .row.p-2
+            button#btnOutputOff.btn.btn-danger(title="Turn OFF all outputs", disabled) Turn Off All
+    
+
+.row.mt-4.row-cols-3.mb-3(align="center")
+    .col
+        label(style='font-size: 1.2em', title='Green: Connected / Yellow: In transition / Red: Disconnected') Quad RF<br>Plate
+    .col
+        label(style='font-size: 1.2em', title='Send RF waveform to the corresponding plate') Update<br>Waveform
+    .col
+        label(style='font-size: 1.2em', title='Labels show the current output') Toggle<br>Output
 
 each plate in ['Q1T', 'Q1I', 'Q1O', 'Q2T', 'Q2I', 'Q2O', 'Q3T', 'Q3I', 'Q3O', 'Q4T', 'Q4I', 'Q4O', 'QB']
     .row.mb-3.align-items-center
         .col-1
         .col-3
             div(id=`radioGroup${plate}`).radio.radio-danger
-                input(id=`radioStatus${plate}`, type="radio", checked)
+                input(id=`radioStatus${plate}`, type="radio", checked, disabled)
                 label(for=`radioStatus${plate}`) #{plate}
 
         .col-4(align="center")
-            button(id=`btnWaveform${plate}`, disabled).btn.btn-outline-dark Waveform
+            button.btn.btn-outline-dark(id=`btnWaveform${plate}`, style='width: 80%', disabled) Disconnected
 
         .col-4(align="center")
-            button(id=`btnOutput${plate}`, disabled).btn.btn-outline-dark Output
+            button.btn.btn-outline-dark(id=`btnOutput${plate}`, disabled) Disconnected
