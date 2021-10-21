@@ -29,7 +29,7 @@ function connectElementFunctions() {
     document.querySelector('#btnDisconnect').addEventListener('click', disconnectBackendServer);
 
     document.querySelector('#btnWaveform')  .quadPlate = 'All';
-    document.querySelector('#btnWaveform')  .addEventListener('click', clickWaveform);
+    document.querySelector('#btnWaveform')  .addEventListener('click', sendWaveform);
 
     document.querySelector('#btnOutputOn')  .quadPlate = 'All';
     document.querySelector('#btnOutputOn')  .state = 'On';
@@ -42,7 +42,7 @@ function connectElementFunctions() {
     window.waveformButtonProperties = {}; 
     for (let quadPlate of window.quadPlates) {
         document.querySelector(`#btnWaveform${quadPlate}`).quadPlate = quadPlate;
-        document.querySelector(`#btnWaveform${quadPlate}`).addEventListener('click', clickWaveform);
+        document.querySelector(`#btnWaveform${quadPlate}`).addEventListener('click', sendWaveform);
         document.querySelector(`#btnWaveform${quadPlate}`).addEventListener('mouseover', mouseoverWaveform);
         document.querySelector(`#btnWaveform${quadPlate}`).addEventListener('mouseout', mouseoutWaveform);
 		

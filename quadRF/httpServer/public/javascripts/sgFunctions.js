@@ -79,37 +79,39 @@ function turnOutput(event) {
     }
 }
 
-function clickWaveform(event) {
+function sendWaveform(event) {
     const quadPlate = event.target.quadPlate;
     if (quadPlate === 'All') {
         for (let qp of window.quadPlates) {
-            document.querySelector(`#btnWaveform${qp}`).click();
+            let waveform = getWaveform(qp);
+            // Send waveform only to those who have non-zero waveforms.
+            if (!isWaveformEmpty(waveform)) {
+                document.querySelector(`#btnWaveform${qp}`).click();
+            }
         }
     } else {
-        sendWaveform(quadPlate);
-        document.querySelector(`#radioGroup${quadPlate}`).className = 'radio radio-warning';
+        const waveform = getWaveform(quadPlate);
+        // Send waveform only to those who have non-zero waveforms.
+        if (!isWaveformEmpty(waveform)) {
+            data = {
+                cmd: 'sendWaveform',
+                target: quadPlate,
+                waveformSpan: window.waveformConfig.waveformSpan,
+                waveformData: waveform.map(val => val === 0 ? val : val.toFixed(4)).join() // Keep only to 4 decimal places (except 0).
+            }
+            socket.emit('backendServer', {cmd:'write', data});
 
-        event.target.className = 'btn btn-warning';
-        event.target.innerHTML = 'Acquiring...';
-        event.target.style.fontSize = '1.0em';
-        if (event.target.getAttribute('mouseoverout') === 'true') {
-            event.target.removeEventListener('mouseover', mouseoverWaveform);
-            event.target.removeEventListener('mouseout', mouseoutWaveform);
+            document.querySelector(`#radioGroup${quadPlate}`).className = 'radio radio-warning';
+            event.target.className = 'btn btn-warning';
+            event.target.innerHTML = 'Acquiring...';
+            event.target.style.fontSize = '1.0em';
+            if (event.target.getAttribute('mouseoverout') === 'true') {
+                event.target.removeEventListener('mouseover', mouseoverWaveform);
+                event.target.removeEventListener('mouseout', mouseoutWaveform);
+            }
+        } else {
+            alert('No waveform to send! Please check the current waveform or preset again.');
         }
-    }
-}
-
-function sendWaveform(quadPlate) {
-    const waveform = getWaveform(quadPlate);
-    // Send waveform only to those who have non-zero waveforms.
-    if (!isWaveformEmpty(waveform)) {
-        data = {
-            cmd: 'sendWaveform',
-            target: quadPlate,
-            waveformSpan: window.waveformConfig.waveformSpan,
-            waveformData: waveform.map(val => val === 0 ? val : val.toFixed(4)).join() // Keep only to 4 decimal places (except 0).
-        }
-        socket.emit('backendServer', {cmd:'write', data});
     }
 }
 
