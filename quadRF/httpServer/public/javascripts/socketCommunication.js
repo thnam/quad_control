@@ -43,11 +43,10 @@ socket.on('backendData', data=>{
     }
 });
 
-/*
-socket.on('noBackendConnection', ()=>{
-    noBackendConnection();
+socket.on('synchronize', data=>{
+	//synchronizeElements(data);
+	setElementProperties(data.target, data.properties);
 });
-*/
 
 socket.on('returnFileSystem', data=>{
 	switch (data.cmd){

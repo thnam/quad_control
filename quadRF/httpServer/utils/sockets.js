@@ -127,7 +127,8 @@ function accessFileSystem(socket, data){
 					if (err){
 						httpLog.error(err);
 					}
-					socket.emit('returnFileSystem', {
+					// Emit to ALL users.
+					io.emit('returnFileSystem', {
 						cmd: 'load',
 						name: data.name,
 						content: buffer.toString()
@@ -215,6 +216,11 @@ io.on('connection', function (socket) {
 				backendServer.write(data.data);
 				break;
 		}
+	});
+
+	socket.on('synchronize', data=>{
+		console.log('SYNC: ', data);
+		io.emit('synchronize', data);
 	});
 
 	socket.on('accessFileSystem', data=>{

@@ -37,7 +37,7 @@ function connectElementFunctions() {
 
     document.querySelector('#btnOutputOff') .quadPlate = 'All';
     document.querySelector('#btnOutputOff') .state = 'Off';
-    document.querySelector('#btnOutputOff').addEventListener('click', turnOutput);
+    document.querySelector('#btnOutputOff') .addEventListener('click', turnOutput);
 
     window.waveformButtonProperties = {}; 
     for (let quadPlate of window.quadPlates) {
