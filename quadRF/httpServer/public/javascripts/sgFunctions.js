@@ -72,7 +72,11 @@ function turnOutput(event) {
 		// Turn on/off only to those whose waveforms are updated.
 		for (let qp of window.quadPlates) {
 			if (document.querySelector(`#btnWaveform${qp}`).className === 'btn btn-outline-success') {
-				document.querySelector(`#btnOutput${qp}`).click();
+				let targetOn_statusOff = event.target.state === 'ON' && document.querySelector(`#btnOutput${qp}`).value === 'OFF';
+				let targetOff_statusOn = event.target.state === 'OFF' && document.querySelector(`#btnOutput${qp}`).value === 'ON';
+				if (targetOn_statusOff || targetOff_statusOn) {
+					document.querySelector(`#btnOutput${qp}`).click();
+				}
 			}
 		}
 	} else {
