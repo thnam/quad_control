@@ -32,11 +32,11 @@ function connectElementFunctions() {
     document.querySelector('#btnWaveform')  .addEventListener('click', sendWaveform);
 
     document.querySelector('#btnOutputOn')  .quadPlate = 'All';
-    document.querySelector('#btnOutputOn')  .state = 'On';
+    document.querySelector('#btnOutputOn')  .state = 'ON';
     document.querySelector('#btnOutputOn')  .addEventListener('click', turnOutput);
 
     document.querySelector('#btnOutputOff') .quadPlate = 'All';
-    document.querySelector('#btnOutputOff') .state = 'Off';
+    document.querySelector('#btnOutputOff') .state = 'OFF';
     document.querySelector('#btnOutputOff') .addEventListener('click', turnOutput);
 
     window.waveformButtonProperties = {}; 
@@ -65,6 +65,8 @@ function connectElementFunctions() {
     document.querySelector('#savePreset').addEventListener('click', ()=>savePreset());
     document.querySelector('#renamePreset').addEventListener('click', ()=>renamePreset());
     document.querySelector('#removePreset').addEventListener('click', ()=>removePreset());
+
+	// document.querySelector('#checkRFOutputs').addEventListener('click', checkRFOutputs);
 }
 
 function getWaveParamElement(classifier, quad, row) {
