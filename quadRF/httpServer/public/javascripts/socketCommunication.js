@@ -65,8 +65,8 @@ socket.on('returnFileSystem', data=>{
 socket.on('reload_imageRFOutputs', ()=>{
 	// Refresh the imageRFOutputs
 	document.querySelector('#imageRFOutputs').src = `${baseUrl}/images/tektronics.png?${Date.now()}`;
-	document.querySelector('#imageRFOutputs').className = 'btn btn-primary';
-	document.querySelector('#imageRFOutputs').innerHTML = 'Check RF outputs';
+	document.querySelector('#checkRFOutputs').className = 'btn btn-primary';
+	document.querySelector('#checkRFOutputs').innerHTML = 'Check RF outputs';
 });
 
 function forceReload(){
