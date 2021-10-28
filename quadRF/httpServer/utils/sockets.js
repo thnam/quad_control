@@ -4,6 +4,7 @@ const httpLog = require(`${global.appRoot}/loggers/httpLogger`);
 const config = require('config');
 const net = require('net');
 const fs = require('fs');
+const spawn = require('child_process').spawn;
 
 /**
  * Socket communication with the backend server to control and monitor the signal generators.
@@ -226,6 +227,17 @@ io.on('connection', function (socket) {
 	socket.on('accessFileSystem', data=>{
 		httpLog.info('Request to access the file system in the server.');
 		accessFileSystem(socket, data);
+	});
+
+	socket.on('runPyScript', ()=>{
+		const pyProcess = spawn('python', [`${global.appRoot}/../fetchScopeData/tektronics-lb.py`]);
+		pyProcess.stdout.on('data', data=>{
+			// httpLog.info(`Stdout from the pyProcess: ${data}`);
+			io.emit('reload_imageRFOutputs');
+		});
+		pyProcess.stderr.on('data', data=>{
+			httpLog.info(`Stdout from the pyProcess: ${data}`);
+		});
 	});
 
 	socket.on('debug', data=>{

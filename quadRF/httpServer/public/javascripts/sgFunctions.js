@@ -116,7 +116,7 @@ function sendWaveform(event) {
 
 			const syncData = {
 				target: event.target.id,
-				properties: {className:'btn btn-warning', innerHTML:`Acquiring...`, mouseoverout:false}
+				properties: {className:'btn btn-warning', innerHTML:'Acquiring...', mouseoverout:false}
 			}
 			socket.emit('synchronize', syncData);
 		} else {

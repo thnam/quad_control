@@ -66,7 +66,7 @@ function connectElementFunctions() {
     document.querySelector('#renamePreset').addEventListener('click', ()=>renamePreset());
     document.querySelector('#removePreset').addEventListener('click', ()=>removePreset());
 
-	// document.querySelector('#checkRFOutputs').addEventListener('click', checkRFOutputs);
+	document.querySelector('#checkRFOutputs').addEventListener('click', checkRFOutputs);
 }
 
 function getWaveParamElement(classifier, quad, row) {

@@ -1,31 +1,37 @@
 .h6.blockTitle Save/Load Presets
 .row
-    .row.mt-1
-        .col
-            label(style='font-size: 15pt') Current preset
-            label#loadedPresetName.ps-3(style='font-size: 15pt; color: blue')
-    .row.mt-3(align='center')
-        .col-2
-            button#refreshDialog.btn.btn-info
-                span.bi-arrow-clockwise
-        .col-3
-            button#loadPreset.btn.btn-dark Load
-        .col-3
-            button#savePreset.btn.btn-dark Save
-        .col-2
-            button#renamePreset.btn.btn-warning
-                span.bi-pencil-square
-        .col-2
-            button#removePreset.btn.btn-danger
-                span.bi-x-lg
-    select#presetDialog.form-select(size='4').mt-3
+	.row.mt-1
+		.col
+			label(style='font-size:15pt') Current preset
+			label#loadedPresetName.ps-3(style='font-size:15pt; color:blue')
+	.row.mt-3(align='center')
+		.col-2
+			button#refreshDialog.btn.btn-info
+				span.bi-arrow-clockwise
+		.col-3
+			button#loadPreset.btn.btn-dark Load
+		.col-3
+			button#savePreset.btn.btn-dark Save
+		.col-2
+			button#renamePreset.btn.btn-warning
+				span.bi-pencil-square
+		.col-2
+			button#removePreset.btn.btn-danger
+				span.bi-x-lg
+	select#presetDialog.form-select(size='4').mt-3
 
 //-        
-    div.mt-3
-        label(for='loadPreset').pe-3 Load preset
-        input#loadPreset(type='file', onchange='onChooseFile(event, readPreset.bind(this))', accept='.txt')
-    div.mt-3
-        label(for='savePreset').pe-3 Save preset
-        button#savePreset().btn.btn-outline-dark Save as
+	div.mt-3
+		label(for='loadPreset').pe-3 Load preset
+		input#loadPreset(type='file', onchange='onChooseFile(event, readPreset.bind(this))', accept='.txt')
+	div.mt-3
+		label(for='savePreset').pe-3 Save preset
+		button#savePreset().btn.btn-outline-dark Save as
 
 .mt-3.h6.blockTitle Waveform Plots
+.row
+	.row.mt-1
+		.col-4
+			button#checkRFOutputs.btn.btn-primary Check RF outputs
+	.row.mt-3
+		img#imageRFOutputs(src='/images/tektronics.png', style='max-width:100%; max-height:100%')
