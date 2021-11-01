@@ -8,19 +8,19 @@
             button#btnDisconnect.btn.btn-danger(title="Disconnect to the signal generators", disabled) Disconnect
     .col-4
         .pt-2.mt-1
-        button#btnWaveform.btn.btn-primary(title="Send waveforms to all", style='height: 80%', disabled) Update All
+        button#btnWaveform.btn.btn-primary(title="Send waveforms to all (make sure you have generated a waveform or loaded a proper preset)", style='height: 80%', disabled) Update All
     .col-4
         .row.p-2
-            button#btnOutputOn.btn.btn-success(title="Turn ON all outputs", disabled) Turn On All
+            button#btnOutputOn.btn.btn-success(title="Turn ON outputs of those who have an updated waveform (have green button for 'update waveform')", disabled) Turn On All
         .row.p-2
-            button#btnOutputOff.btn.btn-danger(title="Turn OFF all outputs", disabled) Turn Off All
+            button#btnOutputOff.btn.btn-danger(title="Turn OFF outputs of those who have an updated waveform (have green button for 'update waveform')", disabled) Turn Off All
     
 
 .row.mt-4.row-cols-3.mb-3(align="center")
     .col
         label(style='font-size: 1.2em', title='Green: Connected / Yellow: In transition / Red: Disconnected') Quad RF<br>Plate
     .col
-        label(style='font-size: 1.2em', title='Send RF waveform to the corresponding plate') Update<br>Waveform
+        label(style='font-size: 1.2em', title='Send RF waveform to the corresponding plate (make sure you have generated a waveform or loaded a proper preset)') Update<br>Waveform
     .col
         label(style='font-size: 1.2em', title='Labels show the current output') Toggle<br>Output
 

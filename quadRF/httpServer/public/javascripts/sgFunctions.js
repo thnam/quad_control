@@ -11,16 +11,16 @@
  */
 
 function connectBackendServer(event) {
-	socket.emit('backendServer', {cmd: 'connect'});
-
 	const syncData = {
 		target: event.target.id,
-		properties: {className:'btn btn-warning', innerHTML:'Connecting'}
+		properties: {className:'btn btn-warning', innerHTML:'Connecting...'}
 	}
 	socket.emit('synchronize', syncData);
+	socket.emit('backendServer', {cmd: 'connect'});
 }
 
 function disconnectBackendServer(event) {
+	if (!confirmAction('Sure to disconnect from the signal generators?')) return;
 	socket.emit('backendServer', {cmd: 'disconnect'});
 }
 
@@ -68,27 +68,29 @@ function isWaveformEmpty(waveform) {
 }
 
 function turnOutput(event) {
+	const state = event.target.quadPlate === 'All' ? event.target.value : (event.target.value === 'OFF' ? 'ON' : 'OFF');
+
 	if (event.target.quadPlate === 'All') {
 		// Turn on/off only to those whose waveforms are updated.
 		for (let qp of window.quadPlates) {
 			if (document.querySelector(`#btnWaveform${qp}`).className === 'btn btn-outline-success') {
-				let targetOn_statusOff = event.target.state === 'ON' && document.querySelector(`#btnOutput${qp}`).value === 'OFF';
-				let targetOff_statusOn = event.target.state === 'OFF' && document.querySelector(`#btnOutput${qp}`).value === 'ON';
+				let targetOn_statusOff = state === 'ON' && document.querySelector(`#btnOutput${qp}`).value === 'OFF';
+				let targetOff_statusOn = state === 'OFF' && document.querySelector(`#btnOutput${qp}`).value === 'ON';
 				if (targetOn_statusOff || targetOff_statusOn) {
 					document.querySelector(`#btnOutput${qp}`).click();
 				}
 			}
 		}
 	} else {
-		state = event.target.value === 'OFF' ? 'ON' : 'OFF';
-		const data = {cmd:'turnOutput', target:event.target.quadPlate, state};
-		socket.emit('backendServer', {cmd:'write', data});
-
+		if (!confirmAction(`Sure to turn ${state} the output of ${event.target.quadPlate}?`)) return;
 		const syncData = {
 			target: event.target.id,
 			properties: {className:'btn btn-warning', innerHTML:`Turning ${state}...`}
 		}
 		socket.emit('synchronize', syncData);
+
+		const data = {cmd:'turnOutput', target:event.target.quadPlate, state};
+		socket.emit('backendServer', {cmd:'write', data});
 	}
 }
 
@@ -103,9 +105,16 @@ function sendWaveform(event) {
 			}
 		}
 	} else {
-		const waveform = getWaveform(quadPlate);
+		if (!confirmAction(`Sure to update the waveform of ${quadPlate}?`)) return;
 		// Send waveform only to those who have non-zero waveforms.
+		const waveform = getWaveform(quadPlate);
 		if (!isWaveformEmpty(waveform)) {
+			const syncData = {
+				target: event.target.id,
+				properties: {className:'btn btn-warning', innerHTML:'Acquiring...', mouseoverout:false}
+			}
+			socket.emit('synchronize', syncData);
+
 			data = {
 				cmd: 'sendWaveform',
 				target: quadPlate,
@@ -113,12 +122,6 @@ function sendWaveform(event) {
 				waveformData: waveform.map(val => val === 0 ? val : val.toFixed(4)).join() // Keep only to 4 decimal places (except 0).
 			}
 			socket.emit('backendServer', {cmd:'write', data});
-
-			const syncData = {
-				target: event.target.id,
-				properties: {className:'btn btn-warning', innerHTML:'Acquiring...', mouseoverout:false}
-			}
-			socket.emit('synchronize', syncData);
 		} else {
 			alert('No waveform to send! Please check the current waveform or preset again.');
 		}

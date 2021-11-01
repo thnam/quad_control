@@ -170,7 +170,7 @@ function accessFileSystem(socket, data){
 
 const backendServer = new BackendServer(config.backendServer.ip, config.backendServer.port);
 
-let intervals = []; // Contains timer id for each setInterval.
+let interval = [];
 let users = []; // Contains the connected clients (socket id).
 
 /**
@@ -230,10 +230,16 @@ io.on('connection', function (socket) {
 	});
 
 	socket.on('runPyScript', ()=>{
+		interval.forEach(clearInterval);
+
 		const pyProcess = spawn('python', [`${global.appRoot}/../fetchScopeData/tektronics-lb.py`]);
 		pyProcess.stdout.on('data', data=>{
 			// httpLog.info(`Stdout from the pyProcess: ${data}`);
 			io.emit('reload_imageRFOutputs');
+
+			interval.push(setInterval(()=>{
+				io.emit('checkRFOutputs');
+			}, 60000));
 		});
 		pyProcess.stderr.on('data', data=>{
 			httpLog.info(`Stdout from the pyProcess: ${data}`);
@@ -251,18 +257,18 @@ io.on('connection', function (socket) {
 			users: users.length
 		});
 	});
-
-	intervals.forEach(clearInterval);
-	intervals = [];
-	// All the setInterval periodic jobs for the websocket should be below here!
-	
-	intervals.push(
-		setInterval(()=>{
-			const date = new Date();
-			const dateStr = `${date.toDateString()} - ${date.toLocaleTimeString()}`;
-			socket.emit('timeStamp', { timeStamp: dateStr });
-		}, 1000)
-	);
 });
+
+// Timestamp
+setInterval(()=>{
+	const date = new Date();
+	const dateStr = `${date.toDateString()} - ${date.toLocaleTimeString()}`;
+	io.emit('timeStamp', { timeStamp: dateStr });
+}, 1000);
+
+// Fetch RF output status (oscilloscope data)
+interval.push(setInterval(()=>{
+	io.emit('checkRFOutputs');
+}, 5000));
 
 module.exports = io;

@@ -21,7 +21,7 @@ function savePreset(){
 	if (!name) return;
 	Array.prototype.forEach.call(dialog, option=>{
 		if (option.innerText === name){
-			if (!window.confirm('There exists a file with the same name. Overwrite?')) return;
+			if (!confirm('There exists a file with the same name. Overwrite?')) return;
 		}
 	});
 
@@ -98,7 +98,7 @@ function removePreset(){
 		return;
 	}
 	const name = dialog.options[dialog.selectedIndex].innerText;
-	if (window.confirm(`Remove the preset "${name}"?`)){
+	if (confirm(`Remove the preset "${name}"?`)){
 		socket.emit('accessFileSystem', {cmd:'remove', name});
 	}
 }

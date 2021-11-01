@@ -33,9 +33,16 @@ html(lang='en')
 				h3.float-start#topheader Quad RF System Control/Monitoring Interface
 			#clock.float-end(style='color: red;')
 			br
-			p(style='margin-top:20px;') 
-				a(href='https://cdcvs.fnal.gov/redmine/projects/g-2/wiki/Quad_GUI_manual_for_shifters') 
+			p(style='margin-top:20px')
+			.row.mt-3.row-cols-6
+				a(href='https://cdcvs.fnal.gov/redmine/projects/g-2/wiki/Quad_RF_GUI_manual_for_shifters', target='_blank')
 					h5.float-start Manual for shifters
+				a(href='http://localhost:3333/quads_RF', target='_blank')
+					h5.float-start Quad RF DQM
+				a(href='http://localhost:8888', target='_blank')
+					h5.float-start Scope
+				a(href='http://localhost:8884', target='_blank')
+					h5.float-start Linkbone
 
 		nav
 			#nav-tab.nav.nav-tabs(role='tablist').container
@@ -44,10 +51,10 @@ html(lang='en')
 				button#btnTabQ2.nav-link(data-bs-toggle='tab', data-bs-target='#tabQ2', type='button', role='tab', aria-controls='tabQ2', aria-selected='false') Q2
 				button#btnTabQ3.nav-link(data-bs-toggle='tab', data-bs-target='#tabQ3', type='button', role='tab', aria-controls='tabQ3', aria-selected='false') Q3
 				button#btnTabQ4.nav-link(data-bs-toggle='tab', data-bs-target='#tabQ4', type='button', role='tab', aria-controls='tabQ4', aria-selected='false') Q4
-				//- button#btnTabAdvanced.nav-link(data-bs-toggle='tab', data-bs-target='#tabAdvanced', type='button', role='tab', aria-controls='tabAdvanced', aria-selected='false') Advanced
+				button#btnTabAdvanced.nav-link(data-bs-toggle='tab', data-bs-target='#tabAdvanced', type='button', role='tab', aria-controls='tabAdvanced', aria-selected='false') Advanced
 
 		#nav-tabContent.tab-content
 			include tabMain.pug
 			include tabQs.pug
-			//- include tabAdvanced.pug
+			include tabAdvanced.pug
 

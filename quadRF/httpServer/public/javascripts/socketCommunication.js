@@ -28,6 +28,12 @@ socket.on('reload', ()=>{
 
 socket.on('timeStamp', data=>{
     document.querySelector('#clock').innerHTML = `<h4> Server time: ${data.timeStamp} </h4>`;
+
+	let btnCheckRF = document.querySelector('#checkRFOutputs');
+	if (btnCheckRF.timer > 0) {
+		btnCheckRF.timer -= 1;
+		btnCheckRF.innerHTML = `Check RF outputs in ${btnCheckRF.timer} sec...`;
+	}
 });
 
 socket.on('backendData', data=>{
@@ -44,7 +50,6 @@ socket.on('backendData', data=>{
 });
 
 socket.on('synchronize', data=>{
-	//synchronizeElements(data);
 	setElementProperties(data.target, data.properties);
 });
 
@@ -62,11 +67,19 @@ socket.on('returnFileSystem', data=>{
 	}
 });
 
+socket.on('checkRFOutputs', ()=>{
+	document.querySelector('#checkRFOutputs').click();
+});
+
 socket.on('reload_imageRFOutputs', ()=>{
 	// Refresh the imageRFOutputs
 	document.querySelector('#imageRFOutputs').src = `${baseUrl}/images/tektronics.png?${Date.now()}`;
-	document.querySelector('#checkRFOutputs').className = 'btn btn-primary';
-	document.querySelector('#checkRFOutputs').innerHTML = 'Check RF outputs';
+	setElementProperties('#checkRFOutputs', {
+		className: 'btn btn-primary',
+		timer: 60,
+		innerHTML: 'Check RF outputs in 60 sec...',
+		disabled: false
+	});
 });
 
 function forceReload(){
