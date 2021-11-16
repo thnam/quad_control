@@ -77,6 +77,9 @@ $(() =>{
     window.sparkAlarmAudio.pause();
     window.sparkAlarmAudio.currentTime = 0.0;
   });
+
+  $("#btnRebootScope").click(() => {rebootScope();});
+
 })
 
 plotColor = [
@@ -196,6 +199,18 @@ function sendSlackAlarm(msg) {
       data: 'payload=' + JSON.stringify({ "text": msg }),
       processData: false,
       success: (res) => {console.log("Alarm sent."); resolve(true)},
+      error: (err, stat) => { console.log(err.responseText); resolve(false)}
+    });
+  });
+}
+
+function rebootScope(){
+  return new Promise(function (resolve, reject){
+    $.ajax({
+      type: 'POST',
+      url: baseUrl + "/rebootScope",
+      processData: false,
+      success: (res) => {console.log("Rebooting scope ..."); resolve(true)},
       error: (err, stat) => { console.log(err.responseText); resolve(false)}
     });
   });
