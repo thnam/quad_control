@@ -161,10 +161,12 @@ window.onload = () => {
     let vRead = await getVoltage();
 
     let vFS = parseFloat(((vRead.fs.pv + Math.abs(vRead.fs.nv)) / 2).toFixed(1));
-    let vSS = parseFloat(((vRead.ss.pv + Math.abs(vRead.ss.nv)) / 2).toFixed(1));
-    let vOS = parseFloat(((vRead.os.pv + Math.abs(vRead.os.nv)) / 2).toFixed(1));
+    let vSS = parseFloat(((vRead.ss.pv + Math.abs(vRead.ss.nv)) / 2));
+    let vOS = parseFloat(((vRead.os.pv + Math.abs(vRead.os.nv)) / 2));
+    console.log("vOS:", vOS, ", vSS:", vSS);
 
-    let str = vFS.toString() + ", " + vSS.toString();
+    let str = vFS.toString() + ", " + ((vSS + vOS)/2).toFixed(1).toString();
+    console.log(str);
     $('#vSetpointList').append("<option value='" + str + "'>");
     document.getElementById('vSetpoint').value = str;
     reflectVPreset();
