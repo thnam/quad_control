@@ -14,7 +14,7 @@ class BackendServer {
 	constructor(host, port) {
 		this.host = host;
 		this.port = port;
-		console.log('BackendServer instance is constructed!');
+		httpLog.info('BackendServer instance is constructed!');
 	}
 
 	connect() {
@@ -170,8 +170,12 @@ function accessFileSystem(socket, data){
 
 const backendServer = new BackendServer(config.backendServer.ip, config.backendServer.port);
 
-let interval = [];
+
+let checkRFTimer = 0;
+let checkRFInterval = makeInterval();
+
 let users = []; // Contains the connected clients (socket id).
+
 
 /**
  * Use io.emit for broadcasting to all clients.
@@ -189,8 +193,10 @@ io.on('connection', function (socket) {
 		message: 'Greeting from RF controller.',
 		controller: config.controller,
 		role: process.env.role,
-		waveformConfig: config.waveformConfig
+		waveformConfig: config.waveformConfig,
 	});
+
+	socket.emit('reload_imageRFOutputs', checkRFTimer);
 
 	socket.on('reloadReq', ()=>{
 		httpLog.info('reloadReq received, will broadcast reload to all clients.');
@@ -230,20 +236,7 @@ io.on('connection', function (socket) {
 	});
 
 	socket.on('runPyScript', ()=>{
-		interval.forEach(clearInterval);
-
-		const pyProcess = spawn('python', [`${global.appRoot}/../fetchScopeData/tektronics-lb.py`]);
-		pyProcess.stdout.on('data', data=>{
-			// httpLog.info(`Stdout from the pyProcess: ${data}`);
-			io.emit('reload_imageRFOutputs');
-
-			interval.push(setInterval(()=>{
-				io.emit('checkRFOutputs');
-			}, 60000));
-		});
-		pyProcess.stderr.on('data', data=>{
-			httpLog.info(`Stdout from the pyProcess: ${data}`);
-		});
+		runPyProcess();
 	});
 
 	socket.on('debug', data=>{
@@ -259,16 +252,53 @@ io.on('connection', function (socket) {
 	});
 });
 
+
 // Timestamp
 setInterval(()=>{
 	const date = new Date();
 	const dateStr = `${date.toDateString()} - ${date.toLocaleTimeString()}`;
 	io.emit('timeStamp', { timeStamp: dateStr });
+	checkRFTimer -= 1;
 }, 1000);
 
 // Fetch RF output status (oscilloscope data)
-interval.push(setInterval(()=>{
-	io.emit('checkRFOutputs');
-}, 5000));
+function makeInterval() {
+	let interval;
+	return {
+		start() {
+			httpLog.info("Start interval called");
+			interval = setInterval(runPyProcess, config.checkRFPeriod);
+			checkRFTimer = config.checkRFPeriod/1e3;
+		},
+		stop() {
+			httpLog.info("Stop interval called");
+			clearInterval(interval);
+		}
+	}
+}
+
+// Fetch RF output status (oscilloscope data)
+function runPyProcess() {
+	httpLog.info("This is runPyProcess.");
+	const syncData = {
+		target: 'checkRFOutputs',
+		properties: {className:'btn btn-warning', innerHTML:'Fetching...', timer:0, disabled:true}
+	}
+	io.emit('synchronize', syncData);
+
+	checkRFInterval.stop();
+	const pyProcess = spawn('python', [`${global.appRoot}/../fetchScopeData/tektronics-lb.py`]);
+
+	pyProcess.stdout.on('data', data=>{
+		// httpLog.info(`Stdout from the pyProcess: ${data}`);
+		checkRFInterval.start();
+		io.emit('reload_imageRFOutputs', config.checkRFPeriod/1e3);
+	});
+	pyProcess.stderr.on('data', data=>{
+		httpLog.info(`Stdout from the pyProcess: ${data}`);
+	});
+}
+
+checkRFInterval.start();
 
 module.exports = io;

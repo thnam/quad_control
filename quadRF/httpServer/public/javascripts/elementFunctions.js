@@ -12,6 +12,7 @@ window.onload = async ()=>{
 
     // Let server connect to the backend server.
     socket.emit('backendServer', {cmd: 'connect'});
+	socket.emit('accessFileSystem', {cmd:'refresh'});
 };
 
 function whenDefined(object, property, callback) {

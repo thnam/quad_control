@@ -67,17 +67,13 @@ socket.on('returnFileSystem', data=>{
 	}
 });
 
-socket.on('checkRFOutputs', ()=>{
-	document.querySelector('#checkRFOutputs').click();
-});
-
-socket.on('reload_imageRFOutputs', ()=>{
+socket.on('reload_imageRFOutputs', data=>{
 	// Refresh the imageRFOutputs
 	document.querySelector('#imageRFOutputs').src = `${baseUrl}/images/tektronics.png?${Date.now()}`;
 	setElementProperties('#checkRFOutputs', {
 		className: 'btn btn-primary',
-		timer: 60,
-		innerHTML: 'Check RF outputs in 60 sec...',
+		timer: data,
+		innerHTML: `Check RF outputs in ${data} sec...`,
 		disabled: false
 	});
 });
