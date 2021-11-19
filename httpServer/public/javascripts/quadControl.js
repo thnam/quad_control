@@ -77,6 +77,9 @@ $(() =>{
     window.sparkAlarmAudio.pause();
     window.sparkAlarmAudio.currentTime = 0.0;
   });
+
+  $("#btnRebootScope").click(() => {rebootScope();});
+
 })
 
 plotColor = [
@@ -161,10 +164,12 @@ window.onload = () => {
     let vRead = await getVoltage();
 
     let vFS = parseFloat(((vRead.fs.pv + Math.abs(vRead.fs.nv)) / 2).toFixed(1));
-    let vSS = parseFloat(((vRead.ss.pv + Math.abs(vRead.ss.nv)) / 2).toFixed(1));
-    let vOS = parseFloat(((vRead.os.pv + Math.abs(vRead.os.nv)) / 2).toFixed(1));
+    let vSS = parseFloat(((vRead.ss.pv + Math.abs(vRead.ss.nv)) / 2));
+    let vOS = parseFloat(((vRead.os.pv + Math.abs(vRead.os.nv)) / 2));
+    console.log("vOS:", vOS, ", vSS:", vSS);
 
-    let str = vFS.toString() + ", " + vSS.toString();
+    let str = vFS.toString() + ", " + ((vSS + vOS)/2).toFixed(1).toString();
+    console.log(str);
     $('#vSetpointList').append("<option value='" + str + "'>");
     document.getElementById('vSetpoint').value = str;
     reflectVPreset();
@@ -194,6 +199,18 @@ function sendSlackAlarm(msg) {
       data: 'payload=' + JSON.stringify({ "text": msg }),
       processData: false,
       success: (res) => {console.log("Alarm sent."); resolve(true)},
+      error: (err, stat) => { console.log(err.responseText); resolve(false)}
+    });
+  });
+}
+
+function rebootScope(){
+  return new Promise(function (resolve, reject){
+    $.ajax({
+      type: 'POST',
+      url: baseUrl + "/rebootScope",
+      processData: false,
+      success: (res) => {console.log("Rebooting scope ..."); resolve(true)},
       error: (err, stat) => { console.log(err.responseText); resolve(false)}
     });
   });
