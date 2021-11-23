@@ -266,20 +266,21 @@ function makeInterval() {
 	let interval;
 	return {
 		start() {
-			httpLog.info("Start interval called");
+		//	httpLog.info("Start interval called");
 			interval = setInterval(runPyProcess, config.checkRFPeriod);
 			checkRFTimer = config.checkRFPeriod/1e3;
 		},
 		stop() {
-			httpLog.info("Stop interval called");
+		//	httpLog.info("Stop interval called");
 			clearInterval(interval);
+			checkRFTimer = 0;
 		}
 	}
 }
 
 // Fetch RF output status (oscilloscope data)
 function runPyProcess() {
-	httpLog.info("This is runPyProcess.");
+//	httpLog.info("This is runPyProcess.");
 	const syncData = {
 		target: 'checkRFOutputs',
 		properties: {className:'btn btn-warning', innerHTML:'Fetching...', timer:0, disabled:true}
@@ -287,6 +288,11 @@ function runPyProcess() {
 	io.emit('synchronize', syncData);
 
 	checkRFInterval.stop();
+
+	io.emit('reload_imageRFOutputs', config.checkRFPeriod/1e3);
+	checkRFInterval.start();
+
+/*
 	const pyProcess = spawn('python', [`${global.appRoot}/../fetchScopeData/tektronics-lb.py`]);
 
 	pyProcess.stdout.on('data', data=>{
@@ -297,6 +303,7 @@ function runPyProcess() {
 	pyProcess.stderr.on('data', data=>{
 		httpLog.info(`Stdout from the pyProcess: ${data}`);
 	});
+*/
 }
 
 checkRFInterval.start();
