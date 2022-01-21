@@ -79,6 +79,7 @@ $(() =>{
   });
 
   $("#btnRebootScope").click(() => {rebootScope();});
+  $("#btnSetVdiv").click(() => {setVdiv();});
 
 })
 
@@ -210,7 +211,19 @@ function rebootScope(){
       type: 'POST',
       url: baseUrl + "/rebootScope",
       processData: false,
-      success: (res) => {console.log("Rebooting scope ..."); resolve(true)},
+      success: (res) => {console.log("Rebooting scope done"); resolve(true)},
+      error: (err, stat) => { console.log(err.responseText); resolve(false)}
+    });
+  });
+}
+
+function setVdiv(){
+  return new Promise(function (resolve, reject){
+    $.ajax({
+      type: 'POST',
+      url: baseUrl + "/setVdiv",
+      processData: false,
+      success: (res) => {console.log("Setting Vdiv done."); resolve(true)},
       error: (err, stat) => { console.log(err.responseText); resolve(false)}
     });
   });

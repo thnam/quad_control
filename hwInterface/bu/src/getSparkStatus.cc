@@ -60,7 +60,16 @@ int main(int argc, char *argv[]) {
         uint32_t shift = k * qPlates.size() + j;
         // armed status means no spark detected 
         bool sparked = !((ret & (1 << shift)) >> shift);
-        os << "\"" << qPlates.at(j) <<"\""<< ":" << sparked;
+        if (qTypes.at(k) == "l" && qPlates.at(j) == "i") { 
+            os << "\"" << "o" <<"\""<< ":" << sparked;
+        }
+        else if (qTypes.at(k) == "l" && qPlates.at(j) == "o") {
+            os << "\"" << "i" <<"\""<< ":" << sparked;
+        }
+        else {
+            os << "\"" << qPlates.at(j) <<"\""<< ":" << sparked;
+        }
+
         if (j != qPlates.size() - 1) 
           os << ",";
         else

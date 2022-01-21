@@ -26,5 +26,7 @@
 		"ip": "192.168.30.62",
 		"port": 5050,
 		"updatePeriod": 60000
-	}
+	},
+
+	"checkRFPeriod": 60000
 }
