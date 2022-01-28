@@ -60,6 +60,7 @@ int main(int argc, char *argv[]) {
         uint32_t shift = k * qPlates.size() + j;
         // armed status means no spark detected 
         bool sparked = !((ret & (1 << shift)) >> shift);
+        // hacky way to swap I and O on long plates
         if (qTypes.at(k) == "l" && qPlates.at(j) == "i") { 
             os << "\"" << "o" <<"\""<< ":" << sparked;
         }
